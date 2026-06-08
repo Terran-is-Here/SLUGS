@@ -10,7 +10,7 @@ package Game;
  */
 import java.util.ArrayList; 
 import java.util.Iterator; 
-public class Resource {
+public class Resource{
     
     /**
      * The internal identifier of this Resource Object, used to gain information about this Resource from a data reference Hashmap. 
@@ -22,35 +22,56 @@ public class Resource {
      */
     private double resourceAmount;
     
-    private ReferenceDataEntry getReferenceDataTableEntry() {
-        return GameData.fetchReferenceDataEntry(Game.getResourceReferenceTable(), this.identifierName); 
-    }
+    ReferenceDataEntry referenceDataEntry; 
+    
     
     private Resource(
             String _identifierName,
-            double _resourceAmount) {
+            double _resourceAmount,
+            ReferenceDataEntry _referenceDataEntry) {
         identifierName = _identifierName; 
         resourceAmount = _resourceAmount; 
+        referenceDataEntry = _referenceDataEntry; 
     }
     
     public static Resource newResource(String _identifierName, double _resourceAmount) {
-        return new Resource(_identifierName, _resourceAmount);
+        return new Resource(
+                _identifierName,
+                _resourceAmount,
+                GameData.fetchReferenceDataEntry(Game.getResourceReferenceTable(), _identifierName));
     }
     
-    public String getIdentifier() {
-        return this.identifierName; 
+    public ReferenceDataEntry getReferenceDataTableEntry() {
+        return referenceDataEntry; 
     }
     
-    public String getResourceDisplayName() {
+    /** 
+     * Returns the display name of this Structure object. 
+     * @return 
+     */
+    public String getDisplayName() {
+        // Get reference hashtable, get the related data value using structure identifier
         return this.getReferenceDataTableEntry().getDisplayName(); 
+    }
+    
+    /**
+     * Returns the internal identifier of this Structure Object. 
+     * @return 
+     */
+    public String getIdentifier() {
+        return identifierName; 
+    }
+    
+    /**
+     * Returns the display description of this Structure object via reference HashMap. 
+     * @return 
+     */
+    public String getDisplayDescription() {
+        return this.getReferenceDataTableEntry().getDescription(); 
     }
     
     public double getResourceAmount() {
         return this.resourceAmount; 
-    }
-    
-    public String getResourceDisplayDescription() {
-        return this.getReferenceDataTableEntry().getDescription(); 
     }
     
     public String getResourceType() {
@@ -72,7 +93,7 @@ public class Resource {
             bufferResource = (Resource)resourceListIterator.next();
             System.out.println("Identifier: " + bufferResource.getIdentifier());
             System.out.println("Resource Amount: " + bufferResource.getResourceAmount()); 
-            System.out.println("Resource Display Name: " +bufferResource.getResourceDisplayName()); 
+            System.out.println("Resource Display Name: " +bufferResource.getDisplayName()); 
             System.out.println("Resource Display Description: " +bufferResource.getResourceDisplayDescription()); 
             System.out.println("Resource Type: " + bufferResource.getResourceType());
                     

@@ -10,35 +10,47 @@ package Game;
  */
 import java.util.ArrayList; 
 import java.util.Iterator; 
-abstract class BuildableBody {
+public class BuildableBody{
     
     /**
-     * Internal identifier for use within searching methods. 
+     * Internal identifier for use within searching and getting visual and type. 
      */
     protected String identifierName; 
-    
-    // ArrayList of Resource objects that dictate the amount of resources currently in this BuildableBody's storage.
+    /**
+     * ArrayList of Resource objects that dictate the amount of Resources currently in this BuildableBody's storage. 
+    */
     protected ArrayList<Resource> bodyResourceStorage; 
     
-    // ArrayList of Structure objects that dictate the current about of Structure objects present in this BuildableBody
+    /** ArrayList of Structure objects that represent the Structure objects currently present in this BuildableBody*/
     protected ArrayList<Structure> bodyStructures; 
     
-    // todo: implement Vehicles
-    protected ArrayList<Vehicle> bodyVehicles; 
+    /** ArrayList of Vehicle objects that represent the Vehicles currently present in this BuildableBody.*/
+    protected ArrayList<Vehicle> bodyVehicles; // Vehicles are currently unimplemented but will be in the future. 
     
+    protected ReferenceDataEntry referenceDataEntry; 
     
     // Methods to return properties; 
-    
     /** 
-     * Returns the bodyStructures ArrayList.
+     * Returns the ArrayList of Structures this object has.
      * @return 
      */
+    
+    public String getIdentifier() {
+        return this.identifierName; 
+    }
+    
+    
+    // To be implemented in the future. 
+    abstract public ReferenceDataEntry getReferenceDataTableEntry(){
+        return 
+    };
+    
     public ArrayList<Structure> getBodyStructures() {
         return this.bodyStructures;
     }
     
     /**
-     * Returns the bodyResourceStorage ArrayList.
+     * Returns the ArrayList of Resources this object has. 
      * @return 
      */
     public ArrayList<Resource> getBodyResources() {
@@ -46,7 +58,7 @@ abstract class BuildableBody {
     }
     
     /**
-     * Returns the bodyVehicles ArrayList. 
+     * Returns the ArrayList of Vehicles this object has. 
      * @return 
      */
     public ArrayList<Vehicle> getBodyVehicles() {
@@ -55,8 +67,8 @@ abstract class BuildableBody {
     
     /** 
      * Checks if structureToFind is already present on this Structure object; in which case return true.
-     * If not, return false. 
-     * @param structureToFind
+     * If not, return false. Uses linear search.
+     * @param structureToFind A Structure object to find. 
      * @return 
      */
     public Boolean checkIfBuildingIsPresent(Structure structureToFind) {

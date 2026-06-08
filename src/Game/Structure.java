@@ -14,7 +14,7 @@ import java.util.Iterator;
 /*
 Superclass for all Structures present within the game. 
 */
-public class Structure {
+public class Structure{
     
     /**
      * Internal structure identifier; used for parsing referenceHashMaps for gathering data shared by other 
@@ -46,24 +46,27 @@ public class Structure {
      * Additional modifier ontop of the base input modifier. 
      */
     protected double innateInputEfficiency = 1.0;
+    
+    /** Pointer towards ReferenceDataEntry in reference Data Table. */
+    protected ReferenceDataEntry referenceDataEntry; 
     // Property Return functions 
     
     /**
      * Gets the related data entry within the reference HashMap. 
      * @return Returns the related data entry within the reference dataTable.
      */
-    private ReferenceDataEntry getReferenceDataTableEntry() {
-        return GameData.fetchReferenceDataEntry(Game.getStructureReferenceTable(), this.identifierName); 
+    
+    public ReferenceDataEntry getReferenceDataTableEntry() {
+        return referenceDataEntry; 
     }
     
     /** 
      * Returns the display name of this Structure object. 
      * @return 
      */
-    public String getStructureDisplayName() {
+    public String getDisplayName() {
         // Get reference hashtable, get the related data value using structure identifier
-        ReferenceDataEntry bufferDataEntry = getReferenceDataTableEntry(); 
-        return bufferDataEntry.getDisplayName(); 
+        return this.getReferenceDataTableEntry().getDisplayName(); 
     }
     
     /**
@@ -78,9 +81,8 @@ public class Structure {
      * Returns the display description of this Structure object via reference HashMap. 
      * @return 
      */
-    public String getStructureDescription() {
-        ReferenceDataEntry bufferDataEntry = getReferenceDataTableEntry(); 
-        return bufferDataEntry.getDescription(); 
+    public String getDisplayDescription() {
+        return this.getReferenceDataTableEntry().getDescription(); 
     }
     
     /**
@@ -112,8 +114,7 @@ public class Structure {
      * @return 
      */
     public ArrayList<Resource> getBaseStructureCosts() {
-        ReferenceDataEntry bufferDataEntry = this.getReferenceDataTableEntry(); 
-        return bufferDataEntry.getCostResourceArrayList(); 
+        return this.getReferenceDataTableEntry().getCostResourceArrayList(); 
     }
     
     /**
@@ -121,8 +122,7 @@ public class Structure {
      * @return 
      */
     public double getStrucutreCostScaleFactor() {
-        ReferenceDataEntry bufferDataEntry = this.getReferenceDataTableEntry(); 
-        return bufferDataEntry.getCostScaleFactor(); 
+        return this.getReferenceDataTableEntry().getCostScaleFactor(); 
     }
     
     /**
@@ -130,8 +130,7 @@ public class Structure {
      * @return 
      */
     public double getStructureOutputEfficiency() {
-        ReferenceDataEntry bufferDataEntry = this.getReferenceDataTableEntry(); // update
-        return bufferDataEntry.getBaseOutputEfficiency(); 
+        return this.getReferenceDataTableEntry().getBaseOutputEfficiency(); 
     }
     
     /**
@@ -139,8 +138,7 @@ public class Structure {
      * @return 
      */
     public double getStructureInputEfficiency() {
-        ReferenceDataEntry bufferDataEntry = this.getReferenceDataTableEntry(); //update
-        return bufferDataEntry.getBaseInputEfficiency(); 
+        return this.getReferenceDataTableEntry().getBaseInputEfficiency(); 
     }
     
     /**
@@ -148,8 +146,7 @@ public class Structure {
      * @return 
      */
     public ArrayList<Resource> getStructureBaseOutputResources() {
-        ReferenceDataEntry bufferDataEntry = this.getReferenceDataTableEntry();  //update
-        return bufferDataEntry.getOutputResourceArrayList(); 
+        return this.getReferenceDataTableEntry().getOutputResourceArrayList(); 
     }; 
     
     /**
@@ -157,22 +154,16 @@ public class Structure {
      * @return 
      */
     public ArrayList<Resource> getStructureBaseInputResources() {
-        ReferenceDataEntry bufferDataEntry = this.getReferenceDataTableEntry(); 
-        return bufferDataEntry.getInputResourceArrayList(); 
+        return this.getReferenceDataTableEntry().getInputResourceArrayList(); 
     }; 
     
-   
     
     // Functions for altering current Structure object properties.
     
     /**
-     * changes the structureAmount property with the value giving in structuresToAdd. 
-     * @param structuresToAdd 
+     * Directly sets the amount of structures of this object.
+     * @param structureAmountToSet Value to set this object's structure amount. 
      */
-    public void updateStructureAmount (int structuresToAdd) {
-        this.structureAmount += structuresToAdd;
-    }
-    
     public void setStructureAmount (int structureAmountToSet) {
         this.structureAmount = structureAmountToSet; 
     }
@@ -189,9 +180,9 @@ public class Structure {
      * @return 
      */
     public Resource findTotalResources(Resource resourceType) {
-        double buffer = 0; 
+        double buffer; 
         buffer = Utilities.geometricSeriesInitialSum(1, this.getStructureAmount(),this.getStrucutreCostScaleFactor());
-        Resource outputResource = Resource.newResource(resourceType.getIdentifierName(), buffer); 
+        Resource outputResource = Resource.newResource(resourceType.getIdentifier(), buffer); 
         return outputResource; 
     }
     
@@ -225,7 +216,7 @@ public class Structure {
         // Using scalingFactor calculated above; iterate across baseStructureCosts to return the resulting cost as a Resource ArrayList. 
         while (resourceCostIterator.hasNext()) {
                currentResource = (Resource) resourceCostIterator.next(); 
-               buffer = Resource.newResource(currentResource.getIdentifierName(), currentResource.getResourceAmount()*scalingFactor);
+               buffer = Resource.newResource(currentResource.getIdentifier(), currentResource.getResourceAmount()*scalingFactor);
                outputArrayList.add(buffer);
         }
         return outputArrayList; 

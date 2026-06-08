@@ -133,7 +133,7 @@ public class ReferenceDataEntry {
     };
     
     /**
-     * Returns an empty referenceDataEntry object. 
+     * Returns an empty referenceDataEntry object.
      * @return 
      */
     public static ReferenceDataEntry emptyReference() {
@@ -150,10 +150,18 @@ public class ReferenceDataEntry {
                 null); 
     }
     
+    /**
+     * Fetches the internal identifier name of a ReferenceDataEntry. 
+     * @return Returns the internal identifier of a ReferenceDataEntry as a String. 
+     */
     public String getIdentifierName() {
         return this.identifierName;
     }
     
+    /**
+     * Fetches the display description of a ReferenceDataEntry.
+     * @return Returns the display description parameter of this object as a string. 
+     */
     public String getDescription() {
         return this.description; 
     }
