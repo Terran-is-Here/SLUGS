@@ -102,6 +102,10 @@ public class Resource{
     public double getResourceUsedAmount() {
         return this.resourceUsed; 
     }
+    
+    public double getCurrentAvailableCapacity() {
+        return (this.resourceAmount - this.resourceUsed); 
+    }
     //## Property setting methods. 
     public void setResourceAmount(double newValue) {
         this.resourceAmount = newValue; 
@@ -127,6 +131,19 @@ public class Resource{
             System.out.println("Resource Type: " + bufferResource.getResourceType());
                     
         }
+    }
+    
+    public static Resource getResourceFromArray(ArrayList<Resource> inputArrayList, String identifierName) {
+        Iterator inputArrayListIterator = inputArrayList.iterator(); 
+        Resource currentResource; 
+        while (inputArrayListIterator.hasNext()) {
+            currentResource = (Resource) inputArrayListIterator.next(); 
+            if (currentResource.getIdentifier().equals(identifierName)) {
+                return currentResource; 
+            }
+            
+        }
+        return null; 
     }
     
     
