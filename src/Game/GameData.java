@@ -24,7 +24,7 @@ public class GameData {
      */
     public static String[] getLineValue(String inputRegex, String inputString) {
         String processedInputString = inputString.replaceFirst(inputRegex, "");
-        String[] OutputArray = processedInputString.split(GameDataRegex.VALUE_DEFINITION_REGEX);
+        String[] OutputArray = processedInputString.split(GameDataConfigs.VALUE_DEFINITION_REGEX);
         return OutputArray; 
                 
     }
@@ -82,7 +82,7 @@ public class GameData {
                 
                 // Checks if the current line starts with "entryend" 
                 // If so, initialize new set of buffers. 
-                if (currentLine.contains(GameDataRegex.ENTRY_END_REGEX)) {
+                if (currentLine.contains(GameDataConfigs.ENTRY_END_REGEX)) {
                     bufferIdentifier = "";
                     bufferDescription = "";
                     bufferDisplayName = "";
@@ -98,9 +98,9 @@ public class GameData {
                 // Checks if the current line starts with "entrystart" (i.e. data entry has finished.)
                 // If so; add collected data into HashMap. 
                 // Use bufferIdentifier as the "key" and set the respective bufferReferenceDataHashMapEntry as it's value pair.
-                if (currentLine.startsWith(GameDataRegex.ENTRY_START_REGEX)) {
+                if (currentLine.startsWith(GameDataConfigs.ENTRY_START_REGEX)) {
                     // Create new dataHashMapEntry specific for Structure objects. 
-                    bufferReferenceDataEntry = ReferenceDataEntry.newStructureReferenceDataHashMapEntry(
+                    bufferReferenceDataEntry = ReferenceDataEntry.newStructureReferenceDataEntry(
                             bufferIdentifier,
                             bufferDescription,
                             bufferDisplayName, 
@@ -117,71 +117,71 @@ public class GameData {
                     continue; 
                 }
                 // Checks if current line starts with with "input."
-                if (currentLine.startsWith(GameDataRegex.INPUT_RESOURCE_REGEX)) {
+                if (currentLine.startsWith(GameDataConfigs.INPUT_RESOURCE_REGEX)) {
                     // If true, add new Resource object to bufferInputResourceArrayList. 
                     
-                    bufferStringArray = getLineValue(GameDataRegex.INPUT_RESOURCE_REGEX, currentLine);
+                    bufferStringArray = getLineValue(GameDataConfigs.INPUT_RESOURCE_REGEX, currentLine);
                     bufferResource = Resource.newResource(bufferStringArray[0], Double.parseDouble(bufferStringArray[1]));
                     bufferInputResourceArrayList.add(bufferResource);
                     continue; 
                 }
                 
                 // Checks if current line starts with with "output." 
-                if (currentLine.startsWith(GameDataRegex.OUTPUT_RESOURCE_REGEX)) {
+                if (currentLine.startsWith(GameDataConfigs.OUTPUT_RESOURCE_REGEX)) {
                     
                     // If true, add new Resource object to bufferOutputResourceArrayList
-                    bufferStringArray = getLineValue(GameDataRegex.OUTPUT_RESOURCE_REGEX, currentLine); 
+                    bufferStringArray = getLineValue(GameDataConfigs.OUTPUT_RESOURCE_REGEX, currentLine); 
                     bufferResource = Resource.newResource(bufferStringArray[0], Double.parseDouble(bufferStringArray[1]));
                     bufferOutputResourceArrayList.add(bufferResource); 
                     continue; 
                 }
                 
                 //Checks if current line starts with with "cost." 
-                if (currentLine.startsWith(GameDataRegex.COST_RESOURCE_REGEX)) {
+                if (currentLine.startsWith(GameDataConfigs.COST_RESOURCE_REGEX)) {
                     
                     // If true, add new Resource object to bufferCostResourceArrayList
-                    bufferStringArray = getLineValue(GameDataRegex.COST_RESOURCE_REGEX, currentLine); 
+                    bufferStringArray = getLineValue(GameDataConfigs.COST_RESOURCE_REGEX, currentLine); 
                     bufferResource = Resource.newResource(bufferStringArray[0], Double.parseDouble(bufferStringArray[1]));
                     bufferCostResourceArrayList.add(bufferResource); 
                     continue; 
                 }
                 
                 // Checks if current line starts with "identifier"
-                if (currentLine.startsWith(GameDataRegex.INTERNAL_IDENTIFIER_REGEX)) {
-                    bufferStringArray = getLineValue(GameDataRegex.INTERNAL_IDENTIFIER_REGEX, currentLine); 
+                if (currentLine.startsWith(GameDataConfigs.INTERNAL_IDENTIFIER_REGEX)) {
+                    bufferStringArray = getLineValue(GameDataConfigs.INTERNAL_IDENTIFIER_REGEX, currentLine); 
                     bufferIdentifier = bufferStringArray[1]; 
                     continue; 
                 }
                 
                 // Checks if current line starts with "description".
-                if (currentLine.startsWith(GameDataRegex.STRUCTURE_DESCRIPTION_REGEX)) {
+                if (currentLine.startsWith(GameDataConfigs.DISPLAY_DESCRIPTION_REGEX)) {
                     // If true, set bufferDescription to the respective line's value. 
-                    bufferStringArray = getLineValue(GameDataRegex.STRUCTURE_DESCRIPTION_REGEX, currentLine); 
+                    bufferStringArray = getLineValue(GameDataConfigs.DISPLAY_DESCRIPTION_REGEX, currentLine); 
                     bufferDescription = bufferStringArray[1]; 
                     continue; 
                 }
                 
                 // Checks if current line starts with "displayname" 
-                if (currentLine.startsWith(GameDataRegex.DISPLAY_NAME_REGEX)) {
-                    bufferStringArray = getLineValue(GameDataRegex.DISPLAY_NAME_REGEX, currentLine); 
+                if (currentLine.startsWith(GameDataConfigs.DISPLAY_NAME_REGEX)) {
+                    bufferStringArray = getLineValue(GameDataConfigs.DISPLAY_NAME_REGEX, currentLine); 
                     bufferDisplayName = bufferStringArray[1]; 
                     continue; 
                 }
                 
-                if (currentLine.startsWith(GameDataRegex.STRUCTURE_INPUT_EFFICIENCY_REGEX)) {
-                    bufferStringArray = getLineValue(GameDataRegex.STRUCTURE_INPUT_EFFICIENCY_REGEX, currentLine); 
+                if (currentLine.startsWith(GameDataConfigs.STRUCTURE_INPUT_EFFICIENCY_REGEX)) {
+                    bufferStringArray = getLineValue(GameDataConfigs.STRUCTURE_INPUT_EFFICIENCY_REGEX, currentLine); 
                     bufferOutputEfficiency = Double.parseDouble(bufferStringArray[1]); 
                     continue; 
                 }
                 
-                if (currentLine.startsWith(GameDataRegex.STRUCTURE_OUTPUT_EFFICIENCY_REGEX)) {
-                    bufferStringArray = getLineValue(GameDataRegex.STRUCTURE_OUTPUT_EFFICIENCY_REGEX, currentLine); 
+                if (currentLine.startsWith(GameDataConfigs.STRUCTURE_OUTPUT_EFFICIENCY_REGEX)) {
+                    bufferStringArray = getLineValue(GameDataConfigs.STRUCTURE_OUTPUT_EFFICIENCY_REGEX, currentLine); 
                     bufferInputEfficiency = Double.parseDouble(bufferStringArray[1]); 
                     continue; 
                 }
                 
-                if (currentLine.startsWith(GameDataRegex.STRUCTURE_COST_SCALE_FACTOR_REGEX)) {
-                    bufferStringArray = getLineValue(GameDataRegex.STRUCTURE_COST_SCALE_FACTOR_REGEX, currentLine); 
+                if (currentLine.startsWith(GameDataConfigs.STRUCTURE_COST_SCALE_FACTOR_REGEX)) {
+                    bufferStringArray = getLineValue(GameDataConfigs.STRUCTURE_COST_SCALE_FACTOR_REGEX, currentLine); 
                     bufferCostScaleFactor = Double.parseDouble(bufferStringArray[1]); 
                     continue; 
                 }
@@ -226,7 +226,7 @@ public class GameData {
                 currentLine = fileScanner.nextLine().trim(); 
                 // Checks if the current line starts with "entryend" 
                 // If so, initialize new set of buffers. 
-                if (currentLine.contains(GameDataRegex.ENTRY_END_REGEX)) {
+                if (currentLine.contains(GameDataConfigs.ENTRY_END_REGEX)) {
                     bufferIdentifier = "";
                     bufferDescription = "";
                     bufferDisplayName = "";
@@ -237,9 +237,9 @@ public class GameData {
                 // Checks if the current line starts with "entrystart" (i.e. data entry has finished.)
                 // If so; add collected data into HashMap. 
                 // Use bufferIdentifier as the "key" and set the respective bufferReferenceDataHashMapEntry as it's value pair.
-                if (currentLine.startsWith(GameDataRegex.ENTRY_START_REGEX)) {
+                if (currentLine.startsWith(GameDataConfigs.ENTRY_START_REGEX)) {
                     // Create new dataHashMapEntry specific for Structure objects. 
-                    bufferReferenceDataEntry = ReferenceDataEntry.newResourceReferenceDataHashMapEntry(
+                    bufferReferenceDataEntry = ReferenceDataEntry.newResourceReferenceDataEntry(
                             bufferIdentifier,
                             bufferDescription, 
                             bufferDisplayName,
@@ -250,29 +250,29 @@ public class GameData {
                 }
                 
                 // Checks if current line starts with "identifier"
-                if (currentLine.startsWith(GameDataRegex.INTERNAL_IDENTIFIER_REGEX)) {
-                    bufferStringArray = getLineValue(GameDataRegex.INTERNAL_IDENTIFIER_REGEX, currentLine); 
+                if (currentLine.startsWith(GameDataConfigs.INTERNAL_IDENTIFIER_REGEX)) {
+                    bufferStringArray = getLineValue(GameDataConfigs.INTERNAL_IDENTIFIER_REGEX, currentLine); 
                     bufferIdentifier = bufferStringArray[1]; 
                     continue; 
                 }
                 
                 // Checks if current line starts with "description".
-                if (currentLine.startsWith(GameDataRegex.STRUCTURE_DESCRIPTION_REGEX)) {
+                if (currentLine.startsWith(GameDataConfigs.DISPLAY_DESCRIPTION_REGEX)) {
                     // If true, set bufferDescription to the respective line's value. 
-                    bufferStringArray = getLineValue(GameDataRegex.STRUCTURE_DESCRIPTION_REGEX, currentLine); 
+                    bufferStringArray = getLineValue(GameDataConfigs.DISPLAY_DESCRIPTION_REGEX, currentLine); 
                     bufferDescription = bufferStringArray[1]; 
                     continue; 
                 }
                 
                 // Checks if current line starts with "displayname" 
-                if (currentLine.startsWith(GameDataRegex.DISPLAY_NAME_REGEX)) {
-                    bufferStringArray = getLineValue(GameDataRegex.DISPLAY_NAME_REGEX, currentLine); 
+                if (currentLine.startsWith(GameDataConfigs.DISPLAY_NAME_REGEX)) {
+                    bufferStringArray = getLineValue(GameDataConfigs.DISPLAY_NAME_REGEX, currentLine); 
                     bufferDisplayName = bufferStringArray[1]; 
                     continue; 
                 }
                 
-                if (currentLine.startsWith(GameDataRegex.RESOURCE_TYPE_REGEX)) {
-                    bufferStringArray = getLineValue(GameDataRegex.RESOURCE_TYPE_REGEX, currentLine); 
+                if (currentLine.startsWith(GameDataConfigs.RESOURCE_TYPE_REGEX)) {
+                    bufferStringArray = getLineValue(GameDataConfigs.RESOURCE_TYPE_REGEX, currentLine); 
                     bufferResourceType = bufferStringArray[1]; 
                     continue; 
                 }
@@ -288,7 +288,90 @@ public class GameData {
         }
     }
     
-    
+    public static ArrayList<ReferenceDataEntry> readBuildableBodyDataFile(String fileName) {
+        ArrayList<ReferenceDataEntry> outputTable = new ArrayList<>(); 
+        String currentLine; 
+        String[] bufferStringArray; 
+        // Buffer ReferenceDataEntry object. 
+        ReferenceDataEntry bufferReferenceDataEntry; 
+        
+        // Buffer variables for ReferenceDataEntry (resource) 
+        String bufferIdentifier = ""; 
+        String bufferDescription = "";
+        String bufferDisplayName = ""; 
+        String bufferBuildableBodyType = ""; 
+        try {
+            // Tries to open up .txt file with fileName filename. 
+            File openedFile = new File(fileName); 
+            
+            // sets up output Scanner. 
+            Scanner fileScanner = new Scanner(openedFile); 
+            
+            while (fileScanner.hasNextLine()) {
+                currentLine = fileScanner.nextLine().trim(); 
+                // Checks if the current line starts with "entryend" 
+                // If so, initialize new set of buffers. 
+                if (currentLine.contains(GameDataConfigs.ENTRY_END_REGEX)) {
+                    bufferIdentifier = "";
+                    bufferDescription = "";
+                    bufferDisplayName = "";
+                    bufferBuildableBodyType = "";
+                    continue; 
+                }
+                
+                // Checks if the current line starts with "entrystart" (i.e. data entry has finished.)
+                // If so; add collected data into HashMap. 
+                // Use bufferIdentifier as the "key" and set the respective bufferReferenceDataHashMapEntry as it's value pair.
+                if (currentLine.startsWith(GameDataConfigs.ENTRY_START_REGEX)) {
+                    // Create new dataHashMapEntry specific for Structure objects. 
+                    bufferReferenceDataEntry = ReferenceDataEntry.newResourceReferenceDataEntry(
+                            bufferIdentifier,
+                            bufferDescription, 
+                            bufferDisplayName,
+                            bufferBuildableBodyType);
+                    // Put respective buffer entry at the end of the hashmap. 
+                    outputTable.add(bufferReferenceDataEntry);
+                    continue; 
+                }
+                
+                // Checks if current line starts with "identifier"
+                if (currentLine.startsWith(GameDataConfigs.INTERNAL_IDENTIFIER_REGEX)) {
+                    bufferStringArray = getLineValue(GameDataConfigs.INTERNAL_IDENTIFIER_REGEX, currentLine); 
+                    bufferIdentifier = bufferStringArray[1]; 
+                    continue; 
+                }
+                
+                // Checks if current line starts with "description".
+                if (currentLine.startsWith(GameDataConfigs.DISPLAY_DESCRIPTION_REGEX)) {
+                    // If true, set bufferDescription to the respective line's value. 
+                    bufferStringArray = getLineValue(GameDataConfigs.DISPLAY_DESCRIPTION_REGEX, currentLine); 
+                    bufferDescription = bufferStringArray[1]; 
+                    continue; 
+                }
+                
+                // Checks if current line starts with "displayname" 
+                if (currentLine.startsWith(GameDataConfigs.DISPLAY_NAME_REGEX)) {
+                    bufferStringArray = getLineValue(GameDataConfigs.DISPLAY_NAME_REGEX, currentLine); 
+                    bufferDisplayName = bufferStringArray[1]; 
+                    continue; 
+                }
+                
+                if (currentLine.startsWith(GameDataConfigs.BUILDABLEBODY_TYPE_REGEX)) {
+                    bufferStringArray = getLineValue(GameDataConfigs.DISPLAY_NAME_REGEX, currentLine); 
+                    bufferBuildableBodyType = bufferStringArray[1]; 
+                    continue; 
+                }
+                
+            }
+            return outputTable; 
+        }
+        
+        catch (FileNotFoundException e) {
+            System.out.println("The reference file was not found."); 
+            e.printStackTrace(); 
+            return null;
+        }
+    }
     
     /**
      * Uses binary search to find the corresponding ReferenceDataEntry within a reference arrayList. 

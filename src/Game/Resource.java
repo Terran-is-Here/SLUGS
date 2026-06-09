@@ -22,29 +22,42 @@ public class Resource{
      */
     private double resourceAmount;
     
+    /** ReferenceDataEntry of this type of Object, determined by identifierName and is used to gleam other information universal across 
+     * the same type of resource.
+     */
     ReferenceDataEntry referenceDataEntry; 
     
+    /**
+     * Special variable used for resources which are not directly consumed; yet contribute towards a cap (e.g. electricity). 
+     */
+    private double resourceUsed; 
     
     private Resource(
             String _identifierName,
             double _resourceAmount,
-            ReferenceDataEntry _referenceDataEntry) {
+            double _resourceUsed,
+            ReferenceDataEntry _referenceDataEntry
+            ) {
         identifierName = _identifierName; 
         resourceAmount = _resourceAmount; 
         referenceDataEntry = _referenceDataEntry; 
+        resourceUsed = _resourceUsed;
     }
     
     public static Resource newResource(String _identifierName, double _resourceAmount) {
         return new Resource(
                 _identifierName,
                 _resourceAmount,
+                0,
                 GameData.fetchReferenceDataEntry(Game.getResourceReferenceTable(), _identifierName));
     }
+    
     
     public ReferenceDataEntry getReferenceDataTableEntry() {
         return referenceDataEntry; 
     }
     
+    // ##Property Returning methods
     /** 
      * Returns the display name of this Structure object. 
      * @return 
@@ -67,19 +80,35 @@ public class Resource{
      * @return 
      */
     public String getDisplayDescription() {
-        return this.getReferenceDataTableEntry().getDescription(); 
+        return this.referenceDataEntry.getDescription(); 
     }
     
+    /**
+     * Gets the current amount of resources logged within this object.
+     * @return A double representing the resourceAmount property of this object.
+     */
     public double getResourceAmount() {
         return this.resourceAmount; 
     }
     
+    /**
+     * Gets the current type of resource of this object. (i.e. renewable / consumed) 
+     * @return Returns a string specifying the objectType of this specific Resource instance. 
+     */
     public String getResourceType() {
-        return this.getReferenceDataTableEntry().getResourceType(); 
+        return this.referenceDataEntry.getObjectType(); 
     }
     
+    public double getResourceUsedAmount() {
+        return this.resourceUsed; 
+    }
+    //## Property setting methods. 
     public void setResourceAmount(double newValue) {
         this.resourceAmount = newValue; 
+    }
+    
+    public void setResourceUsedAmount (double newValue) {
+        this.resourceUsed = newValue; 
     }
     
     /**
@@ -94,7 +123,7 @@ public class Resource{
             System.out.println("Identifier: " + bufferResource.getIdentifier());
             System.out.println("Resource Amount: " + bufferResource.getResourceAmount()); 
             System.out.println("Resource Display Name: " +bufferResource.getDisplayName()); 
-            System.out.println("Resource Display Description: " +bufferResource.getResourceDisplayDescription()); 
+            System.out.println("Resource Display Description: " +bufferResource.getDisplayDescription()); 
             System.out.println("Resource Type: " + bufferResource.getResourceType());
                     
         }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator; 
 public class BuildableBody{
     
+    
     /**
      * Internal identifier for use within searching and getting visual and type. 
      */
@@ -21,172 +22,255 @@ public class BuildableBody{
     */
     protected ArrayList<Resource> bodyResourceStorage; 
     
-    /** ArrayList of Structure objects that represent the Structure objects currently present in this BuildableBody*/
+    /** ArrayList of Resource Object that dictate the amount of resources allocated to some capacity-limiting purposes (e.g. electricity) */
+    protected ArrayList<Resource> bodyCapacityResourceStorage; 
+    
+    /** ArrayList of Structure objects that represent the Structures currently present in this BuildableBody. */
     protected ArrayList<Structure> bodyStructures; 
     
     /** ArrayList of Vehicle objects that represent the Vehicles currently present in this BuildableBody.*/
     protected ArrayList<Vehicle> bodyVehicles; // Vehicles are currently unimplemented but will be in the future. 
     
+    /** ReferenceDataEntry of this type of Object; determined by identifierName. */ 
     protected ReferenceDataEntry referenceDataEntry; 
     
-    // Methods to return properties; 
-    /** 
-     * Returns the ArrayList of Structures this object has.
+    /** Flag if a BuildableBody is currently accessible to have structures built on it. */ 
+    protected boolean buildableFlag = true; 
+    
+    /** Parent BuildableBody this BuildableBody belongs to*/
+    protected BuildableBody parentBuildableBody; 
+    //## Constructor Methods
+    /**
+     * Internal constructor method of the BuildableBody class.
+     * @param _identifierName The internal identifier name used for internal identification/searching methods.
+     * @param _bodyResourceStorage An ArrayList of Resources this BuildableBody currently holds.
+     * @param _bodyStructures An ArrayList of Structures this BuildableBody currently holds. 
+     * @param _bodyVehicle An ArrayList of Vehicles this BuildableBody currently has present.
+     * @param _referenceDataEntry The reference Data Table entry this instance is linked to. 
+     * @param _parentBuildableBody The parent BuildableBody of this object. 
+     */
+    private BuildableBody(String _identifierName,
+            ArrayList<Resource> _bodyResourceStorage,
+            ArrayList<Structure> _bodyStructures, 
+            ArrayList<Vehicle> _bodyVehicle, 
+            ReferenceDataEntry _referenceDataEntry,
+            BuildableBody _parentBuildableBody) {
+        
+            identifierName = _identifierName; 
+            bodyResourceStorage = _bodyResourceStorage;
+            bodyStructures = _bodyStructures; 
+            bodyVehicles = _bodyVehicle; 
+            referenceDataEntry = _referenceDataEntry;
+            parentBuildableBody = _parentBuildableBody;
+    }
+    
+    /**
+     * Creates a new BuildableBody object with parameters set from the identifierName. 
+     * Automatically sets the Parent BuildableBody as null and must be assigned. 
+     * @param _identifierName
      * @return 
      */
+    public static BuildableBody initializeNewBuildableBody(String _identifierName) {
+        return new BuildableBody(
+                _identifierName,
+                new ArrayList<Resource>(),
+                new ArrayList<Structure>(), 
+                new ArrayList<Vehicle>(),
+                GameData.fetchReferenceDataEntry(Game.getBuildableBodyReferenceTable(), _identifierName),
+                null);
+    }
     
+    //## Property Return Functions ##//
+    
+    /**
+     * Gets the internal identifier of this object.
+     * @return Returns the internal identifierName of this object as a String. 
+     */
     public String getIdentifier() {
         return this.identifierName; 
     }
     
+    /**
+     * Gets this object's data entry in the reference data table. 
+     * @return Returns the referenceDataEntry property of this object. 
+     */
+    public ReferenceDataEntry getReferenceDataTableEntry() {
+        return this.referenceDataEntry; 
+    }
     
-    // To be implemented in the future. 
-    abstract public ReferenceDataEntry getReferenceDataTableEntry(){
-        return 
-    };
+    /**
+     * Gets this object's display name for use in the GUI
+     * @return Returns the displayName field of this object's corresponding ReferenceDataEntry in the reference data table. 
+     */
+    public String getDisplayName() {
+        return this.referenceDataEntry.getDisplayName(); 
+    }
     
+    /**
+     * Gets this object's display description for use in the GUI
+     * @return Returns the displayDescription field of this object's corresponding ReferenceDataEntry in the reference data table. 
+     */
+    public String getDisplayDescription() {
+        return this.referenceDataEntry.getDescription(); 
+    }
+    
+    /**
+     * Gets the current list of Resources present on this object. 
+     * @return Returns the bodyResourceStorage field of this object as an ArrayList of Resource objects.
+     */
+    public ArrayList<Resource> getBodyResourceStorage() {
+        return this.bodyResourceStorage; 
+    }
+    
+    /**
+     * Gets the current list of Structures present on this object. 
+     * @return Returns the bodyStructures field of this object as an ArrayList of Structure objects. 
+     */
     public ArrayList<Structure> getBodyStructures() {
         return this.bodyStructures;
     }
     
     /**
-     * Returns the ArrayList of Resources this object has. 
-     * @return 
-     */
-    public ArrayList<Resource> getBodyResources() {
-        return this.bodyResourceStorage;
-    }
-    
-    /**
-     * Returns the ArrayList of Vehicles this object has. 
-     * @return 
+     * Gets the current list of Vehicles present on this object.
+     * @return Returns an ArrayList of Vehicles which point towards this object's bodyVehicles property.
      */
     public ArrayList<Vehicle> getBodyVehicles() {
-        return this.bodyVehicles; 
+        return this.bodyVehicles;
+    }
+    
+    //##Property Assignment Functions ##//
+    
+    /**
+     * Sets the parentBuildableBody of this object to _newParent.
+     * @param _newParent The new BuildableBody to set this object to be the parent of. 
+     */
+    public void setParentBuildableBody (BuildableBody _newParent) {
+        this.parentBuildableBody = _newParent; 
+    }
+
+    //## Structure Management Functions ##//
+    
+    /**
+     * Checks if a building is present on this BuildableBody through the identifierName of the objects.
+     * @param structureIdentifier String identifier to search for the structure with. 
+     * @return Returns false in the case no match is found, returns true if a match is found. 
+     */
+    public boolean checkIfStructureIsPresent(String structureIdentifier) {
+        Iterator structureIterator = this.getBodyStructures().iterator(); 
+        Structure currentStructure; 
+        
+        while (structureIterator.hasNext()) {
+            currentStructure =(Structure) structureIterator.next(); 
+            if (currentStructure.getIdentifier().equals(structureIdentifier)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /** 
-     * Checks if structureToFind is already present on this Structure object; in which case return true.
-     * If not, return false. Uses linear search.
-     * @param structureToFind A Structure object to find. 
-     * @return 
+     * Checks if a building is present on this BuildableBody; then returns it if it exists. 
+     * @param structureToFindIdentifier The identifier of the Structure object being searched for.
+     * @return Returns the Structure object with the same identifierName as the structure being found. If no match is found, returns null.
      */
-    public Boolean checkIfBuildingIsPresent(Structure structureToFind) {
+    public Structure getStructure (String structureToFindIdentifier) {
         Iterator structureIterator = this.getBodyStructures().iterator(); 
-        Structure currentStructure;
-        // Iterates though every Structure within bodyStructures; 
-        while (structureIterator.hasNext()) {
+        Structure currentStructure; 
+        if (checkIfStructureIsPresent(structureToFindIdentifier)){ 
+            while (structureIterator.hasNext()) {
             currentStructure = (Structure) structureIterator.next(); 
             
-            // Searches linearly to check if the strutcureToFind.structureIdentifier = currentStructure.structureIdentifier.
-            // If a match is found; returns true.
-            if (currentStructure.getIdentifier().equals(structureToFind.getIdentifier())) {
-                return true; 
+            if (currentStructure.getIdentifier().equals(structureToFindIdentifier)) {
+                return currentStructure; 
             }
-            
+            }
+            // Also returns null if structure is not present at all (mainly for Apache Netbeans Error Handling
+            return null; 
+        
+        }
+        else {
+        // Returns null if structure is not present at all. 
+        return null;
+        }
+    }
+    
+    public void updateStructureAmount(String structureToUpdateIdentifier, int newValue) {
+        // Checks if the resource is present first.
+        Structure bufferStructure;
+        if (checkIfStructureIsPresent(structureToUpdateIdentifier)) {
+            bufferStructure = this.getStructure(structureToUpdateIdentifier); 
+            bufferStructure.setStructureAmount(newValue);
+        }
+        // Else, make a new resource object into the body's resource storage.
+        else {
+            bufferStructure = Structure.newStructure(identifierName, newValue, this);
+            this.bodyStructures.add(bufferStructure); 
+        }
+    }
+    
+
+    //## Resource Management Functions ##//
+    
+    /**
+     * Checks if a Resource is present on this BuildableBody through the identifierName of the objects.
+     * @param resourceIdentifier String identifier to search for the structure with. 
+     * @return Returns false in the case no match is found, returns true if a match is found. 
+     */
+    public boolean checkIfResourceIsPresent (String resourceIdentifier) {
+        Iterator resourceIterator = this.getBodyResourceStorage().iterator(); 
+        Resource currentResource; 
+        
+        while (resourceIterator.hasNext()) {
+            currentResource =(Resource) resourceIterator.next(); 
+            if (currentResource.getIdentifier().equals(resourceIdentifier)) {
+                return true;
+            }
         }
         return false;
-    } 
+    }
     
-    
-    /**
-     * Returns the Structure of a linear search of structureToFind in a buildableBody's bodyStructures via comparing their structureName. 
-     * Returns null if the Structure is not found. 
-     * @param structureToFind The structure being found and matched.
-     * @return 
+    /** 
+     * Checks if a building is present on this BuildableBody; then returns it if it exists. 
+     * @param resourceToFindIterator The identifier of the Resource object being searched for.
+     * @return Returns the Resource object with the same identifierName as the resource being found. If no match is found, returns null.
      */
-    public Structure findStructure(Structure structureToFind){
-        Iterator structureIterator = this.getBodyStructures().iterator(); 
-        Structure currentStructure;
-        // Iterates through every Structure within bodyStructures
-        while (structureIterator.hasNext()) {
-            currentStructure = (Structure)structureIterator.next(); 
+    public Resource getResource (String resourceToFindIdentifier) {
+        Iterator resourceIterator = this.getBodyResourceStorage().iterator();
+        Resource currentResource; 
+        if (checkIfResourceIsPresent(resourceToFindIdentifier)){ 
+            while (resourceIterator.hasNext()) {
+            currentResource = (Resource) resourceIterator.next(); 
             
-            // Searches linearly to check if the strutcureToFind.structureIdentifier = currentStructure.structureIdentifier.
-            // If a match is found; returns currentStructure Object.
-            if (currentStructure.getIdentifier().equals(structureToFind.getIdentifier())) {
-                return currentStructure;
-            }
-        }
-        // Returns null if no corresponding Structure is found. 
-        return null; 
-    };
-    
-    /**
-     * Returns the Resource of a linear search of resourceToFind in a buildableBody's bodyResources via comparing their resourceName. 
-     * Returns null if the Resource is not found. 
-     * @param resourceToFind
-     * @return 
-     */
-    public Resource getResource(Resource resourceToFind) {
-    Iterator bodyResourceIterator = this.getBodyResources().iterator(); 
-    Resource currentResource; 
-    
-    // Iterates through every Resource object present within bodyResources. 
-        while (bodyResourceIterator.hasNext()) {
-            currentResource = (Resource) bodyResourceIterator.next();
-            
-            // Searches linarly to check if currentResource is resourceToFind based on their resourceName properties. 
-            // If a match is found; return currentResource. 
-            if(resourceToFind.getIdentifier().equals(currentResource.getIdentifier())) {
+            if (currentResource.getIdentifier().equals(resourceToFindIdentifier)) {
                 return currentResource; 
             }
+            }
+            // Also returns null if structure is not present at all (mainly for Apache Netbeans Error Handling
+            return null; 
+        
         }
-        // Returns null if no corresponding Resource is found. 
-        return null; 
-    }
-    
-    /**
-     * Adds resourceToAdd's resourceAmount value to it's corresponding Resource element within bodyResources.
-     * 
-     * Expects that resourceToUpdate.structureAmount value is the change desired in resource amount. 
-     * 
-     * Creates a new entry if the resource has not yet existed before within that ArrayList with the same data that resourceToUpdate has.
-     * @param resourceToUpdate
-     */
-    public void updateResourceAmount(Resource resourceToUpdate) {
-        
-        // Attempts to get the current Resource object within bodyResources that matches resourceToAdd.
-        Resource resourceFoundToAdd = getResource(resourceToUpdate); 
-        double currentValue; 
-        
-        // In the case in which a match is found; directly add the resourceToAdd's value with resourceFoundToAdd's value.
-        if (resourceFoundToAdd != null) {
-            
-            // set as temporary variable 
-            currentValue = resourceFoundToAdd.getResourceAmount(); 
-            
-            // update resourceFoundToAdd with new value within resourceToAdd. 
-            resourceFoundToAdd.setResourceAmount(currentValue + resourceToUpdate.getResourceAmount());
-        }
-        
-        // If resource is not found at all; directly add as a new object within the ArrayList. 
         else {
-            this.getBodyResources().add(resourceToUpdate); 
+        // Returns null if structure is not present at all. 
+        return null;
         }
     }
     
     /**
-     * Adds structureToUpdate to it's corresponding Structure entry in bodyStructures. 
-     * Expects that the structureToUpdate.structureAmount value is the change desired in structure amount. 
-     * If the Structure object is not currently within bodyStructures via name comparison, create a new Structure with structureQuantity structureAmount. 
-     * @param structureToUpdate
-     * @param structureQuantity 
+     * Updates a resource value based off it's identifier. If a resource is not yet present, creates a new object and sets newValue as it's amount value.
+     * @param resourceToUpdateIdentifier The internal identifier of the resource object being updated.
+     * @param newValue The new value to set the resourceAmount property to. 
      */
-    public void updateStructureAmount (Structure structureToUpdate, int structureQuantity) {
-        Structure buildingBuffer;
-        // In the case in which structureToAdd is already within bodyStructures via comparing structureName:
-        if (this.checkIfBuildingIsPresent(structureToUpdate)) {
-            buildingBuffer = this.findStructure(structureToUpdate);
-            buildingBuffer.updateStructureAmount(structureQuantity);
+    public void updateResourceAmount(String resourceToUpdateIdentifier, double newValue) {
+        // Checks if the resource is present first.
+        Resource bufferResource;
+        if (checkIfResourceIsPresent(resourceToUpdateIdentifier)) {
+            bufferResource = this.getResource(resourceToUpdateIdentifier); 
+            bufferResource.setResourceAmount(newValue);
         }
-        
-        // In the case in which structureToAdd is not already within bodyStructures, create a new Structures object within bodyStructures.
+        // Else, make a new resource object into the body's resource storage.
         else {
-            buildingBuffer = structureToUpdate; 
-            buildingBuffer.setStructureAmount(structureQuantity);
-            this.getBodyStructures().add(buildingBuffer);
+            bufferResource = Resource.newResource(resourceToUpdateIdentifier, newValue);
+            this.bodyResourceStorage.add(bufferResource); 
         }
     }
-           
 }

@@ -16,7 +16,7 @@ public class ReferenceDataEntry {
     private String displayName; 
     
     // Optional graphical definitions
-    private String description; 
+    private String displayDescription; 
     
     // Structure-specific fields. 
     private ArrayList<Resource> inputResourceArrayList; 
@@ -26,8 +26,10 @@ public class ReferenceDataEntry {
     private double inputEfficiency = 1; 
     private double costScaleFactor = 1.0;  
     
-    // Resource-specific fields. 
-    private String resourceType; 
+    // Type of object (mainly for Resource and Structure) 
+    private String objectType; 
+    
+    
     
     /**
      * Creates a new ReferenceDataHashMapObject. Meant to be used as an internal constructor for this function alone. 
@@ -40,11 +42,11 @@ public class ReferenceDataEntry {
      * @param _costScaleFactor The double representing the cost-scaling factor of an object.
      * @param _inputEfficiency The double representing the input efficiency of an object. 
      * @param _outputEfficiency The double representing the output efficiency of an object. 
-     * @param _resourceType A String representing the type of Resource. 
+     * @param _objectType A String representing the specific type of the object (mainly for BuildableBody or Resource) 
      */
     private ReferenceDataEntry(
             String _identifierName,
-            String _description,
+            String _displayDescription,
             String _displayName, 
             ArrayList<Resource> _inputResourceArrayList,
             ArrayList<Resource> _outputResourceArrayList,
@@ -52,9 +54,9 @@ public class ReferenceDataEntry {
             double _costScaleFactor, 
             double _inputEfficiency, 
             double _outputEfficiency, 
-            String _resourceType) {
+            String _objectType) {
         identifierName = _identifierName; 
-        description = _description; 
+        displayDescription = _displayDescription; 
         displayName = _displayName; 
         inputResourceArrayList = _inputResourceArrayList; 
         outputResourceArrayList = _outputResourceArrayList; 
@@ -62,7 +64,7 @@ public class ReferenceDataEntry {
         costScaleFactor = _costScaleFactor; 
         inputEfficiency = _inputEfficiency;
         outputEfficiency = _outputEfficiency; 
-        resourceType = _resourceType; 
+        objectType = _objectType; 
     } 
     
     /**
@@ -79,7 +81,7 @@ public class ReferenceDataEntry {
      * @return 
      */
     
-    public static ReferenceDataEntry newStructureReferenceDataHashMapEntry(
+    public static ReferenceDataEntry newStructureReferenceDataEntry(
             String _identifierName,
             String _description,
             String _displayName, 
@@ -113,7 +115,7 @@ public class ReferenceDataEntry {
      * @param _resourceType The type of resource of a Resource object.
      * @return 
      */
-    public static ReferenceDataEntry newResourceReferenceDataHashMapEntry (
+    public static ReferenceDataEntry newResourceReferenceDataEntry (
                 String _identifierName, 
                 String _description, 
                 String _displayName, 
@@ -131,6 +133,34 @@ public class ReferenceDataEntry {
                 0,
                 _resourceType); 
     };
+    
+    /**
+     * Creates a ReferenceDataEntry Object specifically for BuildableBody objects (and subclasses) within reference data ArrayList tables. Passes all other non-used properties in the class as null or 0.
+     * @param _identifierName Internal identifier of a BuildableBody object. 
+     * @param _description The display description of a BuildableBody object. 
+     * @param _displayName The display name of a BuildableBody object. 
+     * @param _bodyType The type of Body of a BuildableBody object.
+     * @return 
+     */
+    public static ReferenceDataEntry newBuildableBodyReferenceDataEntry(
+                String _identifierName, 
+                String _description, 
+                String _displayName,
+                String _bodyType) {
+            return new ReferenceDataEntry(
+                _identifierName,
+                _description,
+                _displayName, 
+                null,
+                null,
+                null,
+                0, 
+                0,
+                0,
+                _bodyType); 
+    
+    
+    }
     
     /**
      * Returns an empty referenceDataEntry object.
@@ -163,7 +193,7 @@ public class ReferenceDataEntry {
      * @return Returns the display description parameter of this object as a string. 
      */
     public String getDescription() {
-        return this.description; 
+        return this.displayDescription; 
     }
     
     public String getDisplayName() {
@@ -196,8 +226,8 @@ public class ReferenceDataEntry {
         return this.outputEfficiency; 
     }
     
-    public String getResourceType() {
-        return this.resourceType; 
+    public String getObjectType() {
+        return this.objectType; 
     }
     
     

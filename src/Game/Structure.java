@@ -16,6 +16,8 @@ Superclass for all Structures present within the game.
 */
 public class Structure{
     
+    
+    
     /**
      * Internal structure identifier; used for parsing referenceHashMaps for gathering data shared by other 
      * structures of the same identity. 
@@ -30,7 +32,7 @@ public class Structure{
     /**
      * The parent BuildableBody this Structure is currently present on. 
      */
-    protected BuildableBody parentBody; 
+    private BuildableBody parentBody; 
     
     /**
      * If the structure is currently enabled or not (by default set to on) 
@@ -49,6 +51,59 @@ public class Structure{
     
     /** Pointer towards ReferenceDataEntry in reference Data Table. */
     protected ReferenceDataEntry referenceDataEntry; 
+    
+    // Constructor Methods
+    
+    /**
+     * Private internal constructor method for creating Structure objects.
+     * @param _identifierName The internal identifier name used for internal identification/searching.
+     * @param _structureAmount The amount of structures present within this instance of the structure object.
+     * @param _parentBody The parent BuildableBody this structure belongs to. 
+     * @param _enabledFlag A boolean signifying if this structure in it's entirety is toggled on. 
+     * @param _innateOutputEfficiency The unique output efficiency modifier of this specific instance of this type of structure.
+     * @param _innateInputEfficiency The unique input efficiency modifier of this specific instance of this type of structure.
+     * @param _referenceDataEntry The reference Data Table entry this instance belongs to. 
+     */
+    private Structure(
+            String _identifierName,
+            int _structureAmount, 
+            BuildableBody _parentBody,
+            boolean _enabledFlag,
+            double _innateOutputEfficiency, 
+            double _innateInputEfficiency,
+            ReferenceDataEntry _referenceDataEntry) {
+        identifierName = _identifierName;
+        parentBody = _parentBody; 
+        enabledFlag = _enabledFlag; 
+        innateOutputEfficiency = _innateOutputEfficiency; 
+        innateInputEfficiency = _innateInputEfficiency; 
+        referenceDataEntry = _referenceDataEntry; 
+    }
+    
+    /**
+     * Creates a new Structure object; with all non-provided fields set to their default values. 
+     * @param _identifierName The internal identifier name used for internal identification/searching.
+     * @param _structureAmount The amount of structures present within this instance of the structure object.
+     * @param _parentBody The parent BuildableBody this structure belongs to. 
+     * @return A new Structure object with the information provided above; and with innate efficiencies set to 1.0 and with a true enabledFlag value.
+     */
+    public static Structure newStructure (
+            String _identifierName,
+            int _structureAmount,
+            BuildableBody _parentBody) {
+        return new Structure(
+                _identifierName,
+                _structureAmount,
+                _parentBody,
+                true,
+                1.0,
+                1.0,
+                GameData.fetchReferenceDataEntry(Game.getStructureReferenceTable(), _identifierName)); 
+        
+        
+    }
+
+
     // Property Return functions 
     
     /**

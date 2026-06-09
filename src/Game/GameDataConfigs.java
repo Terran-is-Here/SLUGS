@@ -8,14 +8,14 @@ package Game;
  *
  * @author plcau
  */
-public class GameDataRegex {
+public class GameDataConfigs {
         
     //## Universal REGEX
     // Regex used across all objects regardless of type. 
     /**
      * Regex to notate that a specific line's value is relating to the visual description of an object.
      */
-    public final static String STRUCTURE_DESCRIPTION_REGEX = "description"; 
+    public final static String DISPLAY_DESCRIPTION_REGEX = "displaydescription"; 
     
     /**
      * Regex to notate the internal reference name for a referenceDataList. 
@@ -84,4 +84,12 @@ public class GameDataRegex {
     
     public final static String BUILDABLEBODY_TYPE_REGEX = "buildablebodytype"; 
     
+    
+    
+    
+    
+    // ## Other object expectations / formats. 
+    /** String used for dictating that a resource is persistent, that is they tend towards a capacity such as electricity.*/
+    public final static String PERSISTENT_RESOURCE_STRING = "non-consumed"; 
+    public final static String NORMAL_RESOURCE_STRING = "normal"; 
 }
