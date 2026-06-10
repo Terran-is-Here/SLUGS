@@ -12,11 +12,9 @@ package Game;
 import java.util.ArrayList;
 import java.util.Iterator; 
 /*
-Superclass for all Structures present within the game. 
+Main class for all Structures present within the game. 
 */
 public class Structure{
-    
-    
     
     /**
      * Internal structure identifier; used for parsing referenceHashMaps for gathering data shared by other 
@@ -73,6 +71,7 @@ public class Structure{
             double _innateInputEfficiency,
             ReferenceDataEntry _referenceDataEntry) {
         identifierName = _identifierName;
+        structureAmount = _structureAmount; 
         parentBody = _parentBody; 
         enabledFlag = _enabledFlag; 
         innateOutputEfficiency = _innateOutputEfficiency; 
@@ -170,6 +169,14 @@ public class Structure{
      */
     public ArrayList<Resource> getBaseStructureCosts() {
         return this.getReferenceDataTableEntry().getCostResourceArrayList(); 
+    }
+    
+    public double getStructureInnateInputEfficiency() {
+        return this.innateInputEfficiency; 
+    }
+    
+    public double getStructureInnateOutputEfficiency() {
+        return this.innateOutputEfficiency; 
     }
     
     /**
@@ -278,17 +285,76 @@ public class Structure{
     }  
     
     
-    /** Ticks the structure by a single tick; logic dictated by child classes.  **/ 
-    // wip
+    /** Ticks the structure by a single tick; logic can be dictated by child classes.  **/ 
     public void tickStructure() {
         ArrayList<Resource> baseInputResources = this.getReferenceDataTableEntry().getInputResourceArrayList();
         ArrayList<Resource> baseOutputResources = this.getReferenceDataTableEntry().getOutputResourceArrayList(); 
-        
-        boolean hasInputFlag = false; 
         Iterator baseInputResourceIterator = baseInputResources.iterator(); 
         Iterator baseOutputResourceIterator = baseOutputResources.iterator(); 
+        System.out.println(this.getStructureAmount());
+        double effectiveStructures = this.getStructureAmount(); // Assume from the start that all structures can be used at 100%. 
+        double temp; 
+        Resource tempResource;
+        Resource bufferResource; 
+        System.out.println("Testing10");
         
-        
+        // Check if structure has any inputs to begin with. 
+        if (!baseInputResources.isEmpty())
+            System.out.println("Input resources found.");
+        // Check if we are bottlenecks with any input resources; iterate through all input resources.
+            while (baseInputResourceIterator.hasNext()) {
+            
+            // Get current input resource being checked. 
+            bufferResource = (Resource) baseInputResourceIterator.next(); 
+            System.out.println("BufferResource: " + bufferResource.getDisplayName()); 
+            tempResource = this.getParentBuildableBody().getResource(bufferResource.getIdentifier()); 
+            
+            // Check if the resource with the same identifier actually exists within the parent BuildableBody. 
+            if (tempResource != null) {
+                System.out.println("Resource found in parent!");
+                // Uses the equation of bodyResourceAmount / (InputResourceAmount * Innate Input Efficiency * Universal Input Efficiency); 
+                // Temp is equal to the amount of structures sustainable by this amount stockpiled. 
+                temp = tempResource.getResourceAmount() / (bufferResource.getResourceAmount() * this.getStructureInnateInputEfficiency() * this.getStructureInputEfficiency()); 
+                System.out.println(temp);
+                // If Temp (sustainable structures) is less than effective structures previously calculated; set that as the new effective structure amount. 
+                if (temp < effectiveStructures) {;
+                    effectiveStructures = temp; 
+                }
+                continue; 
+            }
+            
+            // If resource does not exist; that means that our body does not have it and therefore we are bottlenecked with no input. 
+            else if (tempResource == null) {
+                System.out.println("Resource not found.");
+                effectiveStructures = 0; 
+                break; 
+            }        
+        }
+        // Reset input resource iterator. 
+        baseInputResourceIterator = baseInputResources.iterator(); 
+        System.out.println("uh oh" + this.getStructureAmount());
+        // If we have any effective structures at all; iterate through using effective amount and update resources of parent BuildableBody accordingly. 
+        if (effectiveStructures > 0) {
+            
+            while (baseInputResourceIterator.hasNext()) {
+                bufferResource = (Resource) baseInputResourceIterator.next(); 
+                
+                // Update all input resources first..
+                tempResource = this.getParentBuildableBody().getResource(bufferResource.getIdentifier()); 
+                temp = tempResource.getResourceAmount() - bufferResource.getResourceAmount() * effectiveStructures * this.getStructureInnateInputEfficiency() * this.getStructureInputEfficiency(); 
+                System.out.println("Input Updated:" + temp);
+                tempResource.setResourceAmount(temp);
+                
+            }
+            while (baseOutputResourceIterator.hasNext()) {
+                bufferResource = (Resource) baseOutputResourceIterator.next(); 
+                
+                // Update all output resources...
+                tempResource = this.getParentBuildableBody().getResource(bufferResource.getIdentifier()); 
+                temp = tempResource.getResourceAmount() + bufferResource.getResourceAmount() * effectiveStructures * this.getStructureInnateOutputEfficiency() * this.getStructureOutputEfficiency();
+                tempResource.setResourceAmount(temp);
+            }
+        }
         
     }; 
     

@@ -1,0 +1,20 @@
+entrystart
+identifier=iron_furnace
+displayname=Iron Furnace 
+displaydescription=This is a test iron furnace. 
+inputefficiency=1.0
+outputefficiency=1.0
+costscalefactor=1.0
+input.iron_ore=10
+output.iron_plate=1
+entryend
+entrystart
+identifier=iron_mine
+displayname=Iron Mine
+displaydescription=This is a test iron furnace. 
+inputefficiency=1.0
+outputefficiency=1.0
+costscalefactor=1.0
+input.iron_ore=10
+output.iron_plate=1
+entryend

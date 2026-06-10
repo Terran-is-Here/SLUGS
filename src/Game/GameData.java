@@ -82,7 +82,7 @@ public class GameData {
                 
                 // Checks if the current line starts with "entryend" 
                 // If so, initialize new set of buffers. 
-                if (currentLine.contains(GameDataConfigs.ENTRY_END_REGEX)) {
+                if (currentLine.contains(GameDataConfigs.ENTRY_START_REGEX)) {
                     bufferIdentifier = "";
                     bufferDescription = "";
                     bufferDisplayName = "";
@@ -98,7 +98,7 @@ public class GameData {
                 // Checks if the current line starts with "entrystart" (i.e. data entry has finished.)
                 // If so; add collected data into HashMap. 
                 // Use bufferIdentifier as the "key" and set the respective bufferReferenceDataHashMapEntry as it's value pair.
-                if (currentLine.startsWith(GameDataConfigs.ENTRY_START_REGEX)) {
+                if (currentLine.startsWith(GameDataConfigs.ENTRY_END_REGEX)) {
                     // Create new dataHashMapEntry specific for Structure objects. 
                     bufferReferenceDataEntry = ReferenceDataEntry.newStructureReferenceDataEntry(
                             bufferIdentifier,
@@ -226,7 +226,7 @@ public class GameData {
                 currentLine = fileScanner.nextLine().trim(); 
                 // Checks if the current line starts with "entryend" 
                 // If so, initialize new set of buffers. 
-                if (currentLine.contains(GameDataConfigs.ENTRY_END_REGEX)) {
+                if (currentLine.contains(GameDataConfigs.ENTRY_START_REGEX)) {
                     bufferIdentifier = "";
                     bufferDescription = "";
                     bufferDisplayName = "";
@@ -237,7 +237,7 @@ public class GameData {
                 // Checks if the current line starts with "entrystart" (i.e. data entry has finished.)
                 // If so; add collected data into HashMap. 
                 // Use bufferIdentifier as the "key" and set the respective bufferReferenceDataHashMapEntry as it's value pair.
-                if (currentLine.startsWith(GameDataConfigs.ENTRY_START_REGEX)) {
+                if (currentLine.startsWith(GameDataConfigs.ENTRY_END_REGEX)) {
                     // Create new dataHashMapEntry specific for Structure objects. 
                     bufferReferenceDataEntry = ReferenceDataEntry.newResourceReferenceDataEntry(
                             bufferIdentifier,
@@ -309,6 +309,7 @@ public class GameData {
             
             while (fileScanner.hasNextLine()) {
                 currentLine = fileScanner.nextLine().trim(); 
+                
                 // Checks if the current line starts with "entryend" 
                 // If so, initialize new set of buffers. 
                 if (currentLine.contains(GameDataConfigs.ENTRY_END_REGEX)) {

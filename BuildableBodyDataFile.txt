@@ -1,0 +1,6 @@
+entrystart
+identifier=earth
+displayname=Earth
+displaydescription=This is Earth, our home.   
+buildablebodytype=planet
+entryend

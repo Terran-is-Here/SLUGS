@@ -71,13 +71,15 @@ public class BuildableBody{
      * @return 
      */
     public static BuildableBody initializeNewBuildableBody(String _identifierName) {
-        return new BuildableBody(
+        BuildableBody buffer = new BuildableBody(
                 _identifierName,
                 new ArrayList<Resource>(),
                 new ArrayList<Structure>(), 
                 new ArrayList<Vehicle>(),
                 GameData.fetchReferenceDataEntry(Game.getBuildableBodyReferenceTable(), _identifierName),
                 null);
+        Game.getBuildableBodyContainerTable().add(buffer); 
+        return buffer; 
     }
     
     //## Property Return Functions ##//
@@ -230,13 +232,14 @@ public class BuildableBody{
     }
     
     /** 
-     * Checks if a building is present on this BuildableBody; then returns it if it exists. 
+     * Checks if a resource is present on this BuildableBody; then returns it if it exists. 
      * @param resourceToFindIterator The identifier of the Resource object being searched for.
      * @return Returns the Resource object with the same identifierName as the resource being found. If no match is found, returns null.
      */
     public Resource getResource (String resourceToFindIdentifier) {
         Iterator resourceIterator = this.getBodyResourceStorage().iterator();
         Resource currentResource; 
+        Resource bufferResource;
         if (checkIfResourceIsPresent(resourceToFindIdentifier)){ 
             while (resourceIterator.hasNext()) {
             currentResource = (Resource) resourceIterator.next(); 
@@ -246,12 +249,14 @@ public class BuildableBody{
             }
             }
             // Also returns null if structure is not present at all (mainly for Apache Netbeans Error Handling
-            return null; 
+            bufferResource = Resource.newResource(resourceToFindIdentifier, 0);
+            return bufferResource; 
         
         }
         else {
-        // Returns null if structure is not present at all. 
-        return null;
+        // Returns null if resource is not present at all. 
+        bufferResource = Resource.newResource(resourceToFindIdentifier, 0);
+            return bufferResource;
         }
     }
     
