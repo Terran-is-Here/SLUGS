@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class ReferenceDataEntry {
     
     // ## Global / universal data fields (required for all ReferenceDataEntry Objects) 
-    private String identifierName; 
+    final private String identifierName; 
     private String displayName; 
     
     // Optional graphical definitions
@@ -29,6 +29,8 @@ public class ReferenceDataEntry {
     // Type of object (mainly for Resource and Structure) 
     private String objectType; 
     
+    //BuildableBody-specific objects.
+    private ArrayList<Resource> depositResourceArrayList; 
     
     
     /**
@@ -51,12 +53,14 @@ public class ReferenceDataEntry {
             ArrayList<Resource> _inputResourceArrayList,
             ArrayList<Resource> _outputResourceArrayList,
             ArrayList<Resource> _costResourceArrayList,
+            ArrayList<Resource> _depositResourceArrayList,
             double _costScaleFactor, 
             double _inputEfficiency, 
             double _outputEfficiency, 
             String _objectType) {
         identifierName = _identifierName; 
         displayDescription = _displayDescription; 
+        depositResourceArrayList = _depositResourceArrayList; 
         displayName = _displayName; 
         inputResourceArrayList = _inputResourceArrayList; 
         outputResourceArrayList = _outputResourceArrayList; 
@@ -100,6 +104,7 @@ public class ReferenceDataEntry {
                 _inputResourceArrayList,
                 _outputResourceArrayList,
                 _costResourceArrayList,
+                null, 
                 _costScaleFactor, 
                 _inputEfficiency,
                 _outputEfficiency,
@@ -128,6 +133,7 @@ public class ReferenceDataEntry {
                 null,
                 null,
                 null,
+                null,
                 0, 
                 0,
                 0,
@@ -146,7 +152,8 @@ public class ReferenceDataEntry {
                 String _identifierName, 
                 String _description, 
                 String _displayName,
-                String _bodyType) {
+                String _bodyType,
+                ArrayList<Resource> _depositResourceArrayList) {
             return new ReferenceDataEntry(
                 _identifierName,
                 _description,
@@ -154,6 +161,7 @@ public class ReferenceDataEntry {
                 null,
                 null,
                 null,
+                _depositResourceArrayList, 
                 0, 
                 0,
                 0,
@@ -174,6 +182,7 @@ public class ReferenceDataEntry {
                 null,
                 null,
                 null,
+                null, 
                 0, 
                 0,
                 0,
@@ -210,6 +219,10 @@ public class ReferenceDataEntry {
     
     public ArrayList<Resource> getCostResourceArrayList() {
         return this.costResourceArrayList;
+    }
+    
+    public ArrayList<Resource> getDepositResourceArrayList() {
+        return this.depositResourceArrayList; 
     }
     
     

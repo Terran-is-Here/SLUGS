@@ -291,31 +291,31 @@ public class Structure{
         ArrayList<Resource> baseOutputResources = this.getReferenceDataTableEntry().getOutputResourceArrayList(); 
         Iterator baseInputResourceIterator = baseInputResources.iterator(); 
         Iterator baseOutputResourceIterator = baseOutputResources.iterator(); 
-        System.out.println(this.getStructureAmount());
+        
         double effectiveStructures = this.getStructureAmount(); // Assume from the start that all structures can be used at 100%. 
         double temp; 
         Resource tempResource;
         Resource bufferResource; 
-        System.out.println("Testing10");
+        
         
         // Check if structure has any inputs to begin with. 
         if (!baseInputResources.isEmpty())
-            System.out.println("Input resources found.");
+            
         // Check if we are bottlenecks with any input resources; iterate through all input resources.
             while (baseInputResourceIterator.hasNext()) {
             
             // Get current input resource being checked. 
             bufferResource = (Resource) baseInputResourceIterator.next(); 
-            System.out.println("BufferResource: " + bufferResource.getDisplayName()); 
+            
             tempResource = this.getParentBuildableBody().getResource(bufferResource.getIdentifier()); 
             
             // Check if the resource with the same identifier actually exists within the parent BuildableBody. 
             if (tempResource != null) {
-                System.out.println("Resource found in parent!");
+                
                 // Uses the equation of bodyResourceAmount / (InputResourceAmount * Innate Input Efficiency * Universal Input Efficiency); 
                 // Temp is equal to the amount of structures sustainable by this amount stockpiled. 
                 temp = tempResource.getResourceAmount() / (bufferResource.getResourceAmount() * this.getStructureInnateInputEfficiency() * this.getStructureInputEfficiency()); 
-                System.out.println(temp);
+                
                 // If Temp (sustainable structures) is less than effective structures previously calculated; set that as the new effective structure amount. 
                 if (temp < effectiveStructures) {;
                     effectiveStructures = temp; 
@@ -325,14 +325,14 @@ public class Structure{
             
             // If resource does not exist; that means that our body does not have it and therefore we are bottlenecked with no input. 
             else if (tempResource == null) {
-                System.out.println("Resource not found.");
+                
                 effectiveStructures = 0; 
                 break; 
             }        
         }
         // Reset input resource iterator. 
         baseInputResourceIterator = baseInputResources.iterator(); 
-        System.out.println("uh oh" + this.getStructureAmount());
+        
         // If we have any effective structures at all; iterate through using effective amount and update resources of parent BuildableBody accordingly. 
         if (effectiveStructures > 0) {
             
@@ -342,7 +342,7 @@ public class Structure{
                 // Update all input resources first..
                 tempResource = this.getParentBuildableBody().getResource(bufferResource.getIdentifier()); 
                 temp = tempResource.getResourceAmount() - bufferResource.getResourceAmount() * effectiveStructures * this.getStructureInnateInputEfficiency() * this.getStructureInputEfficiency(); 
-                System.out.println("Input Updated:" + temp);
+                
                 tempResource.setResourceAmount(temp);
                 
             }
@@ -358,7 +358,74 @@ public class Structure{
         
     }; 
     
-    
+         public static void buildStructure(BuildableBody bodyToBuildOn, String structureIdentifier, int structuresToBuild) {
+        
+        // Get current available resources present in bodyToBuildOn; 
+        ArrayList<Resource> parentBodyResources = bodyToBuildOn.getBodyResourceStorage(); 
+        
+        // Get a reference data entry of an object with our structureIdentifier (mainly for resource cost tables); 
+        ReferenceDataEntry structureReference = GameData.fetchReferenceDataEntry(Game.getStructureReferenceTable(), structureIdentifier); 
+        
+        // Buffer variables for iteration. 
+        Resource currentResource; 
+        Resource currentResourceTaken; 
+        Structure currentStructure; 
+        Iterator structureResourceCostIterator = structureReference.getCostResourceArrayList().iterator(); 
+        
+        double tempResourceAmount;
+        
+        // Check if there's sufficient materials to perform this build order to begin with. 
+        // Prematurely ends buy transaction if there are not enough resources. 
+        while (structureResourceCostIterator.hasNext()) {
+            // Get current resource in the arraylist of structure build costs.
+            currentResource = (Resource) structureResourceCostIterator.next(); 
+            
+            // Checks if the current resource is present at all on the parent body. 
+            if (bodyToBuildOn.checkIfResourceIsPresent(currentResource.getIdentifier())){
+                // If present, calculates current build cost; 
+                tempResourceAmount = currentResource.getResourceAmount() * structuresToBuild; 
+                
+                // Compare current buildcost with current resource stockpile in bodyToBuildOn. 
+                // If current body resources in this type of resource are less than the total build cost; build order does not go through. 
+                if (Resource.getResourceFromArray(parentBodyResources, currentResource.getIdentifier()).getResourceAmount() < tempResourceAmount) {
+                    // Implement "insufficient resources" logic here. 
+                    return;
+                }
+            
+            }
+            else {
+                // Implement "insufficient resources" logic here. 
+                return; 
+            }
+         }
+        
+        
+        // If all resources are available; check if a Structure object of the same identifier already exists. 
+        if (bodyToBuildOn.checkIfStructureIsPresent(structureIdentifier)) {
+            // If it exists; then add it to the count of structures present with that object and update resoruce tables accordingly. 
+            currentStructure = bodyToBuildOn.getStructure(structureIdentifier); 
+            currentStructure.setStructureAmount(currentStructure.getStructureAmount() + structuresToBuild);
+        }
+        // If structure is not already inherently present; create new structure object and add to the BuildableBody's ArrayList of structures. 
+        else {
+            currentStructure = Structure.newStructure(structureIdentifier, structuresToBuild, bodyToBuildOn); 
+            bodyToBuildOn.getBodyStructures().add(currentStructure); 
+        }
+        
+        structureResourceCostIterator = structureReference.getCostResourceArrayList().iterator(); 
+        // Then iterate through costs and update parentBody resource amounts accordingly. 
+        while (structureResourceCostIterator.hasNext()) {
+            currentResourceTaken = (Resource) structureResourceCostIterator.next();
+            currentResource = bodyToBuildOn.getResource(currentResourceTaken.getIdentifier()); 
+            tempResourceAmount = currentResource.getResourceAmount() - (currentResourceTaken.getResourceAmount() * structuresToBuild); 
+            currentResource.setResourceAmount(tempResourceAmount);
+                    
+        }
+    }
+     
+    public static void sellStructure(BuildableBody parentBody, String structureIdentifier, int structuresToSell) {
+        
+    }
 }
 
 

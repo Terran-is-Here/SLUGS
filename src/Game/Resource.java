@@ -122,6 +122,7 @@ public class Resource{
     public static void debugResourceArrayList(ArrayList<Resource> inputArrayList) {
         Iterator resourceListIterator = inputArrayList.iterator(); 
         Resource bufferResource;
+        System.out.println("Resource Objects present:" + inputArrayList.size());
         while (resourceListIterator.hasNext()) {
             bufferResource = (Resource)resourceListIterator.next();
             System.out.println("Identifier: " + bufferResource.getIdentifier());
@@ -136,6 +137,7 @@ public class Resource{
     public static Resource getResourceFromArray(ArrayList<Resource> inputArrayList, String identifierName) {
         Iterator inputArrayListIterator = inputArrayList.iterator(); 
         Resource currentResource; 
+        
         while (inputArrayListIterator.hasNext()) {
             currentResource = (Resource) inputArrayListIterator.next(); 
             if (currentResource.getIdentifier().equals(identifierName)) {

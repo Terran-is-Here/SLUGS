@@ -22,6 +22,11 @@ public class BuildableBody{
     */
     protected ArrayList<Resource> bodyResourceStorage; 
     
+    /**
+     * ArrayList of Resource objects that dictate the amount of Resources currently within this BuildableBody's internal deposits (i.e. not readily accessible). 
+     */
+    protected ArrayList<Resource> bodyResourceDeposits; 
+    
     /** ArrayList of Resource Object that dictate the amount of resources allocated to some capacity-limiting purposes (e.g. electricity) */
     protected ArrayList<Resource> bodyCapacityResourceStorage; 
     
@@ -51,6 +56,7 @@ public class BuildableBody{
      */
     private BuildableBody(String _identifierName,
             ArrayList<Resource> _bodyResourceStorage,
+            ArrayList<Resource> _bodyResourceDeposits, 
             ArrayList<Structure> _bodyStructures, 
             ArrayList<Vehicle> _bodyVehicle, 
             ReferenceDataEntry _referenceDataEntry,
@@ -58,6 +64,7 @@ public class BuildableBody{
         
             identifierName = _identifierName; 
             bodyResourceStorage = _bodyResourceStorage;
+            bodyResourceDeposits = _bodyResourceDeposits; 
             bodyStructures = _bodyStructures; 
             bodyVehicles = _bodyVehicle; 
             referenceDataEntry = _referenceDataEntry;
@@ -74,6 +81,7 @@ public class BuildableBody{
         BuildableBody buffer = new BuildableBody(
                 _identifierName,
                 new ArrayList<Resource>(),
+                new ArrayList<Resource>(), 
                 new ArrayList<Structure>(), 
                 new ArrayList<Vehicle>(),
                 GameData.fetchReferenceDataEntry(Game.getBuildableBodyReferenceTable(), _identifierName),
@@ -248,14 +256,19 @@ public class BuildableBody{
                 return currentResource; 
             }
             }
+            
             // Also returns null if structure is not present at all (mainly for Apache Netbeans Error Handling
+            
             bufferResource = Resource.newResource(resourceToFindIdentifier, 0);
+            this.getBodyResourceStorage().add(bufferResource);
             return bufferResource; 
         
         }
         else {
         // Returns null if resource is not present at all. 
+        
         bufferResource = Resource.newResource(resourceToFindIdentifier, 0);
+        this.getBodyResourceStorage().add(bufferResource);
             return bufferResource;
         }
     }
@@ -276,6 +289,72 @@ public class BuildableBody{
         else {
             bufferResource = Resource.newResource(resourceToUpdateIdentifier, newValue);
             this.bodyResourceStorage.add(bufferResource); 
+        }
+    }
+    
+    
+     public static void buildStructure(BuildableBody bodyToBuildOn, String structureIdentifier, int structuresToBuild) {
+        
+        // Get current available resources present in bodyToBuildOn; 
+        ArrayList<Resource> parentBodyResources = bodyToBuildOn.getBodyResourceStorage(); 
+        
+        // Get a reference data entry of an object with our structureIdentifier (mainly for resource cost tables); 
+        ReferenceDataEntry structureReference = GameData.fetchReferenceDataEntry(Game.getStructureReferenceTable(), structureIdentifier); 
+        
+        // Buffer variables for iteration. 
+        Resource currentResource; 
+        Resource currentResourceTaken; 
+        Structure currentStructure; 
+        Iterator structureResourceCostIterator = structureReference.getCostResourceArrayList().iterator(); 
+        
+        double tempResourceAmount;
+        
+        // Check if there's sufficient materials to perform this build order to begin with. 
+        // Prematurely ends buy transaction if there are not enough resources. 
+        while (structureResourceCostIterator.hasNext()) {
+            // Get current resource in the arraylist of structure build costs.
+            currentResource = (Resource) structureResourceCostIterator.next(); 
+            
+            // Checks if the current resource is present at all on the parent body. 
+            if (bodyToBuildOn.checkIfResourceIsPresent(currentResource.getIdentifier())){
+                // If present, calculates current build cost; 
+                tempResourceAmount = currentResource.getResourceAmount() * structuresToBuild; 
+                
+                // Compare current buildcost with current resource stockpile in bodyToBuildOn. 
+                // If current body resources in this type of resource are less than the total build cost; build order does not go through. 
+                if (Resource.getResourceFromArray(parentBodyResources, currentResource.getIdentifier()).getResourceAmount() < tempResourceAmount) {
+                    // Implement "insufficient resources" logic here. 
+                    return;
+                }
+            
+            }
+            else {
+                // Implement "insufficient resources" logic here. 
+                return; 
+            }
+         }
+        
+        
+        // If all resources are available; check if a Structure object of the same identifier already exists. 
+        if (bodyToBuildOn.checkIfStructureIsPresent(structureIdentifier)) {
+            // If it exists; then add it to the count of structures present with that object and update resoruce tables accordingly. 
+            currentStructure = bodyToBuildOn.getStructure(structureIdentifier); 
+            currentStructure.setStructureAmount(currentStructure.getStructureAmount() + structuresToBuild);
+        }
+        // If structure is not already inherently present; create new structure object and add to the BuildableBody's ArrayList of structures. 
+        else {
+            currentStructure = Structure.newStructure(structureIdentifier, structuresToBuild, bodyToBuildOn); 
+            bodyToBuildOn.getBodyStructures().add(currentStructure); 
+        }
+        
+        structureResourceCostIterator = structureReference.getCostResourceArrayList().iterator(); 
+        // Then iterate through costs and update parentBody resource amounts accordingly. 
+        while (structureResourceCostIterator.hasNext()) {
+            currentResourceTaken = (Resource) structureResourceCostIterator.next();
+            currentResource = bodyToBuildOn.getResource(currentResourceTaken.getIdentifier()); 
+            tempResourceAmount = currentResource.getResourceAmount() - (currentResourceTaken.getResourceAmount() * structuresToBuild); 
+            currentResource.setResourceAmount(tempResourceAmount);
+                    
         }
     }
 }

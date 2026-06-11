@@ -378,10 +378,16 @@ public class GameData {
      * Uses binary search to find the corresponding ReferenceDataEntry within a reference arrayList. 
      * @param parentDataTable The parent data table in which to search. 
      * @param identifierToSearch The identifier to search by. 
-     * @return 
+     * @return Returns the respective reference data entry if an entry exists with identifierToSearch. 
      */
     public static ReferenceDataEntry fetchReferenceDataEntry(ArrayList <ReferenceDataEntry> parentDataTable, String identifierToSearch) {
-        return getReferenceDataEntryStep(parentDataTable, identifierToSearch, 0, parentDataTable.size()-1); 
+        
+        if (identifierToSearch != null) {
+            return getReferenceDataEntryStep(parentDataTable, identifierToSearch, 0, parentDataTable.size()-1); }
+        else {
+            return null; 
+        }
+        
     }
     
     /**
