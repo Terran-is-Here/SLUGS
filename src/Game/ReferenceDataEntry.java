@@ -11,30 +11,25 @@ package Game;
 import java.util.ArrayList; 
 public class ReferenceDataEntry extends AbstractGameObject{
     
-    // ## Global / universal data fields (required for all ReferenceDataEntry Objects) 
-    // identifierName in Game.AbstractGameObject contains the identifier object for this ReferenceDataEntry. 
-    private String displayName; 
+    // Display Fields
+    private String displayName; // Display name of this object (if it exists) 
+    private String displayDescription; // Display description of this object (used for GUI) 
     
-    // Optional graphical definitions
-    private String displayDescription; 
+    // Internal fields / used for simulation
+    private ArrayList<Resource> inputResources;  //ArrayList for input resources for an object; such as a Structure. 
+    private ArrayList<Resource> outputResources; //ArrayList for output resources for an object; such as a Structure. 
+    private ArrayList<Resource> costResources;   //ArrayList for the cost to build an object.
+    private ArrayList<Resource> depositResources; //Array for the internal deposits of an object.
+    private double outputEfficiency = 1.0; //double representing the efficiency of an object to output something.  
+    private double inputEfficiency = 1.0; //double representing the efficiency of an object in terms of consuming inputs. 
+    private double costScaleFactor = 1.0; //double representing how much the cost of an object scales exponentially. 
+    private String objectType; // Type of object (mainly for Resource and Structure and another subset of identification) 
     
-    // Structure-specific fields. 
-    private ArrayList<Resource> inputResourceArrayList; 
-    private ArrayList<Resource> outputResourceArrayList; 
-    private ArrayList<Resource> costResourceArrayList; 
-    private double outputEfficiency = 1; 
-    private double inputEfficiency = 1; 
-    private double costScaleFactor = 1.0;  
     
-    // Type of object (mainly for Resource and Structure) 
-    private String objectType; 
-    
-    //BuildableBody-specific objects.
-    private ArrayList<Resource> depositResourceArrayList; 
     
     
     /**
-     * Creates a new ReferenceDataHashMapObject. Meant to be used as an internal constructor for this function alone. 
+     * Creates a new ReferenceDataEntry. Meant to be used as an internal constructor for this function alone. 
      * @param _identifierName The unique internal identifier of this object; mirrored in both a HashMap's Key and part of the resulting value. 
      * @param _description A string used for displaying the description in the GUI. 
      * @param _displayName A string used for displaying a name in the GUI.
@@ -47,147 +42,66 @@ public class ReferenceDataEntry extends AbstractGameObject{
      * @param _objectType A String representing the specific type of the object (mainly for BuildableBody or Resource) 
      */
     private ReferenceDataEntry(
-            String _identifierName,
+            String _displayName,
             String _displayDescription,
-            String _displayName, 
-            ArrayList<Resource> _inputResourceArrayList,
-            ArrayList<Resource> _outputResourceArrayList,
-            ArrayList<Resource> _costResourceArrayList,
-            ArrayList<Resource> _depositResourceArrayList,
-            double _costScaleFactor, 
+            ArrayList<Resource> _inputResources,
+            ArrayList<Resource> _outputResources, 
+            ArrayList<Resource> _costResources,
+            ArrayList<Resource> _depositResources,
+            double _outputEfficiency,
             double _inputEfficiency, 
-            double _outputEfficiency, 
+            double _costScaleFactor,
+            String _objectType
+                ) {
+            displayName = _displayName; 
+            displayDescription = _displayDescription; 
+            inputResources = _inputResources; 
+            outputResources = _outputResources; 
+            costResources = _costResources;
+            depositResources = _depositResources; 
+            outputEfficiency = _outputEfficiency;
+            inputEfficiency = _inputEfficiency; 
+            costScaleFactor = _costScaleFactor; 
+            objectType = _objectType; 
+        
+        
+            
+    } 
+    
+    public static ReferenceDataEntry newReferenceDataEntry(
+            String _displayName,
+            String _displayDescription,
+            ArrayList<Resource> _inputResources,
+            ArrayList<Resource> _outputResources, 
+            ArrayList<Resource> _costResources,
+            ArrayList<Resource> _depositResources,
+            double _outputEfficiency,
+            double _inputEfficiency, 
+            double _costScaleFactor,
             String _objectType) {
-        identifierName = _identifierName; 
-        displayDescription = _displayDescription; 
-        depositResourceArrayList = _depositResourceArrayList; 
-        displayName = _displayName; 
-        inputResourceArrayList = _inputResourceArrayList; 
-        outputResourceArrayList = _outputResourceArrayList; 
-        costResourceArrayList = _costResourceArrayList; 
-        costScaleFactor = _costScaleFactor; 
-        inputEfficiency = _inputEfficiency;
-        outputEfficiency = _outputEfficiency; 
-        objectType = _objectType; 
-    } 
-    
-    /**
-     * Creates and returns a ReferenceDataHashMapEntry Object specifically for Structure reference data HashMaps. Passes _resourceType as null. 
-     * @param _identifierName The internal identifier of a structure. 
-     * @param _description The description of the structure to display.
-     * @param _displayName The name of the structure to visually display.
-     * @param _inputResourceArrayList Optional resource ArrayList denoting input resources.
-     * @param _outputResourceArrayList Optional resource ArrayList denoting output resources.
-     * @param _costResourceArrayList Optional resource ArrayList denoting resource cost to create an object. 
-     * @param _costScaleFactor double value denoting the amount this structure's cost scales as more are created on the same body. 
-     * @param _inputEfficiency double value denoting a flat modifier to inputResources. 
-     * @param _outputEfficiency double value denoting a flat modifier to outputResources. 
-     * @return 
-     */
-    
-    public static ReferenceDataEntry newStructureReferenceDataEntry(
-            String _identifierName,
-            String _description,
-            String _displayName, 
-            ArrayList<Resource> _inputResourceArrayList,
-            ArrayList<Resource> _outputResourceArrayList,
-            ArrayList<Resource> _costResourceArrayList, 
-            double _costScaleFactor, 
-            double _inputEfficiency, 
-            double _outputEfficiency) {
-        
-        
         return new ReferenceDataEntry(
-                _identifierName,
-                _description,
-                _displayName, 
-                _inputResourceArrayList,
-                _outputResourceArrayList,
-                _costResourceArrayList,
-                null, 
-                _costScaleFactor, 
-                _inputEfficiency,
+                _displayName,
+                _displayDescription,
+                _inputResources,
+                _outputResources,
+                _costResources,
+                _depositResources,
                 _outputEfficiency,
-                null); 
-        
-    } 
-    
-    /**
-     * Creates and returns a ReferenceDataHashMapEntry Object specifically for Resource reference data HashMaps. Passes all other non-used properties in the class as null or 0.
-     * @param _identifierName Internal identifier of a Resource object. 
-     * @param _description The display description of a Resource object. 
-     * @param _displayName The display name of a Resource object. 
-     * @param _resourceType The type of resource of a Resource object.
-     * @return 
-     */
-    public static ReferenceDataEntry newResourceReferenceDataEntry (
-                String _identifierName, 
-                String _description, 
-                String _displayName, 
-                String _resourceType
-    ) {
-    return new ReferenceDataEntry(
-                _identifierName,
-                _description,
-                _displayName, 
-                null,
-                null,
-                null,
-                null,
-                0, 
-                0,
-                0,
-                _resourceType); 
-    };
-    
-    /**
-     * Creates a ReferenceDataEntry Object specifically for BuildableBody objects (and subclasses) within reference data ArrayList tables. Passes all other non-used properties in the class as null or 0.
-     * @param _identifierName Internal identifier of a BuildableBody object. 
-     * @param _description The display description of a BuildableBody object. 
-     * @param _displayName The display name of a BuildableBody object. 
-     * @param _bodyType The type of Body of a BuildableBody object.
-     * @return 
-     */
-    public static ReferenceDataEntry newBuildableBodyReferenceDataEntry(
-                String _identifierName, 
-                String _description, 
-                String _displayName,
-                String _bodyType,
-                ArrayList<Resource> _depositResourceArrayList) {
-            return new ReferenceDataEntry(
-                _identifierName,
-                _description,
-                _displayName, 
-                null,
-                null,
-                null,
-                _depositResourceArrayList, 
-                0, 
-                0,
-                0,
-                _bodyType); 
-    
+                _inputEfficiency,
+                _costScaleFactor,
+                _objectType);
     
     }
     
     /**
-     * Returns an empty referenceDataEntry object.
-     * @return 
+     * Create an empty ReferenceDataEntry with all fields initialized as either null or 1.0. 
+     * @return An empty referenceDataEntry. 
      */
-    public static ReferenceDataEntry emptyReference() {
-        return new ReferenceDataEntry(
-                null,
-                null,
-                null, 
-                null,
-                null,
-                null,
-                null, 
-                0, 
-                0,
-                0,
-                null); 
+    public static ReferenceDataEntry newEmptyReferenceDataEntry() {
+        ReferenceDataEntry buffer = new ReferenceDataEntry(null,null,null,null,null,null,1.0,1.0,1.0,null);
+        return buffer; 
     }
+    
     
     /**
      * Fetches the internal identifier name of a ReferenceDataEntry. 
@@ -210,19 +124,19 @@ public class ReferenceDataEntry extends AbstractGameObject{
     }
     
     public ArrayList<Resource> getInputResourceArrayList() {
-        return this.inputResourceArrayList;
+        return this.inputResources;
     }
     
     public ArrayList<Resource> getOutputResourceArrayList() {
-        return this.outputResourceArrayList; 
+        return this.outputResources; 
     }
     
     public ArrayList<Resource> getCostResourceArrayList() {
-        return this.costResourceArrayList;
+        return this.costResources;
     }
     
     public ArrayList<Resource> getDepositResourceArrayList() {
-        return this.depositResourceArrayList; 
+        return this.depositResources; 
     }
     
     

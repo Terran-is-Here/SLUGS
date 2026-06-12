@@ -75,14 +75,17 @@ public class GameDataConfigs {
     public final static String COST_RESOURCE_REGEX = "basecost."; 
     
     
-    // ##Resource-Specific REGEX
     
-    public final static String RESOURCE_TYPE_REGEX = "resourcetype"; 
+    /**
+     * Regex to notate that a specific line's value is relating to it's type (as a String)
+     */
+    public final static String OBJECT_TYPE_REGEX = "type"; 
     
     
     // ##BuildableBody Specific REGEX
+    public final static String BUILDABLEBODY_DEPOSIT_REGEX = "deposit.";
     
-    public final static String BUILDABLEBODY_TYPE_REGEX = "buildablebodytype"; 
+    
     
     
     
