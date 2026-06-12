@@ -4,9 +4,24 @@ displayname=Iron Ore
 displaydescription=This is some iron ore.  
 resourcetype=normal
 entryend
+
 entrystart
 identifier=iron_plate
 displayname=Iron Plate
 displaydescription=This is some iron plates.
 resourcetype=normal
+entryend
+
+entrystart
+identifier=test_material1
+displayname=Refined Quartz
+displaydescription=this is a description that is also very long and is meant to stress test mechanics. 
+resourcetype=normal 
+entryend
+
+entrystart
+identifier=test_material2
+displayname=a
+displaydescription=this is a description that is also very long and is meant to stress test mechanics. 
+resourcetype=normal 
 entryend

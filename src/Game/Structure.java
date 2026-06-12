@@ -14,13 +14,8 @@ import java.util.Iterator;
 /*
 Main class for all Structures present within the game. 
 */
-public class Structure{
+public class Structure extends AbstractGameObject{
     
-    /**
-     * Internal structure identifier; used for parsing referenceHashMaps for gathering data shared by other 
-     * structures of the same identity. 
-     */
-    protected String identifierName; 
     
     /**
      * The amount of structures present within this object. 
@@ -47,8 +42,6 @@ public class Structure{
      */
     protected double innateInputEfficiency = 1.0;
     
-    /** Pointer towards ReferenceDataEntry in reference Data Table. */
-    protected ReferenceDataEntry referenceDataEntry; 
     
     // Constructor Methods
     
@@ -105,15 +98,6 @@ public class Structure{
 
     // Property Return functions 
     
-    /**
-     * Gets the related data entry within the reference HashMap. 
-     * @return Returns the related data entry within the reference dataTable.
-     */
-    
-    public ReferenceDataEntry getReferenceDataTableEntry() {
-        return referenceDataEntry; 
-    }
-    
     /** 
      * Returns the display name of this Structure object. 
      * @return 
@@ -123,13 +107,8 @@ public class Structure{
         return this.getReferenceDataTableEntry().getDisplayName(); 
     }
     
-    /**
-     * Returns the internal identifier of this Structure Object. 
-     * @return 
-     */
-    public String getIdentifier() {
-        return identifierName; 
-    }
+
+
     
     /**
      * Returns the display description of this Structure object via reference HashMap. 

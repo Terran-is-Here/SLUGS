@@ -10,22 +10,14 @@ package Game;
  */
 import java.util.ArrayList; 
 import java.util.Iterator; 
-public class Resource{
+public class Resource extends AbstractGameObject{
     
-    /**
-     * The internal identifier of this Resource Object, used to gain information about this Resource from a data reference Hashmap. 
-     */
-    final private String identifierName;
+    
     
     /**
      * The amount of resources currently present within the object. 
      */
     private double resourceAmount;
-    
-    /** ReferenceDataEntry of this type of Object, determined by identifierName and is used to gleam other information universal across 
-     * the same type of resource.
-     */
-    ReferenceDataEntry referenceDataEntry; 
     
     /**
      * Special variable used for resources which are not directly consumed; yet contribute towards a cap (e.g. electricity). 

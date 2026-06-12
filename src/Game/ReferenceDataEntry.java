@@ -9,10 +9,10 @@ package Game;
  * @author plcau
  */
 import java.util.ArrayList; 
-public class ReferenceDataEntry {
+public class ReferenceDataEntry extends AbstractGameObject{
     
     // ## Global / universal data fields (required for all ReferenceDataEntry Objects) 
-    final private String identifierName; 
+    // identifierName in Game.AbstractGameObject contains the identifier object for this ReferenceDataEntry. 
     private String displayName; 
     
     // Optional graphical definitions

@@ -30,6 +30,14 @@ public class GameData {
     }
     
     /**
+     * WOrk in progress. 
+     * @param fileName
+     * @return 
+     */
+    public static ArrayList<ReferenceDataEntry> readDataFileAsReferenceTable(String fileName) {
+        return null; 
+    }
+    /**
      * Reads fileName and returns a HashMap with internal identifiers as keys, and their respective ReferenceDataHashMapEntries as their value. 
      * @param fileName
      * @return 

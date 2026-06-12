@@ -9,12 +9,21 @@ package guiObjects;
  * @author plcau
  */
 import Game.Game;
-import guiObjects.testPanel;
+import Game.*; 
 import java.awt.BorderLayout;
+import javax.swing.Box; 
+import java.awt.Component; 
+import java.awt.Container; 
+import java.util.Random; 
+import java.util.ArrayList; 
+import java.util.Iterator; 
 public class GameGuiContainer extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GameGuiContainer.class.getName());
-
+    private Random rng = new Random(); 
+    ArrayList<SingleResourceDisplayPanel> buffer = new ArrayList<>(); 
+    SingleResourceDisplayPanel testingthing; 
+    Resource bufferResource; 
     /**
      * Creates new form GameGuiContainer
      */
@@ -22,17 +31,34 @@ public class GameGuiContainer extends javax.swing.JFrame {
         initComponents();
         //setExtendedState(MAXIMIZED_BOTH); 
         MainGamePanel.add(new MainBodyContainer(), BorderLayout.NORTH); 
-        MainGamePanel.repaint(); 
-        MainGamePanel.revalidate(); 
+        updateUI(MainGamePanel); 
+        for (int i = 0; i < 40; i++) {
+            System.out.println("skibidi");
+            bufferResource = Resource.newResource("iron_ore", rng.nextInt(40000)); 
+            buffer.add(new SingleResourceDisplayPanel(bufferResource)); 
+        }
+        int j = 0;
+        Iterator bufferIterator = buffer.iterator(); 
+        while (bufferIterator.hasNext()) {
+            System.out.println("aaa");
+            testingthing = (SingleResourceDisplayPanel) bufferIterator.next(); 
+            testingthing.setIndex(j);
+            j++; 
+            testingthing.updateColor();
+            StructureContainerPanel.add(testingthing); 
+        }
+        updateUI(StructureContainerPanel); 
+        updateUI(MainGamePanel); 
         updateUI(); 
-        
-        
     }
+    public void updateUI(Container ContainerObject) {
+        ContainerObject.repaint();
+        ContainerObject.revalidate(); 
+    }
+    
     public void updateUI() {
-        repaint();
+        repaint(); 
         revalidate(); 
-                
-             
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -43,9 +69,11 @@ public class GameGuiContainer extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        StructureContainerPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         MainGamePanel = new javax.swing.JPanel();
         headerPanelContainer = new javax.swing.JPanel();
+        jScrollPane1 = jScrollPane1 = new javax.swing.JScrollPane(StructureContainerPanel);
+        StructureContainerPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -56,6 +84,12 @@ public class GameGuiContainer extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
 
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Body Resources");
+        jLabel1.setAlignmentX(0.5F);
+        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(Game.GAME_NAME);
         setBackground(new java.awt.Color(102, 102, 102));
@@ -64,19 +98,6 @@ public class GameGuiContainer extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
         setSize(new java.awt.Dimension(1280, 720));
-
-        StructureContainerPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout StructureContainerPanelLayout = new javax.swing.GroupLayout(StructureContainerPanel);
-        StructureContainerPanel.setLayout(StructureContainerPanelLayout);
-        StructureContainerPanelLayout.setHorizontalGroup(
-            StructureContainerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 303, Short.MAX_VALUE)
-        );
-        StructureContainerPanelLayout.setVerticalGroup(
-            StructureContainerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 697, Short.MAX_VALUE)
-        );
 
         MainGamePanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         MainGamePanel.setPreferredSize(new java.awt.Dimension(972, 218));
@@ -92,6 +113,26 @@ public class GameGuiContainer extends javax.swing.JFrame {
             headerPanelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 26, Short.MAX_VALUE)
         );
+
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setToolTipText("");
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jScrollPane1.setColumnHeaderView(jLabel1);
+        jScrollPane1.setMaximumSize(new java.awt.Dimension(250, 800));
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(250, 800));
+        jScrollPane1.setRequestFocusEnabled(false);
+        jScrollPane1.setViewportView(StructureContainerPanel);
+
+        StructureContainerPanel.setBackground(GuiColors.RESOURCE_BACKGROUND_COLOR1);
+        StructureContainerPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        StructureContainerPanel.setForeground(GuiColors.BASE_TEXT_COLOR);
+        StructureContainerPanel.setAlignmentX(0.5F);
+        StructureContainerPanel.setMaximumSize(new java.awt.Dimension(250, 80000));
+        StructureContainerPanel.setMinimumSize(new java.awt.Dimension(250, 800));
+        StructureContainerPanel.setPreferredSize(new java.awt.Dimension(250, 800));
+        StructureContainerPanel.setLayout(new javax.swing.BoxLayout(StructureContainerPanel, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane1.setViewportView(StructureContainerPanel);
 
         jMenu1.setText("Game");
 
@@ -126,21 +167,21 @@ public class GameGuiContainer extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(MainGamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 975, Short.MAX_VALUE)
+                    .addComponent(MainGamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1027, Short.MAX_VALUE)
                     .addComponent(headerPanelContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, 0)
-                .addComponent(StructureContainerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(StructureContainerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(headerPanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(MainGamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, 0)
+                        .addComponent(MainGamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         pack();
@@ -154,6 +195,7 @@ public class GameGuiContainer extends javax.swing.JFrame {
     private javax.swing.JPanel MainGamePanel;
     private javax.swing.JPanel StructureContainerPanel;
     private javax.swing.JPanel headerPanelContainer;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -163,5 +205,6 @@ public class GameGuiContainer extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

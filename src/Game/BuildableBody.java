@@ -10,13 +10,10 @@ package Game;
  */
 import java.util.ArrayList; 
 import java.util.Iterator; 
-public class BuildableBody{
+public class BuildableBody extends AbstractGameObject{
     
     
-    /**
-     * Internal identifier for use within searching and getting visual and type. 
-     */
-    protected String identifierName; 
+    
     /**
      * ArrayList of Resource objects that dictate the amount of Resources currently in this BuildableBody's storage. 
     */
@@ -36,8 +33,7 @@ public class BuildableBody{
     /** ArrayList of Vehicle objects that represent the Vehicles currently present in this BuildableBody.*/
     protected ArrayList<Vehicle> bodyVehicles; // Vehicles are currently unimplemented but will be in the future. 
     
-    /** ReferenceDataEntry of this type of Object; determined by identifierName. */ 
-    protected ReferenceDataEntry referenceDataEntry; 
+    
     
     /** Flag if a BuildableBody is currently accessible to have structures built on it. */ 
     protected boolean buildableFlag = true; 
@@ -54,7 +50,7 @@ public class BuildableBody{
      * @param _referenceDataEntry The reference Data Table entry this instance is linked to. 
      * @param _parentBuildableBody The parent BuildableBody of this object. 
      */
-    private BuildableBody(String _identifierName,
+    protected BuildableBody(String _identifierName,
             ArrayList<Resource> _bodyResourceStorage,
             ArrayList<Resource> _bodyResourceDeposits, 
             ArrayList<Structure> _bodyStructures, 
@@ -92,21 +88,6 @@ public class BuildableBody{
     
     //## Property Return Functions ##//
     
-    /**
-     * Gets the internal identifier of this object.
-     * @return Returns the internal identifierName of this object as a String. 
-     */
-    public String getIdentifier() {
-        return this.identifierName; 
-    }
-    
-    /**
-     * Gets this object's data entry in the reference data table. 
-     * @return Returns the referenceDataEntry property of this object. 
-     */
-    public ReferenceDataEntry getReferenceDataTableEntry() {
-        return this.referenceDataEntry; 
-    }
     
     /**
      * Gets this object's display name for use in the GUI
@@ -253,6 +234,7 @@ public class BuildableBody{
             currentResource = (Resource) resourceIterator.next(); 
             
             if (currentResource.getIdentifier().equals(resourceToFindIdentifier)) {
+                
                 return currentResource; 
             }
             }
@@ -261,6 +243,7 @@ public class BuildableBody{
             
             bufferResource = Resource.newResource(resourceToFindIdentifier, 0);
             this.getBodyResourceStorage().add(bufferResource);
+            Utilities.quickSort(this.bodyResourceStorage);
             return bufferResource; 
         
         }
@@ -269,6 +252,7 @@ public class BuildableBody{
         
         bufferResource = Resource.newResource(resourceToFindIdentifier, 0);
         this.getBodyResourceStorage().add(bufferResource);
+        Utilities.quickSort(this.bodyResourceStorage);
             return bufferResource;
         }
     }
@@ -288,6 +272,7 @@ public class BuildableBody{
         // Else, make a new resource object into the body's resource storage.
         else {
             bufferResource = Resource.newResource(resourceToUpdateIdentifier, newValue);
+            Utilities.quickSort(this.bodyResourceStorage);
             this.bodyResourceStorage.add(bufferResource); 
         }
     }

@@ -8,7 +8,7 @@ package Game;
  *
  * @author plcau
  */
-import guiObjects.GameGuiContainer;
+import guiObjects.*;
 import java.util.ArrayList;
 import java.util.Iterator; 
 public class Game {
@@ -18,6 +18,7 @@ public class Game {
     final static String RESOURCE_DATA_FILE = "ResourceDataFile.txt"; 
     final static String BUILDABLEBODY_DATA_FILE = "BuildableBodyDataFile.txt"; 
     final static String PLANET_DATA_FILE = ""; 
+    static BuildableBody currentScope; 
     
     // Other graphical string thingys
     final static public String GAME_NAME = "Space Logistics Utilitarian Guidance System (S.L.U.G.S) v0.0.1"; 
@@ -27,6 +28,7 @@ public class Game {
             lastTime = (int)System.currentTimeMillis(),
             targetTime = lastTime + targetMillis;
     
+    public static GameGuiContainer GameContainer; 
     /**
      * Reference HashMap containing all information on the base information of Structure objects. 
      */
@@ -42,7 +44,7 @@ public class Game {
         Resource test3 = Resource.newResource("iron_ore", 100); 
         test.getBodyResourceStorage().add(test3); 
         
-        GameGuiContainer newContainer = new GameGuiContainer(); 
+        GameContainer = new GameGuiContainer(); 
         java.awt.EventQueue.invokeLater(() -> newContainer.setVisible(true));
         test2.tickStructure();
         System.out.println("things still happen after.");
@@ -57,26 +59,37 @@ public class Game {
         structureReferenceTable = GameData.readStructureDataFile(STRUCTURE_DATA_FILE);
         buildableBodyReferenceTable = GameData.readBuildableBodyDataFile(BUILDABLEBODY_DATA_FILE); 
         System.out.println("File loading successful.");
-        Utilities.quickSortReferenceData(resourceReferenceTable);
-        Utilities.quickSortReferenceData(structureReferenceTable);
-        Utilities.quickSortReferenceData(buildableBodyReferenceTable);
+        Utilities.quickSort(resourceReferenceTable);
+        Utilities.quickSort(structureReferenceTable);
+        Utilities.quickSort(buildableBodyReferenceTable);
         }
     
     
     /**
      * Main game loop. 
      */
-    public static void mainLoopTick() {
-        Iterator buildableBodyIterator = getBuildableBodyContainerTable().iterator(); 
+    public static void tickGame() {
+        Iterator gameBuildableBodyIterator = buildableBodyTable.iterator(); 
         Iterator structureIterator; 
-        BuildableBody currentBuildableBody = BuildableBody.initializeNewBuildableBody(null); 
+        BuildableBody currentBuildableBody; 
         Structure currentStructure; 
-        while (buildableBodyIterator.hasNext())
-            currentBuildableBody = (BuildableBody)buildableBodyIterator.next(); 
+        // Update all internal storages by iterating through all bodies present; then iterating across all structures within and ticking them.
+        while (gameBuildableBodyIterator.hasNext()) {
+            currentBuildableBody = (BuildableBody) gameBuildableBodyIterator.next();
             structureIterator = currentBuildableBody.getBodyStructures().iterator(); 
-            while (structureIterator.hasNext()){
-                
+            while (structureIterator.hasNext()) {
+                currentStructure = (Structure) structureIterator.next(); 
+                currentStructure.tickStructure();
             }
+        }
+        
+        
+        // Then, update Game UI properties.  
+        //First, update resource table
+        
+        // Then update game UI 
+        GameContainer.updateUI();
+        
     }
     
     /**
