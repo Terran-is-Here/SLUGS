@@ -26,10 +26,11 @@ public class ResourceDisplayPanel extends javax.swing.JPanel {
     
     
     private ResourceDisplayPanel(Resource _resourceToDisplay, int _index) {
-        System.out.println("Please work");
         resourceToDisplay = _resourceToDisplay; 
         index = _index; 
         initComponents();
+        updateColor(); 
+        updateDisplay(this);
         
     }
     public static ResourceDisplayPanel newResourceDisplayPanel(Resource _resourceToDisplay, int _index) {
@@ -83,14 +84,14 @@ public class ResourceDisplayPanel extends javax.swing.JPanel {
         lblDeltaResource = new javax.swing.JLabel();
 
         setBackground(effectiveColor);
-        setMaximumSize(new java.awt.Dimension(230, 20));
-        setMinimumSize(new java.awt.Dimension(230, 15));
+        setMaximumSize(new java.awt.Dimension(230, 22));
+        setMinimumSize(new java.awt.Dimension(230, 17));
         setName(""); // NOI18N
         setPreferredSize(new java.awt.Dimension(300,VERTICAL_SIZING));
         setLayout(new java.awt.GridBagLayout());
 
         lblResourceDisplayName.setBackground(effectiveColor);
-        lblResourceDisplayName.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblResourceDisplayName.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblResourceDisplayName.setForeground(GuiColors.BASE_TEXT_COLOR);
         lblResourceDisplayName.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblResourceDisplayName.setText(resourceToDisplay.getDisplayName());
@@ -106,7 +107,7 @@ public class ResourceDisplayPanel extends javax.swing.JPanel {
         add(lblResourceDisplayName, gridBagConstraints);
 
         lblResourceAmount.setBackground(effectiveColor);
-        lblResourceAmount.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblResourceAmount.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblResourceAmount.setForeground(GuiColors.BASE_TEXT_COLOR);
         lblResourceAmount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblResourceAmount.setText(Double.toString(resourceToDisplay.getResourceAmount()));
@@ -120,7 +121,7 @@ public class ResourceDisplayPanel extends javax.swing.JPanel {
         add(lblResourceAmount, gridBagConstraints);
 
         lblDeltaResource.setBackground(effectiveColor);
-        lblDeltaResource.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblDeltaResource.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblDeltaResource.setForeground(GuiColors.BASE_TEXT_COLOR);
         lblDeltaResource.setText("0.0/day");
         lblDeltaResource.setAlignmentX(0.5F);

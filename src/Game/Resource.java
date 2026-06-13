@@ -186,7 +186,6 @@ public class Resource extends AbstractGameObject{
          
         // Check first if the GUI object acutally exists. If it doesnt; create a new object. 
         if (this.resourceDisplayPanel == null) {
-            System.out.println("New GUI object created");
             this.resourceDisplayPanel = ResourceDisplayPanel.newResourceDisplayPanel(this, currentIndex); 
         }
         

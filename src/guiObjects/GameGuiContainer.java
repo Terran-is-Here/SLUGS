@@ -22,7 +22,7 @@ public class GameGuiContainer extends javax.swing.JFrame {
     /**
      * Creates new form GameGuiContainer
      */
-    ResourceDisplayContainer resourceDisplayPanel = new ResourceDisplayContainer(); 
+    public ResourceDisplayContainer resourceDisplayPanel = new ResourceDisplayContainer(); 
     
     public GameGuiContainer() {
         
@@ -35,6 +35,8 @@ public class GameGuiContainer extends javax.swing.JFrame {
         ContainerObject.repaint();
         ContainerObject.revalidate(); 
     }
+    
+    
     
     public void updateUI() {
         repaint(); 
@@ -52,7 +54,8 @@ public class GameGuiContainer extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         MainGamePanel = new javax.swing.JPanel();
         headerPanelContainer = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane(resourceDisplayPanel);
+        jButton1 = new javax.swing.JButton();
+        ScrlResourceDisplay = new javax.swing.JScrollPane(resourceDisplayPanel);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -65,7 +68,7 @@ public class GameGuiContainer extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Body Resources");
+        jLabel1.setText("Resources");
         jLabel1.setAlignmentX(0.5F);
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
@@ -82,27 +85,37 @@ public class GameGuiContainer extends javax.swing.JFrame {
         MainGamePanel.setPreferredSize(new java.awt.Dimension(972, 218));
         MainGamePanel.setLayout(new java.awt.BorderLayout(5, 5));
 
+        jButton1.setText("tickGame()");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
         javax.swing.GroupLayout headerPanelContainerLayout = new javax.swing.GroupLayout(headerPanelContainer);
         headerPanelContainer.setLayout(headerPanelContainerLayout);
         headerPanelContainerLayout.setHorizontalGroup(
             headerPanelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(headerPanelContainerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         headerPanelContainerLayout.setVerticalGroup(
             headerPanelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 26, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerPanelContainerLayout.createSequentialGroup()
+                .addGap(0, 6, Short.MAX_VALUE)
+                .addComponent(jButton1))
         );
 
-        jScrollPane1.setViewportView(resourceDisplayPanel);
-        jScrollPane1.setToolTipText("");
-        jScrollPane1.setColumnHeaderView(jLabel1);
-        jScrollPane1.setMaximumSize(new java.awt.Dimension(250, 800));
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(250, 690));
-        jScrollPane1.setName(""); // NOI18N
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(250, 690));
-        jScrollPane1.setRequestFocusEnabled(false);
-        jScrollPane1.setVerifyInputWhenFocusTarget(false);
-        jScrollPane1.setViewportView(resourceDisplayPanel);
+        ScrlResourceDisplay.setViewportView(resourceDisplayPanel);
+        ScrlResourceDisplay.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        ScrlResourceDisplay.setToolTipText("");
+        ScrlResourceDisplay.setViewportBorder(null);
+        ScrlResourceDisplay.setColumnHeaderView(jLabel1);
+        ScrlResourceDisplay.setMaximumSize(new java.awt.Dimension(250, 590));
+        ScrlResourceDisplay.setMinimumSize(new java.awt.Dimension(250, 590));
+        ScrlResourceDisplay.setName(""); // NOI18N
+        ScrlResourceDisplay.setPreferredSize(new java.awt.Dimension(250, 690));
+        ScrlResourceDisplay.setRequestFocusEnabled(false);
+        ScrlResourceDisplay.setVerifyInputWhenFocusTarget(false);
+        ScrlResourceDisplay.setViewportView(resourceDisplayPanel);
 
         jMenu1.setText("Game");
 
@@ -140,14 +153,14 @@ public class GameGuiContainer extends javax.swing.JFrame {
                     .addComponent(MainGamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1027, Short.MAX_VALUE)
                     .addComponent(headerPanelContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(ScrlResourceDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ScrlResourceDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(headerPanelContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
@@ -157,13 +170,20 @@ public class GameGuiContainer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Game.tickGame();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MainGamePanel;
+    private javax.swing.JScrollPane ScrlResourceDisplay;
     private javax.swing.JPanel headerPanelContainer;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -174,6 +194,5 @@ public class GameGuiContainer extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

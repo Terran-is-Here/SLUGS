@@ -46,7 +46,9 @@ public class Game {
         startGame(); 
         // For now, set initial scope to be the first object created. In terms of testing; create this. 
         
-        
+        // Add 10 iron mines to test.
+        getCurrentScope().getBodyStructures().add(Structure.newStructure("iron_mine", 10, getCurrentScope())); 
+        getCurrentScope().getBodyStructures().add(Structure.newStructure("iron_furnace", 1, getCurrentScope())); 
         // Create GUI and set it visible after things are loaded
         GameContainer = new GameGuiContainer(); 
         
@@ -94,10 +96,6 @@ public class Game {
             while (referenceDataEntryIterator.hasNext()){
                 referenceDataEntry = (ReferenceDataEntry) referenceDataEntryIterator.next(); 
                 buffer = BuildableBody.initializeNewBuildableBody(referenceDataEntry.getIdentifier());
-                for (int i = 0; i < 95; i++) {
-                buffer.getBodyResourceStorage().add(Resource.newResource("iron_ore", 400));
-                }
-                
             }
             // Get the first indexed object and set as current game scope. 
             setCurrentScope(Game.getBuildableBodyContainerTable().get(0));
@@ -108,12 +106,14 @@ public class Game {
      * Main game loop. 
      */
     public static void tickGame() {
+        
         Iterator gameBuildableBodyIterator = buildableBodyTable.iterator(); 
         Iterator structureIterator; 
         BuildableBody currentBuildableBody; 
         Structure currentStructure; 
         // Update all internal storages by iterating through all bodies present; then iterating across all structures within and ticking them.
         while (gameBuildableBodyIterator.hasNext()) {
+            
             currentBuildableBody = (BuildableBody) gameBuildableBodyIterator.next();
             structureIterator = currentBuildableBody.getBodyStructures().iterator(); 
             while (structureIterator.hasNext()) {
@@ -127,6 +127,7 @@ public class Game {
         //First, update resource table
         
         // Then update game UI 
+        GameContainer.resourceDisplayPanel.readNewResourceTable(getCurrentScope().getBodyResourceStorage());
         GameContainer.updateUI();
         
     }
@@ -162,13 +163,13 @@ public class Game {
     
     
     public static void setCurrentScope(BuildableBody scopeToMoveTo) {
-        System.out.println("Current Scope moved");
+        
         currentScope = scopeToMoveTo; 
         // Probably add GUI update logic here..?
     }
     
     public static BuildableBody getCurrentScope() {
-        System.out.println("What's going on?");
+        
         return currentScope; 
     }
     
