@@ -32,7 +32,7 @@ public class Resource extends AbstractGameObject{
      */
     private double resourceUsed; 
     
-    
+    private boolean isInitial = true; 
     /**
      * Private constructor for Resource objects. 
      * @param _identifierName Internal identifier for this Resource. 
@@ -129,7 +129,12 @@ public class Resource extends AbstractGameObject{
     }
     //## Property setting methods. 
     public void setResourceAmount(double newValue) {
-        this.pastResourceAmount = this.resourceAmount; 
+        if (this.isInitial){
+            this.pastResourceAmount = this.resourceAmount;
+            this.isInitial = false; 
+        }
+            
+        
         this.resourceAmount = newValue; 
     }
     
@@ -183,9 +188,11 @@ public class Resource extends AbstractGameObject{
      * @param currentIndex The current index of this resource object in terms of being displayed.
      */
     public void updateResourceDisplay(int currentIndex) {
-         
+         this.isInitial = true;
         // Check first if the GUI object acutally exists. If it doesnt; create a new object. 
         if (this.resourceDisplayPanel == null) {
+            
+            
             this.resourceDisplayPanel = ResourceDisplayPanel.newResourceDisplayPanel(this, currentIndex); 
         }
         

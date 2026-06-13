@@ -67,4 +67,27 @@ public class Utilities {
     
         return (small+1); 
     }
+    
+    public static String getSign(double number) {
+        String buffer; 
+        buffer = Double.toString(Math.signum(number));
+        System.out.println(buffer);
+        if (buffer.equals("1.0")) {
+            return "+";
+        }
+        else {
+            return ""; 
+        }
+    }
+    
+    public static String getDate(int dateValue) {
+        int totalValue = dateValue; 
+        int year = (dateValue/365); 
+        totalValue -= year*365; 
+        int month = totalValue/31;
+        totalValue -= month*31;
+        int day = totalValue; 
+        String output = "Cycle: " + String.valueOf(year + 1) + " Month: " + String.valueOf(month + 1) + " Day: " + String.valueOf(day + 1); 
+        return output;
+    }
 }

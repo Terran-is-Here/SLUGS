@@ -41,10 +41,10 @@ public class ResourceDisplayPanel extends javax.swing.JPanel {
     
     public void updateValue() {
         if (resourceToDisplay.getPreviousResourceValue() == 0) {
-            lblDeltaResource.setText("+0.0/day"); 
+            lblDeltaResource.setText("0.0/day"); 
         }
         else {
-            lblDeltaResource.setText(String.valueOf(resourceToDisplay.getDeltaResource()) + "/day"); 
+            lblDeltaResource.setText(Game.Utilities.getSign(resourceToDisplay.getDeltaResource())+ " " + String.valueOf(resourceToDisplay.getDeltaResource()) + " / day"); 
         }
         lblResourceAmount.setText(Double.toString(resourceToDisplay.getResourceAmount()));
         updateDisplay(lblResourceAmount); 
@@ -69,6 +69,8 @@ public class ResourceDisplayPanel extends javax.swing.JPanel {
     public void setIndex(int _index) {
         this.index = _index; 
     }
+    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

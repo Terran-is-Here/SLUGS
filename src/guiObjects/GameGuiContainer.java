@@ -39,6 +39,7 @@ public class GameGuiContainer extends javax.swing.JFrame {
     
     
     public void updateUI() {
+        lblDateHeader.setText(Utilities.getDate(Game.gameDate));
         repaint(); 
         revalidate(); 
     }
@@ -54,7 +55,7 @@ public class GameGuiContainer extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         MainGamePanel = new javax.swing.JPanel();
         headerPanelContainer = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        lblDateHeader = new javax.swing.JLabel();
         ScrlResourceDisplay = new javax.swing.JScrollPane(resourceDisplayPanel);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -65,6 +66,8 @@ public class GameGuiContainer extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
+        jMenu6 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -85,24 +88,10 @@ public class GameGuiContainer extends javax.swing.JFrame {
         MainGamePanel.setPreferredSize(new java.awt.Dimension(972, 218));
         MainGamePanel.setLayout(new java.awt.BorderLayout(5, 5));
 
-        jButton1.setText("tickGame()");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        headerPanelContainer.setLayout(new java.awt.GridBagLayout());
 
-        javax.swing.GroupLayout headerPanelContainerLayout = new javax.swing.GroupLayout(headerPanelContainer);
-        headerPanelContainer.setLayout(headerPanelContainerLayout);
-        headerPanelContainerLayout.setHorizontalGroup(
-            headerPanelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(headerPanelContainerLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        headerPanelContainerLayout.setVerticalGroup(
-            headerPanelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerPanelContainerLayout.createSequentialGroup()
-                .addGap(0, 6, Short.MAX_VALUE)
-                .addComponent(jButton1))
-        );
+        lblDateHeader.setText("jLabel2");
+        headerPanelContainer.add(lblDateHeader, new java.awt.GridBagConstraints());
 
         ScrlResourceDisplay.setViewportView(resourceDisplayPanel);
         ScrlResourceDisplay.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -142,6 +131,15 @@ public class GameGuiContainer extends javax.swing.JFrame {
         jMenu5.setText("Vessel Management");
         jMenuBar1.add(jMenu5);
 
+        jMenu6.setText("tickGame");
+        jMenu6.addActionListener(this::jMenu6ActionPerformed);
+
+        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
+        jMenu6.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu6);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -170,10 +168,14 @@ public class GameGuiContainer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jMenu6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu6ActionPerformed
         // TODO add your handling code here:
-        Game.tickGame();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jMenu6ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        Game.tickGame(); 
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -183,16 +185,18 @@ public class GameGuiContainer extends javax.swing.JFrame {
     private javax.swing.JPanel MainGamePanel;
     private javax.swing.JScrollPane ScrlResourceDisplay;
     private javax.swing.JPanel headerPanelContainer;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JLabel lblDateHeader;
     // End of variables declaration//GEN-END:variables
 }

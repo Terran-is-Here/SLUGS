@@ -19,8 +19,10 @@ public class Game {
     final static String BUILDABLEBODY_DATA_FILE = "BuildableBodyDataFile.txt"; 
     static BuildableBody currentScope; 
     static Boolean saveFileLoadFlag = false; 
+    static Boolean gameTickFinished = false; 
+    public static int gameDate = 365; 
     // Other graphical string thingys
-    final static public String GAME_NAME = "Space Logistics Utilitarian Guidance System (S.L.U.G.S) v0.0.2"; 
+    final static public String GAME_NAME = "Space Logistics Utilitarian Guidance System (S.L.U.G.S) v0.1.3"; 
     static private ArrayList<Resource> globalResources = new ArrayList<>(); 
     
     // Game runspeed settings
@@ -106,7 +108,8 @@ public class Game {
      * Main game loop. 
      */
     public static void tickGame() {
-        
+        gameTickFinished = false; 
+        gameDate++; 
         Iterator gameBuildableBodyIterator = buildableBodyTable.iterator(); 
         Iterator structureIterator; 
         BuildableBody currentBuildableBody; 
@@ -127,6 +130,7 @@ public class Game {
         //First, update resource table
         
         // Then update game UI 
+        gameTickFinished = true; 
         GameContainer.resourceDisplayPanel.readNewResourceTable(getCurrentScope().getBodyResourceStorage());
         GameContainer.updateUI();
         
