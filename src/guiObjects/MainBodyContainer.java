@@ -5,17 +5,26 @@
 package guiObjects;
 
 /**
- *
+ * Container JPanel for when a BuildableBody is currently being focused on. 
  * @author plcau
  */
 import java.awt.BorderLayout;
+import Game.Game; 
+import Game.BuildableBody; 
+import javax.swing.JFrame; 
+import javax.swing.BoxLayout; 
+import javax.swing.JDialog; 
+import javax.swing.SwingUtilities; 
 public class MainBodyContainer extends javax.swing.JPanel {
-
+    
+    BuildableBody buildableBodyFocus; 
     /**
      * Creates new form mainContainer
      */
     public MainBodyContainer() {
         initComponents();
+        
+        buildableBodyFocus = Game.getCurrentScope(); 
     }
 
     /**
@@ -31,12 +40,26 @@ public class MainBodyContainer extends javax.swing.JPanel {
         MnuBtnSurface = new javax.swing.JMenu();
         MnuBtnOrbit = new javax.swing.JMenu();
         MenuBtnVesselManagement = new javax.swing.JMenu();
+        pnlStructureDisplay = new javax.swing.JPanel();
+        pnlOrbitalDisplay = new javax.swing.JPanel();
+        pnlVesselDisplay = new javax.swing.JPanel();
         PnlSystemNavigation = new javax.swing.JPanel();
         PnlImage = new javax.swing.JPanel();
         PnlImageDescription = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         PnlMainScreen = new javax.swing.JPanel();
+        pnlMainScreenContent = new javax.swing.JPanel();
 
         MnuBtnSurface.setText("Surface");
+        MnuBtnSurface.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                MnuBtnSurfaceMenuSelected(evt);
+            }
+        });
         MenuNavigationBar.add(MnuBtnSurface);
 
         MnuBtnOrbit.setText("Orbit");
@@ -44,6 +67,39 @@ public class MainBodyContainer extends javax.swing.JPanel {
 
         MenuBtnVesselManagement.setText("Vessel Management");
         MenuNavigationBar.add(MenuBtnVesselManagement);
+
+        javax.swing.GroupLayout pnlStructureDisplayLayout = new javax.swing.GroupLayout(pnlStructureDisplay);
+        pnlStructureDisplay.setLayout(pnlStructureDisplayLayout);
+        pnlStructureDisplayLayout.setHorizontalGroup(
+            pnlStructureDisplayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        pnlStructureDisplayLayout.setVerticalGroup(
+            pnlStructureDisplayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout pnlOrbitalDisplayLayout = new javax.swing.GroupLayout(pnlOrbitalDisplay);
+        pnlOrbitalDisplay.setLayout(pnlOrbitalDisplayLayout);
+        pnlOrbitalDisplayLayout.setHorizontalGroup(
+            pnlOrbitalDisplayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        pnlOrbitalDisplayLayout.setVerticalGroup(
+            pnlOrbitalDisplayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout pnlVesselDisplayLayout = new javax.swing.GroupLayout(pnlVesselDisplay);
+        pnlVesselDisplay.setLayout(pnlVesselDisplayLayout);
+        pnlVesselDisplayLayout.setHorizontalGroup(
+            pnlVesselDisplayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        pnlVesselDisplayLayout.setVerticalGroup(
+            pnlVesselDisplayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setPreferredSize(new java.awt.Dimension(975, 672));
         setRequestFocusEnabled(false);
@@ -76,19 +132,33 @@ public class MainBodyContainer extends javax.swing.JPanel {
 
         PnlImageDescription.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
         javax.swing.GroupLayout PnlImageDescriptionLayout = new javax.swing.GroupLayout(PnlImageDescription);
         PnlImageDescription.setLayout(PnlImageDescriptionLayout);
         PnlImageDescriptionLayout.setHorizontalGroup(
             PnlImageDescriptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 198, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlImageDescriptionLayout.createSequentialGroup()
+                .addContainerGap(69, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(53, 53, 53))
         );
         PnlImageDescriptionLayout.setVerticalGroup(
             PnlImageDescriptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 370, Short.MAX_VALUE)
+            .addGroup(PnlImageDescriptionLayout.createSequentialGroup()
+                .addGap(171, 171, 171)
+                .addComponent(jButton1)
+                .addContainerGap(176, Short.MAX_VALUE))
         );
 
         PnlMainScreen.setLayout(new java.awt.BorderLayout());
         PnlMainScreen.add(MenuNavigationBar, BorderLayout.PAGE_START);
+
+        pnlMainScreenContent.setBackground(new java.awt.Color(204, 102, 0));
+        pnlMainScreenContent.setToolTipText("");
+        pnlMainScreenContent.setLayout(new java.awt.CardLayout());
+        PnlMainScreen.add(pnlMainScreenContent, java.awt.BorderLayout.SOUTH);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -100,7 +170,7 @@ public class MainBodyContainer extends javax.swing.JPanel {
                     .addComponent(PnlImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(PnlImageDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
-                .addComponent(PnlMainScreen, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE))
+                .addComponent(PnlMainScreen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,11 +181,27 @@ public class MainBodyContainer extends javax.swing.JPanel {
                         .addComponent(PnlImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(PnlImageDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(PnlMainScreen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(PnlMainScreen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void MnuBtnSurfaceMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_MnuBtnSurfaceMenuSelected
+        // TODO add your handling code here:
+        System.out.println("test");
+    }//GEN-LAST:event_MnuBtnSurfaceMenuSelected
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        JDialog test = new JDialog(SwingUtilities.getWindowAncestor(this), java.awt.Dialog.ModalityType.APPLICATION_MODAL); 
+        
+        test.add(new StructurePopupDialogFrame(Game.getBuildableBodyContainerTable().get(0).getBodyStructures().get(0)), java.awt.BorderLayout.EAST); 
+        test.setResizable(false);
+        test.setTitle(Game.getBuildableBodyContainerTable().get(0).getBodyStructures().get(0).getDisplayName() + " Management");
+
+        test.pack();
+        test.setVisible(true);
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -127,5 +213,10 @@ public class MainBodyContainer extends javax.swing.JPanel {
     private javax.swing.JPanel PnlImageDescription;
     private javax.swing.JPanel PnlMainScreen;
     private javax.swing.JPanel PnlSystemNavigation;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel pnlMainScreenContent;
+    private javax.swing.JPanel pnlOrbitalDisplay;
+    private javax.swing.JPanel pnlStructureDisplay;
+    private javax.swing.JPanel pnlVesselDisplay;
     // End of variables declaration//GEN-END:variables
 }

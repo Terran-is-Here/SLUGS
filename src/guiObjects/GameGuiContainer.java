@@ -27,8 +27,8 @@ public class GameGuiContainer extends javax.swing.JFrame {
     public GameGuiContainer() {
         
         initComponents();
-        System.out.println("Game GUI loaded");
-        //setExtendedState(MAXIMIZED_BOTH); 
+        
+        // Set MainBodyContainer as current focus tab for now;
         MainGamePanel.add(new MainBodyContainer(), BorderLayout.NORTH); 
     }
     public void updateUI(Container ContainerObject) {
@@ -36,7 +36,14 @@ public class GameGuiContainer extends javax.swing.JFrame {
         ContainerObject.revalidate(); 
     }
     
-    
+    /**
+     * Set current focus game panel to newContainer. 
+     * @param newContainer A JPanel to set as the current new contents of MainGamePanel. 
+     */
+    public void setMainGamePanel(javax.swing.JPanel newContainer) {
+        MainGamePanel.removeAll(); 
+        MainGamePanel.add(newContainer); 
+    }
     
     public void updateUI() {
         lblDateHeader.setText(Utilities.getDate(Game.gameDate));
@@ -65,7 +72,6 @@ public class GameGuiContainer extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
-        jMenu5 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
@@ -90,7 +96,7 @@ public class GameGuiContainer extends javax.swing.JFrame {
 
         headerPanelContainer.setLayout(new java.awt.GridBagLayout());
 
-        lblDateHeader.setText("jLabel2");
+        lblDateHeader.setText("Game Time");
         headerPanelContainer.add(lblDateHeader, new java.awt.GridBagConstraints());
 
         ScrlResourceDisplay.setViewportView(resourceDisplayPanel);
@@ -128,13 +134,10 @@ public class GameGuiContainer extends javax.swing.JFrame {
         jMenu4.setText("Research");
         jMenuBar1.add(jMenu4);
 
-        jMenu5.setText("Vessel Management");
-        jMenuBar1.add(jMenu5);
-
-        jMenu6.setText("tickGame");
+        jMenu6.setText("Debug Menu");
         jMenu6.addActionListener(this::jMenu6ActionPerformed);
 
-        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.setText("Manually tickGame()");
         jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
         jMenu6.add(jMenuItem1);
 
@@ -190,7 +193,6 @@ public class GameGuiContainer extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;

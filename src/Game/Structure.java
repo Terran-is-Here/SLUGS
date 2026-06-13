@@ -17,14 +17,13 @@ Main class for all Structures present within the game.
 public class Structure extends AbstractGameObject{
     
     
-    /**
-     * The amount of structures present within this object. 
-     */
+    /*** The amount of structures present within this object. */
     protected int structureAmount; 
     
-    /**
-     * The parent BuildableBody this Structure is currently present on. 
-     */
+    /*** The amount of structures currently inactive within this instance of the object. */
+    protected int inactiveStructureAmount; 
+    
+    /*** The parent BuildableBody this Structure is currently present on. */
     private BuildableBody parentBody; 
     
     /**
@@ -70,6 +69,7 @@ public class Structure extends AbstractGameObject{
         innateOutputEfficiency = _innateOutputEfficiency; 
         innateInputEfficiency = _innateInputEfficiency; 
         referenceDataEntry = _referenceDataEntry; 
+        inactiveStructureAmount = 0; 
     }
     
     /**
@@ -103,15 +103,12 @@ public class Structure extends AbstractGameObject{
      * @return 
      */
     public String getDisplayName() {
-        // Get reference hashtable, get the related data value using structure identifier
+        // Get reference data entry , get the related data value using structure identifier
         return this.getReferenceDataTableEntry().getDisplayName(); 
     }
     
-
-
-    
     /**
-     * Returns the display description of this Structure object via reference HashMap. 
+     * Returns the display description of this Structure object via reference data table. 
      * @return 
      */
     public String getDisplayDescription() {
@@ -198,6 +195,9 @@ public class Structure extends AbstractGameObject{
         return this.getReferenceDataTableEntry().getInputResourceArrayList(); 
     }; 
     
+    public int getInactiveStructureAmount(){
+        return this.inactiveStructureAmount; 
+    }
     
     // Functions for altering current Structure object properties.
     
@@ -209,10 +209,10 @@ public class Structure extends AbstractGameObject{
         this.structureAmount = structureAmountToSet; 
     }
     
-    /**
-     * Wrapper function of removeObject, removes structuresToAdd to the amount of structures present in Structure.structureAmount.
-     * @param structuresToAdd 
-     */
+    public void setInactiveStructureAmount (int inactiveStructureAmount) {
+        this.inactiveStructureAmount = inactiveStructureAmount;
+    }
+    
     
     // ## Cost Calculation Functions
     /**
@@ -271,7 +271,7 @@ public class Structure extends AbstractGameObject{
         Iterator baseInputResourceIterator = baseInputResources.iterator(); 
         Iterator baseOutputResourceIterator = baseOutputResources.iterator(); 
         
-        double effectiveStructures = this.getStructureAmount(); // Assume from the start that all structures can be used at 100%. 
+        double effectiveStructures = this.getStructureAmount() - this.getInactiveStructureAmount(); // Assume from the start that all active structures can be used at 100%. 
         double temp; 
         Resource tempResource;
         Resource bufferResource; 

@@ -208,4 +208,30 @@ public class Resource extends AbstractGameObject{
     public void destroyResourceDisplay() {
         this.resourceDisplayPanel = null; 
     }
+    
+    /**
+     * Creates a basic formatted arraylist of strings which represent a set of resource values and their associated resource names within inputResourceList.
+     * @param inputResourceList An input ArrayList of Resource objects.
+     * @return A formatted string of Resource Name: Resource Value * scaleFactor. 
+     */
+    public static String[] getScaledResourceReceipt(ArrayList<Resource> inputResourceList, String headerMessage, String endingMessage) {
+        Iterator resourceIterator = inputResourceList.iterator(); 
+        double temp; 
+        String[] outputArray = new String[inputResourceList.size()+2];  
+        Resource tempResource; 
+        String tempOutput;
+        outputArray[0] = headerMessage;
+        int index = 1; 
+        while (resourceIterator.hasNext()) {
+        
+            tempResource = (Resource) resourceIterator.next(); 
+            temp = tempResource.getResourceAmount(); 
+            tempOutput = tempResource.getDisplayName() + ": " + Double.toString(temp); 
+            outputArray[index] = tempOutput; 
+            index++;
+        }
+        outputArray[outputArray.length -1 ] = endingMessage; 
+        return outputArray; 
+    }
+    
 }

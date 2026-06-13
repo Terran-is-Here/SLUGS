@@ -28,6 +28,7 @@ public class ReferenceDataEntry extends AbstractGameObject{
     private boolean booleanFlag; 
     
     
+    
     /**
      * Creates a new ReferenceDataEntry. Meant to be used as an internal constructor for this function alone. 
      * @param _identifierName The unique internal identifier of this object; mirrored in both a HashMap's Key and part of the resulting value. 

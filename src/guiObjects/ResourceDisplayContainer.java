@@ -129,6 +129,7 @@ public class ResourceDisplayContainer extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        setBackground(GuiConfigs.RESOURCE_BACKGROUND_COLOR1);
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         setMaximumSize(new java.awt.Dimension(210, Integer.MAX_VALUE));
         setMinimumSize(new java.awt.Dimension(210, 0));

@@ -231,12 +231,7 @@ public class GameData {
      * @param identifierToSearch The identifier to search by. 
      * @return Returns the respective reference data entry if an entry exists with identifierToSearch. 
      */
-    public static ReferenceDataEntry fetchReferenceDataEntry(ArrayList <ReferenceDataEntry> parentDataTable, String identifierToSearch) {
-        
-        Iterator testIterator = parentDataTable.iterator(); 
-        ReferenceDataEntry test; 
-        
-        
+    public static ReferenceDataEntry fetchReferenceDataEntry(ArrayList <ReferenceDataEntry> parentDataTable, String identifierToSearch) {        
         if (identifierToSearch != null) {
             return getReferenceDataEntryStep(parentDataTable, identifierToSearch, 0, parentDataTable.size()-1); }
         else {
@@ -274,5 +269,14 @@ public class GameData {
         }
                 
     }
+    
+    private static boolean loadGame() {
+        return false; 
+    }
+    
+    private static boolean saveGame() {
+        return false; 
+    }
+    
 }
 
