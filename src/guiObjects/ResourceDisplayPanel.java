@@ -5,78 +5,64 @@ package guiObjects;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 
+
+import Game.Resource; 
+import java.math.BigDecimal; 
+import java.awt.Container; 
 /**
- *
+ * A small lightweight component meant for displaying Resource objects. 
  * @author plcau
  */
-import Game.Resource; 
-import java.lang.Math; 
-import javax.swing.Box; 
-import java.awt.Component; 
-import java.awt.Dimension; 
-import java.math.BigDecimal; 
-public class SingleResourceDisplayPanel extends javax.swing.JPanel {
-    
+public class ResourceDisplayPanel extends javax.swing.JPanel {
     
     private Resource resourceToDisplay; 
-    private double previousResourceValue = 0;
-    private final Component textValueSpacing = Box.createRigidArea(new Dimension(20,0));
-    private final static java.awt.Color backgroundColor1 = new java.awt.Color(200,200,200);
-    private final static java.awt.Color backgroundColor2 = new java.awt.Color(150,150,150); 
-    private java.awt.Color effectiveColor = backgroundColor1; // by defualt use first color..?  
-    private int index; 
-    private final Component glueComponent = Box.createGlue(); 
-    private double currentResourceValue; 
+    private java.awt.Color effectiveColor = GuiColors.RESOURCE_BACKGROUND_COLOR1;  
+    private int index;  
+    public final static int VERTICAL_SIZING = 22;  
     /**
-     * Creates new form ResourceDisplayPanel
+     * Creates a new Resource Display Panel object based off an input _resourceToDisplay; 
+     * @param _resourceToDisplay The resource object to display data from. 
      */
-    public SingleResourceDisplayPanel(Resource _resourceToDisplay) {
+    
+    
+    private ResourceDisplayPanel(Resource _resourceToDisplay, int _index) {
+        System.out.println("Please work");
         resourceToDisplay = _resourceToDisplay; 
+        index = _index; 
         initComponents();
-        lblResourceDisplayName.setText(resourceToDisplay.getDisplayName()); 
-        currentResourceValue = resourceToDisplay.getResourceAmount(); 
-        lblResourceAmount.setText(BigDecimal.valueOf(currentResourceValue).toString()); 
         
     }
+    public static ResourceDisplayPanel newResourceDisplayPanel(Resource _resourceToDisplay, int _index) {
+        ResourceDisplayPanel output = new ResourceDisplayPanel(_resourceToDisplay, _index); 
+        return output; 
+    }
+    
     
     public void updateValue() {
-        if (previousResourceValue == 0) {
-            System.out.println(previousResourceValue);
-            previousResourceValue = resourceToDisplay.getResourceAmount(); 
+        if (resourceToDisplay.getPreviousResourceValue() == 0) {
             lblDeltaResource.setText("+0.0/day"); 
         }
         else {
-            double deltaResource = 0.0; 
-            System.out.println(previousResourceValue);
-            deltaResource = resourceToDisplay.getResourceAmount() - previousResourceValue; 
-            System.out.println(deltaResource);
-            System.out.println("test");
-            lblDeltaResource.setText(String.valueOf(deltaResource) + "/day"); 
+            lblDeltaResource.setText(String.valueOf(resourceToDisplay.getDeltaResource()) + "/day"); 
         }
-        lblResourceAmount.setText(String.valueOf(resourceToDisplay.getResourceAmount()));
-        lblDeltaResource.validate();
-        lblDeltaResource.repaint(); 
+        lblResourceAmount.setText(Double.toString(resourceToDisplay.getResourceAmount()));
+        updateDisplay(lblResourceAmount); 
         
     }
     
     public void updateColor() {
         System.out.println(this.index%2);
         switch(this.index%2) {
-            case 0:
-                effectiveColor = backgroundColor2; 
-                
-                break; 
-            case 1: 
-                effectiveColor = backgroundColor1;
-                break; 
+            case 0 -> effectiveColor = GuiColors.RESOURCE_BACKGROUND_COLOR1;
+            case 1 -> effectiveColor = GuiColors.RESOURCE_BACKGROUND_COLOR2; 
         }
         this.setBackground(effectiveColor); 
-        this.updateDisplay(); 
+        updateDisplay(this); 
     }
     
-    public void updateDisplay() {
-        this.validate();
-        this.repaint();
+    public void updateDisplay(Container uiToUpdate) {
+        uiToUpdate.validate();
+        uiToUpdate.repaint();
     }
     
     public void setIndex(int _index) {
@@ -97,15 +83,17 @@ public class SingleResourceDisplayPanel extends javax.swing.JPanel {
         lblDeltaResource = new javax.swing.JLabel();
 
         setBackground(effectiveColor);
-        setMaximumSize(new java.awt.Dimension(300, 20));
-        setMinimumSize(new java.awt.Dimension(300, 15));
+        setMaximumSize(new java.awt.Dimension(230, 20));
+        setMinimumSize(new java.awt.Dimension(230, 15));
+        setName(""); // NOI18N
+        setPreferredSize(new java.awt.Dimension(300,VERTICAL_SIZING));
         setLayout(new java.awt.GridBagLayout());
 
         lblResourceDisplayName.setBackground(effectiveColor);
         lblResourceDisplayName.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblResourceDisplayName.setForeground(GuiColors.BASE_TEXT_COLOR);
         lblResourceDisplayName.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblResourceDisplayName.setText("Resource Name");
+        lblResourceDisplayName.setText(resourceToDisplay.getDisplayName());
         lblResourceDisplayName.setAlignmentX(0.5F);
         lblResourceDisplayName.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         lblResourceDisplayName.setMaximumSize(new java.awt.Dimension(100, 16));
@@ -121,7 +109,7 @@ public class SingleResourceDisplayPanel extends javax.swing.JPanel {
         lblResourceAmount.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblResourceAmount.setForeground(GuiColors.BASE_TEXT_COLOR);
         lblResourceAmount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblResourceAmount.setText("Resource Amount ");
+        lblResourceAmount.setText(Double.toString(resourceToDisplay.getResourceAmount()));
         lblResourceAmount.setAlignmentX(0.5F);
         lblResourceAmount.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         lblDeltaResource.setHorizontalAlignment(javax.swing.JLabel.RIGHT);
@@ -142,8 +130,10 @@ public class SingleResourceDisplayPanel extends javax.swing.JPanel {
         lblDeltaResource.setMinimumSize(new java.awt.Dimension(100, 16));
         lblDeltaResource.setPreferredSize(new java.awt.Dimension(100, 14));
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
         add(lblDeltaResource, gridBagConstraints);
         lblDeltaResource.getAccessibleContext().setAccessibleDescription("");
     }// </editor-fold>//GEN-END:initComponents

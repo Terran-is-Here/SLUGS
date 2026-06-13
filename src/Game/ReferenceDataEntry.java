@@ -25,7 +25,7 @@ public class ReferenceDataEntry extends AbstractGameObject{
     private double costScaleFactor = 1.0; //double representing how much the cost of an object scales exponentially. 
     private String objectType; // Type of object (mainly for Resource and Structure and another subset of identification) 
     
-    
+    private boolean booleanFlag; 
     
     
     /**
@@ -42,6 +42,7 @@ public class ReferenceDataEntry extends AbstractGameObject{
      * @param _objectType A String representing the specific type of the object (mainly for BuildableBody or Resource) 
      */
     private ReferenceDataEntry(
+            String _identifierName, 
             String _displayName,
             String _displayDescription,
             ArrayList<Resource> _inputResources,
@@ -51,8 +52,10 @@ public class ReferenceDataEntry extends AbstractGameObject{
             double _outputEfficiency,
             double _inputEfficiency, 
             double _costScaleFactor,
-            String _objectType
+            String _objectType, 
+            boolean _booleanFlag
                 ) {
+            identifierName = _identifierName; 
             displayName = _displayName; 
             displayDescription = _displayDescription; 
             inputResources = _inputResources; 
@@ -63,12 +66,13 @@ public class ReferenceDataEntry extends AbstractGameObject{
             inputEfficiency = _inputEfficiency; 
             costScaleFactor = _costScaleFactor; 
             objectType = _objectType; 
-        
+            booleanFlag = _booleanFlag; 
         
             
     } 
     
     public static ReferenceDataEntry newReferenceDataEntry(
+            String _identifierName,
             String _displayName,
             String _displayDescription,
             ArrayList<Resource> _inputResources,
@@ -78,8 +82,10 @@ public class ReferenceDataEntry extends AbstractGameObject{
             double _outputEfficiency,
             double _inputEfficiency, 
             double _costScaleFactor,
-            String _objectType) {
+            String _objectType,
+            boolean _booleanFlag) {
         return new ReferenceDataEntry(
+                _identifierName, 
                 _displayName,
                 _displayDescription,
                 _inputResources,
@@ -89,7 +95,8 @@ public class ReferenceDataEntry extends AbstractGameObject{
                 _outputEfficiency,
                 _inputEfficiency,
                 _costScaleFactor,
-                _objectType);
+                _objectType,
+                _booleanFlag);
     
     }
     
@@ -98,7 +105,7 @@ public class ReferenceDataEntry extends AbstractGameObject{
      * @return An empty referenceDataEntry. 
      */
     public static ReferenceDataEntry newEmptyReferenceDataEntry() {
-        ReferenceDataEntry buffer = new ReferenceDataEntry(null,null,null,null,null,null,1.0,1.0,1.0,null);
+        ReferenceDataEntry buffer = new ReferenceDataEntry(null,null,null,null,null,null,null,1.0,1.0,1.0,null,false);
         return buffer; 
     }
     

@@ -14,5 +14,7 @@ public class Vehicle extends AbstractGameObject{
     protected ArrayList<Resource> vehicleCargo; 
     
     
-    protected Vehicle() {}
+    protected Vehicle() {
+        // To be implemented to inherit and be a child class of the BuildableBodyClass
+    } 
 }

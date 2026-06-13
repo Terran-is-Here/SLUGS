@@ -33,8 +33,6 @@ public class BuildableBody extends AbstractGameObject{
     /** ArrayList of Vehicle objects that represent the Vehicles currently present in this BuildableBody.*/
     protected ArrayList<Vehicle> bodyVehicles; // Vehicles are currently unimplemented but will be in the future. 
     
-    
-    
     /** Flag if a BuildableBody is currently accessible to have structures built on it. */ 
     protected boolean buildableFlag = true; 
     
@@ -82,9 +80,13 @@ public class BuildableBody extends AbstractGameObject{
                 new ArrayList<Vehicle>(),
                 GameData.fetchReferenceDataEntry(Game.getBuildableBodyReferenceTable(), _identifierName),
                 null);
+        // Automatically add self when instantiated into the master arrayList of BuildableBodies for tickGame(). 
         Game.getBuildableBodyContainerTable().add(buffer); 
+        
         return buffer; 
     }
+    
+    
     
     //## Property Return Functions ##//
     

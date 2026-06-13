@@ -1,7 +1,7 @@
 entrystart
 identifier=iron_ore
 displayname=Iron Ore
-displaydescription=This is some iron ore.  
+displaydescription=Raw ore. Must be processed into ingots in order to be utilized in manufacturing. 
 resourcetype=normal
 entryend
 

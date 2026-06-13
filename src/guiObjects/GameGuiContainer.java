@@ -17,39 +17,19 @@ import java.awt.Container;
 import java.util.Random; 
 import java.util.ArrayList; 
 import java.util.Iterator; 
-public class GameGuiContainer extends javax.swing.JFrame {
+public class GameGuiContainer extends javax.swing.JFrame {    
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GameGuiContainer.class.getName());
-    private Random rng = new Random(); 
-    ArrayList<SingleResourceDisplayPanel> buffer = new ArrayList<>(); 
-    SingleResourceDisplayPanel testingthing; 
-    Resource bufferResource; 
     /**
      * Creates new form GameGuiContainer
      */
+    ResourceDisplayContainer resourceDisplayPanel = new ResourceDisplayContainer(); 
+    
     public GameGuiContainer() {
+        
         initComponents();
+        System.out.println("Game GUI loaded");
         //setExtendedState(MAXIMIZED_BOTH); 
         MainGamePanel.add(new MainBodyContainer(), BorderLayout.NORTH); 
-        updateUI(MainGamePanel); 
-        for (int i = 0; i < 40; i++) {
-            System.out.println("skibidi");
-            bufferResource = Resource.newResource("iron_ore", rng.nextInt(40000)); 
-            buffer.add(new SingleResourceDisplayPanel(bufferResource)); 
-        }
-        int j = 0;
-        Iterator bufferIterator = buffer.iterator(); 
-        while (bufferIterator.hasNext()) {
-            System.out.println("aaa");
-            testingthing = (SingleResourceDisplayPanel) bufferIterator.next(); 
-            testingthing.setIndex(j);
-            j++; 
-            testingthing.updateColor();
-            StructureContainerPanel.add(testingthing); 
-        }
-        updateUI(StructureContainerPanel); 
-        updateUI(MainGamePanel); 
-        updateUI(); 
     }
     public void updateUI(Container ContainerObject) {
         ContainerObject.repaint();
@@ -72,8 +52,7 @@ public class GameGuiContainer extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         MainGamePanel = new javax.swing.JPanel();
         headerPanelContainer = new javax.swing.JPanel();
-        jScrollPane1 = jScrollPane1 = new javax.swing.JScrollPane(StructureContainerPanel);
-        StructureContainerPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane(resourceDisplayPanel);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -114,25 +93,16 @@ public class GameGuiContainer extends javax.swing.JFrame {
             .addGap(0, 26, Short.MAX_VALUE)
         );
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setViewportView(resourceDisplayPanel);
         jScrollPane1.setToolTipText("");
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jScrollPane1.setColumnHeaderView(jLabel1);
         jScrollPane1.setMaximumSize(new java.awt.Dimension(250, 800));
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(250, 800));
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(250, 690));
+        jScrollPane1.setName(""); // NOI18N
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(250, 690));
         jScrollPane1.setRequestFocusEnabled(false);
-        jScrollPane1.setViewportView(StructureContainerPanel);
-
-        StructureContainerPanel.setBackground(GuiColors.RESOURCE_BACKGROUND_COLOR1);
-        StructureContainerPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        StructureContainerPanel.setForeground(GuiColors.BASE_TEXT_COLOR);
-        StructureContainerPanel.setAlignmentX(0.5F);
-        StructureContainerPanel.setMaximumSize(new java.awt.Dimension(250, 80000));
-        StructureContainerPanel.setMinimumSize(new java.awt.Dimension(250, 800));
-        StructureContainerPanel.setPreferredSize(new java.awt.Dimension(250, 800));
-        StructureContainerPanel.setLayout(new javax.swing.BoxLayout(StructureContainerPanel, javax.swing.BoxLayout.Y_AXIS));
-        jScrollPane1.setViewportView(StructureContainerPanel);
+        jScrollPane1.setVerifyInputWhenFocusTarget(false);
+        jScrollPane1.setViewportView(resourceDisplayPanel);
 
         jMenu1.setText("Game");
 
@@ -193,7 +163,6 @@ public class GameGuiContainer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MainGamePanel;
-    private javax.swing.JPanel StructureContainerPanel;
     private javax.swing.JPanel headerPanelContainer;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;

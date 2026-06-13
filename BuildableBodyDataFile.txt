@@ -1,6 +1,16 @@
 entrystart
 identifier=earth
-displayname=Earth
-displaydescription=This is Earth, our home.   
-buildablebodytype=planet
+displayname=Kepler 10
+displaydescription=A terrestrial planet nestled inbetween two binary stars. Certainly an exciting location to start out. 
+type=planet
+deposit.iron_ore=100000000
+booleanflag=true
+entryend
+entrystart
+identifier=earth
+displayname=Kepler 11
+displaydescription=A terrestrial planet nestled inbetween two binary stars. Certainly an exciting location to start out. 
+type=planet
+deposit.iron_ore=100000000
+booleanflag=true
 entryend

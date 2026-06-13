@@ -8,6 +8,7 @@ package Game;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Iterator; 
 import java.util.Scanner;  
 /**
  * Contains methods to create reference data tables, as well as methods to fetch data entries within them based off an internal identifier. 
@@ -43,7 +44,7 @@ public class GameData {
     public static ArrayList<ReferenceDataEntry> readDataFileAsReferenceTable(String fileName) {
         ArrayList<ReferenceDataEntry> outputTable = new ArrayList(); 
         String currentLine; 
-        String[] bufferStringArray; 
+        String[] bufferStringArray;
         Resource bufferResource; 
         
         // Buffers for intermediate step values before being entered into ReferenceDataEntry. 
@@ -60,6 +61,7 @@ public class GameData {
         double bufferCostScaleFactor = 1.0; 
         double bufferInputEfficiency = 1.0; 
         double bufferOutputEfficiency = 1.0; 
+        boolean bufferBooleanFlag = false; 
         
         // Buffer ReferenceDataObject for addition to outputTable. 
         ReferenceDataEntry bufferReferenceDataEntry; 
@@ -80,12 +82,15 @@ public class GameData {
                     bufferIdentifierName = "";
                     bufferDisplayDescription = "";
                     bufferDisplayName = "";
+                    bufferObjectType = ""; 
                     bufferInputEfficiency = 1.0;
                     bufferOutputEfficiency = 1.0;
                     bufferCostScaleFactor = 1.0;
                     bufferInputResourceArrayList = new ArrayList<>();
                     bufferOutputResourceArrayList = new ArrayList<>();
                     bufferBuildCostResourceArrayList = new ArrayList<>();
+                    bufferDepositResourceArrayList = new ArrayList<>(); 
+                    bufferBooleanFlag = false; 
                     continue; 
                 }
                 
@@ -95,6 +100,7 @@ public class GameData {
                 if (currentLine.startsWith(GameDataConfigs.ENTRY_END_REGEX)) {
                     // Create new dataHashMapEntry specific for Structure objects. 
                     bufferReferenceDataEntry = ReferenceDataEntry.newReferenceDataEntry(
+                            bufferIdentifierName, 
                             bufferDisplayName,
                             bufferDisplayDescription, 
                             bufferInputResourceArrayList,
@@ -104,13 +110,16 @@ public class GameData {
                             bufferOutputEfficiency,
                             bufferInputEfficiency,
                             bufferCostScaleFactor,
-                            bufferObjectType);
+                            bufferObjectType,
+                            bufferBooleanFlag);
                     
                     // Put respective buffer entry at the end of the table.
                     
                     outputTable.add(bufferReferenceDataEntry);
                     continue; 
                 }
+                
+                
                 // Checks if current line starts with with "input."
                 if (currentLine.startsWith(GameDataConfigs.INPUT_RESOURCE_REGEX)) {
                     // If true, add new Resource object to bufferInputResourceArrayList. 
@@ -194,6 +203,19 @@ public class GameData {
                     bufferDepositResourceArrayList.add(bufferResource); 
                     continue; 
                 }
+                
+                if (currentLine.startsWith(GameDataConfigs.BOOLEAN_FLAG_REGEX)) {
+                    
+                    // If true, add new Resource object to bufferCostResourceArrayList
+                    bufferStringArray = getLineValue(GameDataConfigs.BOOLEAN_FLAG_REGEX, currentLine); 
+                    if(bufferStringArray[1] == "true") {
+                        bufferBooleanFlag = true; 
+                    }
+                    else {
+                        bufferBooleanFlag = false; 
+                    }
+                    continue; 
+                } 
             }
             return outputTable; 
         }
@@ -210,6 +232,10 @@ public class GameData {
      * @return Returns the respective reference data entry if an entry exists with identifierToSearch. 
      */
     public static ReferenceDataEntry fetchReferenceDataEntry(ArrayList <ReferenceDataEntry> parentDataTable, String identifierToSearch) {
+        
+        Iterator testIterator = parentDataTable.iterator(); 
+        ReferenceDataEntry test; 
+        
         
         if (identifierToSearch != null) {
             return getReferenceDataEntryStep(parentDataTable, identifierToSearch, 0, parentDataTable.size()-1); }

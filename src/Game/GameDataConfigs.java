@@ -85,7 +85,9 @@ public class GameDataConfigs {
     // ##BuildableBody Specific REGEX
     public final static String BUILDABLEBODY_DEPOSIT_REGEX = "deposit.";
     
+    public final static String OBJECT_COORDINATES_REGEX = "coordinate."; 
     
+    public final static String BOOLEAN_FLAG_REGEX = "booleanflag"; 
     
     
     

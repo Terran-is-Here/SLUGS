@@ -10,10 +10,18 @@ package Game;
  */
 import java.util.ArrayList; 
 import java.util.Iterator; 
+import guiObjects.ResourceDisplayPanel; 
 public class Resource extends AbstractGameObject{
     
+    /**
+     * The amount of resources previously present within this object; mainly used for GUI objects.
+     */
+    private double pastResourceAmount = 0; 
     
-    
+    /**
+     * GUI object linked to this class for use in displaying to the player. 
+     */
+    private ResourceDisplayPanel resourceDisplayPanel; 
     /**
      * The amount of resources currently present within the object. 
      */
@@ -24,6 +32,14 @@ public class Resource extends AbstractGameObject{
      */
     private double resourceUsed; 
     
+    
+    /**
+     * Private constructor for Resource objects. 
+     * @param _identifierName Internal identifier for this Resource. 
+     * @param _resourceAmount Amount of resources this object currently has.
+     * @param _resourceUsed Amount of resources used (mainly used for capacity-limited resources) 
+     * @param _referenceDataEntry The reference data entry this object uses. 
+     */
     private Resource(
             String _identifierName,
             double _resourceAmount,
@@ -36,18 +52,21 @@ public class Resource extends AbstractGameObject{
         resourceUsed = _resourceUsed;
     }
     
+    /**
+     * Public constructor class for creating a new Resource object. 
+     * @param _identifierName
+     * @param _resourceAmount
+     * @return 
+     */
     public static Resource newResource(String _identifierName, double _resourceAmount) {
+        ReferenceDataEntry referenceDataEntryBuffer = GameData.fetchReferenceDataEntry(Game.getResourceReferenceTable(), _identifierName);
         return new Resource(
                 _identifierName,
                 _resourceAmount,
                 0,
-                GameData.fetchReferenceDataEntry(Game.getResourceReferenceTable(), _identifierName));
+                referenceDataEntryBuffer);
     }
     
-    
-    public ReferenceDataEntry getReferenceDataTableEntry() {
-        return referenceDataEntry; 
-    }
     
     // ##Property Returning methods
     /** 
@@ -60,6 +79,13 @@ public class Resource extends AbstractGameObject{
     }
     
     /**
+     * Returns the previous amount this Resource object had. 
+     * @return 
+     */
+    public double getPreviousResourceValue() {
+        return this.pastResourceAmount; 
+    }
+    /**
      * Returns the internal identifier of this Structure Object. 
      * @return 
      */
@@ -67,6 +93,9 @@ public class Resource extends AbstractGameObject{
         return identifierName; 
     }
     
+    public ResourceDisplayPanel getResourceDisplayPanel(){
+        return this.resourceDisplayPanel; 
+    }
     /**
      * Returns the display description of this Structure object via reference HashMap. 
      * @return 
@@ -100,9 +129,13 @@ public class Resource extends AbstractGameObject{
     }
     //## Property setting methods. 
     public void setResourceAmount(double newValue) {
+        this.pastResourceAmount = this.resourceAmount; 
         this.resourceAmount = newValue; 
     }
     
+    public void setResourceDisplayPanel (ResourceDisplayPanel _resourceDisplayPanel) {
+        this.resourceDisplayPanel = _resourceDisplayPanel;
+    }
     public void setResourceUsedAmount (double newValue) {
         this.resourceUsed = newValue; 
     }
@@ -122,6 +155,7 @@ public class Resource extends AbstractGameObject{
             System.out.println("Resource Display Name: " +bufferResource.getDisplayName()); 
             System.out.println("Resource Display Description: " +bufferResource.getDisplayDescription()); 
             System.out.println("Resource Type: " + bufferResource.getResourceType());
+            System.out.println(""); 
                     
         }
     }
@@ -140,6 +174,32 @@ public class Resource extends AbstractGameObject{
         return null; 
     }
     
+    public double getDeltaResource() {
+        return (this.getResourceAmount() - this.getPreviousResourceValue()); 
+    }
     
-   
+    /**
+     * Updates the resourceDisplayPanel object of this ResourceInstance. If it does not currently exist; create a new instance. 
+     * @param currentIndex The current index of this resource object in terms of being displayed.
+     */
+    public void updateResourceDisplay(int currentIndex) {
+         
+        // Check first if the GUI object acutally exists. If it doesnt; create a new object. 
+        if (this.resourceDisplayPanel == null) {
+            System.out.println("New GUI object created");
+            this.resourceDisplayPanel = ResourceDisplayPanel.newResourceDisplayPanel(this, currentIndex); 
+        }
+        
+        // If object actually exists; simply call update value. 
+        else {
+            this.resourceDisplayPanel.updateValue();
+        }
+    }
+    
+    /**
+     * Destroys resourceDisplayPanel by setting it to null; 
+     */
+    public void destroyResourceDisplay() {
+        this.resourceDisplayPanel = null; 
+    }
 }

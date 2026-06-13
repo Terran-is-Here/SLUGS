@@ -10,5 +10,5 @@ package guiObjects;
  * @author plcau
  */
 public class StructureButton {
-    
+    // Insert button code here for displaying things and whatnot; maybe display popup window. 
 }
