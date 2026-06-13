@@ -208,7 +208,7 @@ public class GameData {
                     
                     // If true, add new Resource object to bufferCostResourceArrayList
                     bufferStringArray = getLineValue(GameDataConfigs.BOOLEAN_FLAG_REGEX, currentLine); 
-                    if(bufferStringArray[1] == "true") {
+                    if(bufferStringArray[1].equals("true")) {
                         bufferBooleanFlag = true; 
                     }
                     else {
