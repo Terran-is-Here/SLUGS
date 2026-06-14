@@ -8,13 +8,76 @@ package guiObjects;
  *
  * @author plcau
  */
+import Game.Structure;
+import java.util.ArrayList; 
+import java.util.Iterator; 
+import java.awt.GridBagConstraints; 
+import java.awt.Insets;
+import java.awt.Dimension; 
 public class StructureDisplayContainer extends javax.swing.JPanel {
-
+    
+    private ArrayList<Structure> structureArrayList; 
+    private static final int BUTTONS_PER_ROW = 5; 
+    private String categoryTitle; 
+    private static int VERTICAL_SIZE_FACTOR = 50; 
     /**
      * Creates new form StructureDisplayPanel
      */
-    public StructureDisplayContainer() {
+    private StructureDisplayContainer(ArrayList<Structure> _structureArrayList, String _categoryTitle) {
+        structureArrayList = _structureArrayList; 
+        categoryTitle = _categoryTitle; 
         initComponents();
+        lblStructureCategoryHeader.setText(categoryTitle);
+    }
+    
+    public ArrayList<Structure> getStructureArrayList() {
+        return this.structureArrayList; 
+    }
+    
+    public static StructureDisplayContainer newStructureDisplayContainer(ArrayList<Structure> _structureArrayList, String _categoryTitle) {
+        Structure currentStructure; 
+        StructureButton bufferStructureButton; 
+        StructureDisplayContainer newContainer = new StructureDisplayContainer(_structureArrayList, _categoryTitle); 
+        GridBagConstraints currentObjectGridBagConstraints; 
+        int index; 
+        int rows; 
+        // Set up structure buttons within PnlButtonContainer; 
+        for (index = 0; index < _structureArrayList.size(); index++) {
+            // Set up GBCs for display objects. 
+            currentObjectGridBagConstraints = new GridBagConstraints(); 
+            
+            // Make each button have 5px of padding on all sides around them in Grid Bag Layout. 
+            currentObjectGridBagConstraints.insets = new Insets(5,5,5,5); 
+            
+            // Set position based on the current index of this button; with every row forming after every BUTTONS_PER_ROW objects. 
+            currentObjectGridBagConstraints.gridx = index%BUTTONS_PER_ROW;
+            currentObjectGridBagConstraints.gridy = index/BUTTONS_PER_ROW; 
+            
+            // Set anchor to northwest and make the objects fill horizontally
+            currentObjectGridBagConstraints.anchor = GridBagConstraints.NORTHWEST; 
+            currentObjectGridBagConstraints.fill = GridBagConstraints.HORIZONTAL; 
+            
+            // Get current structure object from index; 
+            currentStructure = newContainer.getStructureArrayList().get(index); 
+            
+            // Update (or create) a structure button linked to this object; 
+            currentStructure.updateStructureButton();
+            
+            // Get the structure's StructureButton and add it to the PnlButtonContainer. 
+            bufferStructureButton = currentStructure.getStructureButton(); 
+            newContainer.PnlButtonContainer.add(bufferStructureButton.getStructureJButton(), currentObjectGridBagConstraints);
+        }
+        rows = index/BUTTONS_PER_ROW; 
+        int verticalSpacing = rows * VERTICAL_SIZE_FACTOR; 
+        newContainer.PnlButtonContainer.setPreferredSize(new Dimension(600, verticalSpacing));
+        newContainer.PnlButtonContainer.validate();
+        newContainer.PnlButtonContainer.repaint();
+        newContainer.setPreferredSize(new Dimension (600, verticalSpacing + 40));
+        return newContainer; 
+    }
+    
+    protected javax.swing.JPanel getPnlButtonContainer(){
+        return this.PnlButtonContainer; 
     }
 
     /**
@@ -25,20 +88,34 @@ public class StructureDisplayContainer extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        lblStructureCategoryHeader = new javax.swing.JLabel();
+        PnlButtonContainer = new javax.swing.JPanel();
+
+        setLayout(new java.awt.GridBagLayout());
+
+        lblStructureCategoryHeader.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        lblStructureCategoryHeader.setText("Structure Category");
+        add(lblStructureCategoryHeader, new java.awt.GridBagConstraints());
+
+        PnlButtonContainer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        PnlButtonContainer.setMaximumSize(new java.awt.Dimension(500, 2147483647));
+        PnlButtonContainer.setMinimumSize(new java.awt.Dimension(500, 0));
+        PnlButtonContainer.setPreferredSize(new java.awt.Dimension(500, 280));
+        PnlButtonContainer.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        add(PnlButtonContainer, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected javax.swing.JPanel PnlButtonContainer;
+    private javax.swing.JLabel lblStructureCategoryHeader;
     // End of variables declaration//GEN-END:variables
 }

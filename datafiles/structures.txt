@@ -5,7 +5,7 @@ displaydescription=This is a test iron furnace.
 inputefficiency=1.0
 outputefficiency=1.0
 costscalefactor=1.0
-input.iron_ore=10
+input.iron_ore=1
 output.iron_plate=1
 entryend
 
@@ -16,5 +16,6 @@ displaydescription=A basic iron mine that outputs iron ore.
 inputefficiency=1.0
 outputefficiency=1.0
 costscalefactor=1.0
-output.iron_ore=2.0
+output.iron_ore=1
+basecost.iron_ore=1
 entryend

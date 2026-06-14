@@ -47,6 +47,7 @@ public class GameGuiContainer extends javax.swing.JFrame {
     
     public void updateUI() {
         lblDateHeader.setText(Utilities.getDate(Game.gameDate));
+        lblCurrentFocus.setText("Currently on: "+ Game.getCurrentScope().getDisplayName());
         repaint(); 
         revalidate(); 
     }
@@ -58,11 +59,13 @@ public class GameGuiContainer extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel1 = new javax.swing.JLabel();
         MainGamePanel = new javax.swing.JPanel();
         headerPanelContainer = new javax.swing.JPanel();
         lblDateHeader = new javax.swing.JLabel();
+        lblCurrentFocus = new javax.swing.JLabel();
         ScrlResourceDisplay = new javax.swing.JScrollPane(resourceDisplayPanel);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -97,7 +100,17 @@ public class GameGuiContainer extends javax.swing.JFrame {
         headerPanelContainer.setLayout(new java.awt.GridBagLayout());
 
         lblDateHeader.setText("Game Time");
-        headerPanelContainer.add(lblDateHeader, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(0, 30, 0, 30);
+        headerPanelContainer.add(lblDateHeader, gridBagConstraints);
+
+        lblCurrentFocus.setText("Current Focus");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(0, 30, 0, 30);
+        headerPanelContainer.add(lblCurrentFocus, gridBagConstraints);
 
         ScrlResourceDisplay.setViewportView(resourceDisplayPanel);
         ScrlResourceDisplay.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -199,6 +212,7 @@ public class GameGuiContainer extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JLabel lblCurrentFocus;
     private javax.swing.JLabel lblDateHeader;
     // End of variables declaration//GEN-END:variables
 }

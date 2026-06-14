@@ -22,9 +22,15 @@ public class Utilities {
      * @return 
      */
     public static double geometricSeriesInitialSum(double lowerBound, double upperBound, double commonRatio) {
-        double output = 0; 
-        for (int i =0; i >= upperBound; i++) {
-            output += Math.pow(commonRatio, i);
+        double output = 0;
+        System.out.println("Common Ratio" + Double.toString(commonRatio));
+        System.out.println("Lower Bound" + Double.toString(lowerBound));
+        System.out.println("Upper Bound" + Double.toString(upperBound));
+        if(commonRatio > 1.0) {
+            output = (Math.pow(commonRatio, lowerBound) - Math.pow(commonRatio, upperBound+1))/(1-commonRatio); 
+        }
+        if (commonRatio == 1.0) {
+            output = (upperBound-lowerBound)*commonRatio; 
         }
         return output; 
     }

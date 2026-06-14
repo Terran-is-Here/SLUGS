@@ -18,6 +18,7 @@ public class Resource extends AbstractGameObject{
      */
     private double pastResourceAmount = 0; 
     
+    private int displayIndex;
     /**
      * GUI object linked to this class for use in displaying to the player. 
      */
@@ -133,9 +134,12 @@ public class Resource extends AbstractGameObject{
             this.pastResourceAmount = this.resourceAmount;
             this.isInitial = false; 
         }
-            
-        
+
         this.resourceAmount = newValue; 
+        // Checks if it has a related resource display object currently 
+        if (this.getResourceDisplayPanel() != null) {
+            this.updateResourceDisplay(true);
+        }
     }
     
     public void setResourceDisplayPanel (ResourceDisplayPanel _resourceDisplayPanel) {
@@ -145,6 +149,10 @@ public class Resource extends AbstractGameObject{
         this.resourceUsed = newValue; 
     }
     
+    public void setDisplayIndex (int newValue) {
+        this.displayIndex = newValue; 
+        System.out.println("+" + displayIndex);
+    }
     /**
      * Debugging tool that prints out the contents of an ArrayList<Resoruce> to console. 
      * @param inputArrayList Input ArrayList to display contents of. 
@@ -187,13 +195,15 @@ public class Resource extends AbstractGameObject{
      * Updates the resourceDisplayPanel object of this ResourceInstance. If it does not currently exist; create a new instance. 
      * @param currentIndex The current index of this resource object in terms of being displayed.
      */
-    public void updateResourceDisplay(int currentIndex) {
-         this.isInitial = true;
+    public void updateResourceDisplay(boolean isInternal) {
+        if (!isInternal) {
+            this.isInitial = true;
+        }
         // Check first if the GUI object acutally exists. If it doesnt; create a new object. 
         if (this.resourceDisplayPanel == null) {
             
-            
-            this.resourceDisplayPanel = ResourceDisplayPanel.newResourceDisplayPanel(this, currentIndex); 
+            System.out.println(this.displayIndex + "Display Index");
+            this.resourceDisplayPanel = ResourceDisplayPanel.newResourceDisplayPanel(this, this.displayIndex); 
         }
         
         // If object actually exists; simply call update value. 
@@ -201,6 +211,8 @@ public class Resource extends AbstractGameObject{
             this.resourceDisplayPanel.updateValue();
         }
     }
+    
+    
     
     /**
      * Destroys resourceDisplayPanel by setting it to null; 

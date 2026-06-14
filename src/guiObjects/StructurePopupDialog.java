@@ -12,15 +12,42 @@ import Game.Structure;
 import Game.BuildableBody;
 import Game.Resource; 
 import javax.swing.JOptionPane; 
-public class StructurePopupDialogFrame extends javax.swing.JPanel {
+import javax.swing.JDialog; 
+import java.awt.Dialog.ModalityType; 
+import javax.swing.SwingUtilities; 
+import java.awt.Component; 
+public class StructurePopupDialog extends javax.swing.JPanel {
     
     /**
-     * Creates new form StructurePopupDialogFrame
+     * Creates new form StructurePopupDialog
      */
     Structure currentStructure; 
-    public StructurePopupDialogFrame(Structure _currentStructure) {
+    private StructurePopupDialog(Structure _currentStructure) {
         currentStructure = _currentStructure; 
         initComponents();
+    }
+    public static StructurePopupDialog newStructurePopupDialog(Structure _currentStructure) {
+        return new StructurePopupDialog(_currentStructure);
+    }
+    
+    public static void newStructurePopupDialogWindow(Structure _currentStructure, Component parentComponent) {
+        // Create new JDialog object, using SwingUtilities to get the highest most window ancestor of the parent component. 
+        JDialog jDialogToDisplay = new JDialog(SwingUtilities.getWindowAncestor(parentComponent), ModalityType.APPLICATION_MODAL);
+        
+        // Add this class's JPanel into the Frame of the JDialog object and sets it to the east; 
+        jDialogToDisplay.add(StructurePopupDialog.newStructurePopupDialog(_currentStructure), java.awt.BorderLayout.WEST); 
+        
+        // Prevent resizing; 
+        jDialogToDisplay.setResizable(false);
+        
+        // Set title to be the display name of the current structure; 
+        jDialogToDisplay.setTitle(_currentStructure.getDisplayName() + " Management");
+        
+        // Calculates layout
+        jDialogToDisplay.pack(); 
+        
+        jDialogToDisplay.setLocationRelativeTo(SwingUtilities.getWindowAncestor(parentComponent));
+        jDialogToDisplay.setVisible(true);
     }
 
     /**
@@ -94,7 +121,7 @@ public class StructurePopupDialogFrame extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel1.add(txtCurrentlyEnabled, gridBagConstraints);
 
-        txtCurrentlyDisabled.setText("0");
+        txtCurrentlyDisabled.setText(String.valueOf(currentStructure.getInactiveStructureAmount()) );
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -162,6 +189,7 @@ public class StructurePopupDialogFrame extends javax.swing.JPanel {
             BuildableBody.buildStructure(currentStructure.getParentBuildableBody(), currentStructure, structuresToBuild);
         }
         
+        txtCurrentlyEnabled.setText(Integer.toString(currentStructure.getStructureAmount()));
     }//GEN-LAST:event_btnBuildStructureActionPerformed
 
     private void btnDeconstructStructureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeconstructStructureActionPerformed
@@ -172,12 +200,13 @@ public class StructurePopupDialogFrame extends javax.swing.JPanel {
         
         // As convention; 
         if (structuresToBuild == -1) {
-            JOptionPane.showMessageDialog(null, "Demolution order cancelled.", "Result", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Demolition order cancelled.", "Result", JOptionPane.INFORMATION_MESSAGE);
         }
         else {
             // Attempt to build structures based off currentStructure and structuresToBuild. 
             BuildableBody.destroyStructure(currentStructure.getParentBuildableBody(), currentStructure, structuresToBuild);
         }
+        txtCurrentlyEnabled.setText(Integer.toString(currentStructure.getStructureAmount()));
     }//GEN-LAST:event_btnDeconstructStructureActionPerformed
 
     private void btnConfirmConfigurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmConfigurationActionPerformed
@@ -196,8 +225,11 @@ public class StructurePopupDialogFrame extends javax.swing.JPanel {
         catch (java.lang.NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Please enter an actual number", "Result", JOptionPane.WARNING_MESSAGE); 
         }
+        
+        txtCurrentlyDisabled.setText(Integer.toString(currentStructure.getInactiveStructureAmount()));
     }//GEN-LAST:event_btnConfirmConfigurationActionPerformed
-
+    
+    
     /**
      * Obtains a structureAmount value for other methods within this class by displaying a dialog input box for resource amount. Comes with input error handling and user input confirmation dialog. 
      * @param valueInputDisplayMessage Message to display on initial integer input dialog. 

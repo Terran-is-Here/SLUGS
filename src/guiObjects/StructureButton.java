@@ -9,8 +9,7 @@ package guiObjects;
  *
  * @author plcau
  */
-import java.awt.Dialog;
-import javax.swing.JDialog;
+import Game.Game;
 import Game.Structure; 
 import javax.swing.JButton; 
 public class StructureButton{
@@ -21,11 +20,12 @@ public class StructureButton{
     
     private StructureButton(String _buttonDisplayText, Structure _currentStructure) {
         
-        buttonDisplayText = buttonDisplayText; 
-        currentStructure = currentStructure; 
+        buttonDisplayText = _buttonDisplayText; 
+        currentStructure = _currentStructure; 
         
         structureButton = new JButton(buttonDisplayText);
         structureButton.addActionListener(this::structureButtonClicked);
+        
     }; 
     
     public static StructureButton newStructureButton(String _buttonDisplayText, Structure _currentStructure) {
@@ -33,10 +33,15 @@ public class StructureButton{
         return output; 
     };
     
+    
     private void structureButtonClicked(java.awt.event.ActionEvent evt) {
-        
+        StructurePopupDialog.newStructurePopupDialogWindow(this.getCurrentStructure(), this.getStructureJButton());
     }
     
+    public void setDisplayText(String newDisplayText) {
+        this.buttonDisplayText = newDisplayText;
+        this.getStructureJButton().setText(this.getButtonDisplayText());
+    }
     
     public String getButtonDisplayText() {
         return this.buttonDisplayText;
@@ -46,7 +51,7 @@ public class StructureButton{
         return this.currentStructure; 
     }
     
-    public JButton getStructureButton() {
+    public JButton getStructureJButton() {
         return this.structureButton; 
     }
 }

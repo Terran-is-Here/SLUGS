@@ -11,6 +11,7 @@ package Game;
 
 import java.util.ArrayList;
 import java.util.Iterator; 
+import guiObjects.StructureButton; 
 /*
 Main class for all Structures present within the game. 
 */
@@ -31,6 +32,7 @@ public class Structure extends AbstractGameObject{
      */
     protected boolean enabledFlag = true; 
     
+    protected StructureButton structureDisplayButton; 
     /**
      * Additional modifier ontop of the base output modifier. 
      */
@@ -195,6 +197,10 @@ public class Structure extends AbstractGameObject{
         return this.getReferenceDataTableEntry().getInputResourceArrayList(); 
     }; 
     
+    /**
+     * Gets the current inactive structure amount of this object. 
+     * @return Returns the inactiveStructureAmount property of this object as an int. 
+     */
     public int getInactiveStructureAmount(){
         return this.inactiveStructureAmount; 
     }
@@ -202,13 +208,17 @@ public class Structure extends AbstractGameObject{
     // Functions for altering current Structure object properties.
     
     /**
-     * Directly sets the amount of structures of this object.
+     * Directly sets the amount of structures of this Structure.
      * @param structureAmountToSet Value to set this object's structure amount. 
      */
     public void setStructureAmount (int structureAmountToSet) {
         this.structureAmount = structureAmountToSet; 
     }
     
+    /**
+     * Directly sets the amount of inactive structures of this Structure. 
+     * @param inactiveStructureAmount Value to set the inactiveStructureAmount property of this object to. 
+     */
     public void setInactiveStructureAmount (int inactiveStructureAmount) {
         this.inactiveStructureAmount = inactiveStructureAmount;
     }
@@ -226,7 +236,6 @@ public class Structure extends AbstractGameObject{
         Resource outputResource = Resource.newResource(resourceType.getIdentifier(), buffer); 
         return outputResource; 
     }
-    
     
     /**
      * Returns an ArrayList of Resources which symbolize the costs required to build buildAmount Structure objects. 
@@ -265,7 +274,7 @@ public class Structure extends AbstractGameObject{
     }  
     
     
-    /** Ticks the structure by a single tick; logic can be dictated by child classes.  **/ 
+    /** Ticks the structure by a single tick; updating the Resources of this Structure's parent BuildableBody.**/ 
     public void tickStructure() {
         ArrayList<Resource> baseInputResources = this.getReferenceDataTableEntry().getInputResourceArrayList();
         ArrayList<Resource> baseOutputResources = this.getReferenceDataTableEntry().getOutputResourceArrayList(); 
@@ -339,6 +348,30 @@ public class Structure extends AbstractGameObject{
         
     }; 
     
+    // ## GUI Functions 
+    /**
+     * Updates the StructureDisplayButton of this Structure; 
+     */
+    public void updateStructureButton() {
+        
+        // Check if this object is currently displaying a button; if it isnt create one. 
+        if (this.getStructureButton() == null) {
+            this.structureDisplayButton = StructureButton.newStructureButton(this.getDisplayName(), this); 
+        }
+        
+        // Else, if the structure button already exists; update display text if required. 
+        else {
+            this.structureDisplayButton.setDisplayText(this.getDisplayName());
+        }
+    }
+    
+    public StructureButton getStructureButton() {
+        return this.structureDisplayButton; 
+    }
+    
+    public void destroyStructureButton() {
+        this.structureDisplayButton = null; 
+    }
 }
 
 

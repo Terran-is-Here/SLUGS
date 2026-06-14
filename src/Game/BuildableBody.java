@@ -301,7 +301,7 @@ public class BuildableBody extends AbstractGameObject{
                 // Compare current buildcost with current resource stockpile in bodyToBuildOn. 
                 // If current body resources in this type of resource are less than the total build cost; build order does not go through. 
                 if (Resource.getResourceFromArray(parentBodyResources, currentResource.getIdentifier()).getResourceAmount() < tempResourceAmount) {
-                    // Implement "insufficient resources" logic here. 
+                    javax.swing.JOptionPane.showMessageDialog(null, "Insufficient resources to finish build order", "Insuffiicent resources",javax.swing.JOptionPane.WARNING_MESSAGE);
                     return;
                 }
             
@@ -336,8 +336,8 @@ public class BuildableBody extends AbstractGameObject{
         }
     }
     
-    public static void destroyStructure(BuildableBody parentBuildableBody,Structure structureToBuild, int amountToDestroy) {
-        Iterator structureResourceCostIterator = structureToBuild.getBaseStructureCosts().iterator(); 
+    public static void destroyStructure(BuildableBody parentBuildableBody,Structure inputStructure, int amountToDestroy) {
+        Iterator structureResourceCostIterator = inputStructure.getBaseStructureCosts().iterator(); 
         Resource currentStructureResource; 
         Resource currentBodyResource; 
         double temp; 
@@ -345,7 +345,8 @@ public class BuildableBody extends AbstractGameObject{
             currentStructureResource = (Resource) structureResourceCostIterator.next(); 
             currentBodyResource = parentBuildableBody.getResource(currentStructureResource.getIdentifier());
             temp = currentStructureResource.getResourceAmount() * amountToDestroy; 
-            currentBodyResource.setResourceAmount(currentBodyResource.getResourceAmount() + temp);
+            currentBodyResource.setResourceAmount(currentBodyResource.getResourceAmount() - temp);
         }
+        inputStructure.setStructureAmount(inputStructure.getStructureAmount() - amountToDestroy);
     } 
 }
