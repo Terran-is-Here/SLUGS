@@ -23,8 +23,8 @@ public class ReferenceDataEntry extends AbstractGameObject{
     private double outputEfficiency = 1.0; //double representing the efficiency of an object to output something.  
     private double inputEfficiency = 1.0; //double representing the efficiency of an object in terms of consuming inputs. 
     private double costScaleFactor = 1.0; //double representing how much the cost of an object scales exponentially. 
-    private String objectType; // Type of object (mainly for Resource and Structure and another subset of identification) 
-    
+    private String objectType; // Internal object type(mainly for Resource and Structure and another subset of identification); 
+    private String objectDisplayType; // Type of object string used for display. 
     private boolean booleanFlag; 
     
     
@@ -53,7 +53,8 @@ public class ReferenceDataEntry extends AbstractGameObject{
             double _outputEfficiency,
             double _inputEfficiency, 
             double _costScaleFactor,
-            String _objectType, 
+            String _objectType,
+            String _objectDisplayType, 
             boolean _booleanFlag
                 ) {
             identifierName = _identifierName; 
@@ -67,6 +68,7 @@ public class ReferenceDataEntry extends AbstractGameObject{
             inputEfficiency = _inputEfficiency; 
             costScaleFactor = _costScaleFactor; 
             objectType = _objectType; 
+            objectDisplayType = _objectDisplayType; 
             booleanFlag = _booleanFlag; 
         
             
@@ -84,6 +86,7 @@ public class ReferenceDataEntry extends AbstractGameObject{
             double _inputEfficiency, 
             double _costScaleFactor,
             String _objectType,
+            String _objectDisplayType, 
             boolean _booleanFlag) {
         return new ReferenceDataEntry(
                 _identifierName, 
@@ -97,6 +100,7 @@ public class ReferenceDataEntry extends AbstractGameObject{
                 _inputEfficiency,
                 _costScaleFactor,
                 _objectType,
+                _objectDisplayType, 
                 _booleanFlag);
     
     }
@@ -106,7 +110,7 @@ public class ReferenceDataEntry extends AbstractGameObject{
      * @return An empty referenceDataEntry. 
      */
     public static ReferenceDataEntry newEmptyReferenceDataEntry() {
-        ReferenceDataEntry buffer = new ReferenceDataEntry(null,null,null,null,null,null,null,1.0,1.0,1.0,null,false);
+        ReferenceDataEntry buffer = new ReferenceDataEntry(null,null,null,null,null,null,null,1.0,1.0,1.0,null,null,false);
         return buffer; 
     }
     
@@ -165,6 +169,9 @@ public class ReferenceDataEntry extends AbstractGameObject{
         return this.objectType; 
     }
     
+    public String getObjectDisplayType() {
+        return this.objectDisplayType; 
+    }
     
     /**
      * Debugging tool to check if values have been properly loaded for a ReferenceDataEntry object. 

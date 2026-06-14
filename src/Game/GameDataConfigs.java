@@ -81,6 +81,10 @@ public class GameDataConfigs {
      */
     public final static String OBJECT_TYPE_REGEX = "type"; 
     
+    /**
+     * Regex to notate that an object's value is relating to it's type displayed (i.e. a display category); 
+     */
+    public final static String OBJECT_DISPLAY_TYPE_REGEX = "displaytype"; 
     
     // ##BuildableBody Specific REGEX
     public final static String BUILDABLEBODY_DEPOSIT_REGEX = "deposit.";

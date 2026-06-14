@@ -52,6 +52,7 @@ public class GameData {
         String bufferDisplayName = ""; 
         String bufferDisplayDescription = ""; 
         String bufferObjectType = ""; 
+        String bufferObjectDisplayType = ""; 
         
         ArrayList<Resource> bufferInputResourceArrayList = new ArrayList(); 
         ArrayList<Resource> bufferOutputResourceArrayList = new ArrayList(); 
@@ -83,6 +84,7 @@ public class GameData {
                     bufferDisplayDescription = "";
                     bufferDisplayName = "";
                     bufferObjectType = ""; 
+                    bufferObjectDisplayType = ""; 
                     bufferInputEfficiency = 1.0;
                     bufferOutputEfficiency = 1.0;
                     bufferCostScaleFactor = 1.0;
@@ -111,6 +113,7 @@ public class GameData {
                             bufferInputEfficiency,
                             bufferCostScaleFactor,
                             bufferObjectType,
+                            bufferObjectDisplayType, 
                             bufferBooleanFlag);
                     
                     // Put respective buffer entry at the end of the table.
@@ -193,6 +196,7 @@ public class GameData {
                 if (currentLine.startsWith(GameDataConfigs.OBJECT_TYPE_REGEX)) {
                     bufferStringArray = getLineValue(GameDataConfigs.OBJECT_TYPE_REGEX, currentLine);
                     bufferObjectType = bufferStringArray[1]; 
+                    continue; 
                 }
                 
                 if (currentLine.startsWith(GameDataConfigs.BUILDABLEBODY_DEPOSIT_REGEX)) {
@@ -201,6 +205,14 @@ public class GameData {
                     bufferStringArray = getLineValue(GameDataConfigs.BUILDABLEBODY_DEPOSIT_REGEX, currentLine); 
                     bufferResource = Resource.newResource(bufferStringArray[0], Double.parseDouble(bufferStringArray[1]));
                     bufferDepositResourceArrayList.add(bufferResource); 
+                    continue; 
+                }
+                
+                if (currentLine.startsWith(GameDataConfigs.OBJECT_DISPLAY_TYPE_REGEX)) {
+                    
+                    // If true, add new Resource object to bufferCostResourceArrayList
+                    bufferStringArray = getLineValue(GameDataConfigs.OBJECT_DISPLAY_TYPE_REGEX, currentLine);
+                    bufferObjectDisplayType = bufferStringArray[1]; 
                     continue; 
                 }
                 
