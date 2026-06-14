@@ -238,7 +238,7 @@ public class Resource extends AbstractGameObject{
         
             tempResource = (Resource) resourceIterator.next(); 
             temp = tempResource.getResourceAmount(); 
-            tempOutput = tempResource.getDisplayName() + ": " + Double.toString(temp); 
+            tempOutput ="> " +  tempResource.getDisplayName() + ": " + Double.toString(temp); 
             outputArray[index] = tempOutput; 
             index++;
         }
