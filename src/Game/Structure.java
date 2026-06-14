@@ -16,7 +16,7 @@ import guiObjects.StructureButton;
 Main class for all Structures present within the game. 
 */
 public class Structure extends AbstractGameObject{
-    
+    public static String INNATE_IDENTIFIER = "INNATE"; 
     
     /*** The amount of structures present within this object. */
     protected int structureAmount; 
@@ -34,14 +34,14 @@ public class Structure extends AbstractGameObject{
     
     protected StructureButton structureDisplayButton; 
     /**
-     * Additional modifier ontop of the base output modifier. 
+     * ArrayList of Modifier objects for the current set of modifiers affecting this object instance alone (ignoring global effects). 
      */
-    protected double innateOutputEfficiency = 1.0; 
+    protected ArrayList<Modifier> innateOutputEfficiency = new ArrayList<>(); 
     
     /**
      * Additional modifier ontop of the base input modifier. 
      */
-    protected double innateInputEfficiency = 1.0;
+    protected ArrayList <Modifier> innateInputEfficiency = new ArrayList<>();
     
     
     // Constructor Methods
@@ -68,8 +68,8 @@ public class Structure extends AbstractGameObject{
         structureAmount = _structureAmount; 
         parentBody = _parentBody; 
         enabledFlag = _enabledFlag; 
-        innateOutputEfficiency = _innateOutputEfficiency; 
-        innateInputEfficiency = _innateInputEfficiency; 
+        innateOutputEfficiency.add(Modifier.newModifier(Structure.INNATE_IDENTIFIER, _innateOutputEfficiency)); 
+        innateInputEfficiency.add(Modifier.newModifier(Structure.INNATE_IDENTIFIER, _innateInputEfficiency));
         referenceDataEntry = _referenceDataEntry; 
         inactiveStructureAmount = 0; 
     }
@@ -149,12 +149,20 @@ public class Structure extends AbstractGameObject{
         return this.getReferenceDataTableEntry().getCostResourceArrayList(); 
     }
     
-    public double getStructureInnateInputEfficiency() {
+    public ArrayList<Modifier> getStructureInnateInputEfficiencyModifiers() {
         return this.innateInputEfficiency; 
     }
     
-    public double getStructureInnateOutputEfficiency() {
+    public ArrayList<Modifier> getStructureInnateOutputEfficiencyModifiers() {
         return this.innateOutputEfficiency; 
+    }
+    
+    public double getStructureInnateInputEfficiency() {
+        return Modifier.getEffectiveModifier(this.getStructureInnateInputEfficiencyModifiers());
+    }
+    
+    public double getStructureInnateOutputEfficiency() {
+        return Modifier.getEffectiveModifier(this.getStructureInnateOutputEfficiencyModifiers());
     }
     
     /**
