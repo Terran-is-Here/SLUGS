@@ -30,13 +30,27 @@ public class Modifier extends AbstractGameObject {
     }
     
     public static double getEffectiveModifier(ArrayList<Modifier> modifierArrayList) {
-        double output = 0.0; 
+        double output = 1.0; 
         Modifier buffer; 
         Iterator modifierIterator = modifierArrayList.iterator(); 
         while (modifierIterator.hasNext()) {
             buffer = (Modifier) modifierIterator.next();
             output *= buffer.getModifierValue(); 
         }
+        System.out.println("Testing!"); 
+        System.out.println(output);
         return output; 
+    }
+    
+    public static Modifier getModifierFromArray(ArrayList<Modifier> inputArrayList, String identifierToSearch) {
+        Iterator modifierIterator = inputArrayList.iterator(); 
+        Modifier buffer; 
+        while (modifierIterator.hasNext()) {
+            buffer = (Modifier) modifierIterator.next(); 
+            if (buffer.getIdentifier().equals(identifierToSearch)) {
+                return buffer; 
+            }
+        }
+        return null; 
     }
 }
