@@ -11,7 +11,8 @@ package Game;
 import java.lang.Math; 
 import java.util.ArrayList; 
 import java.util.Iterator; 
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 public class Utilities {
     
     /**
@@ -24,10 +25,17 @@ public class Utilities {
     public static double geometricSeriesInitialSum(double lowerBound, double upperBound, double commonRatio) {
         double output = 0;;
         if(commonRatio > 1.0) {
+            // General formula for calculating the sum of a geometric series. 
+            // Given lower bound a, upper bound b, and common ratio r, this evaluates as (r^a - r^b+1) / (1-r) 
             output = (Math.pow(commonRatio, lowerBound) - Math.pow(commonRatio, upperBound+1))/(1-commonRatio); 
         }
         if (commonRatio == 1.0) {
-            output = (upperBound-lowerBound)*commonRatio; 
+            if (upperBound == lowerBound) {
+                output = commonRatio; 
+            }
+            else {
+                output = (upperBound-lowerBound)*commonRatio;
+            }
         }
         return output; 
     }
@@ -109,6 +117,11 @@ public class Utilities {
         return null; 
     }
     
+    public static double round(double value, int places) {
+        BigDecimal bigDecimalBuffer = BigDecimal.valueOf(value); 
+        bigDecimalBuffer = bigDecimalBuffer.setScale(places, RoundingMode.HALF_UP); 
+        return bigDecimalBuffer.doubleValue(); 
+    }
     
     
     

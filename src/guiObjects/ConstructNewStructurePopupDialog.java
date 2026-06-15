@@ -186,7 +186,6 @@ public class ConstructNewStructurePopupDialog extends javax.swing.JPanel {
     private void cmbxStructureChoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbxStructureChoicesActionPerformed
         // TODO add your handling code here:
         selectedIndex = cmbxStructureChoices.getSelectedIndex();
-        System.out.println(selectedIndex);
         this.currentStructure =  Game.Structure.newStructure(this.getChoiceIdentifiers().get(this.selectedIndex), 0, this.parentBuildableBody);
     }//GEN-LAST:event_cmbxStructureChoicesActionPerformed
 

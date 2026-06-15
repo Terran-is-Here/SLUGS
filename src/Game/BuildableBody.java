@@ -324,6 +324,15 @@ public class BuildableBody extends AbstractGameObject{
         Game.contentUpdateFlag = true; 
     } 
     
+    // Refreshes through body resources for non-changing objects; 
+    public void refreshBodyResources() {
+        Iterator bodyResourceIterator = this.getBodyResourceStorage().iterator(); 
+        Resource bufferResrouce; 
+        while (bodyResourceIterator.hasNext()) {
+            bufferResrouce = (Resource) bodyResourceIterator.next(); 
+            bufferResrouce.setResourceAmount(bufferResrouce.getResourceAmount()); // Simply reset to current amount to refresh GUI
+        }
+    }
     
     
     /**

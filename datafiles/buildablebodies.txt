@@ -1,16 +1,21 @@
 entrystart
-identifier=earth
-displayname=Kepler 10
-displaydescription=A terrestrial planet nestled inbetween two binary stars. Certainly an exciting location to start out. 
+identifier=kepler_452b
+displayname=Kepler k452b
+displaydescription=A terrestrial planet located within the habitable region of Kepler 452. Viable candidate for long-term colonization and industrial activities. 
 type=planet
+icon=/assets/img/placeholderPlanet.png
 deposit.iron_ore=100000000
 booleanflag=true
 entryend
+
+
+
 entrystart
-identifier=earth
-displayname=Kepler 11
-displaydescription=A terrestrial planet nestled inbetween two binary stars. Certainly an exciting location to start out. 
+identifier=trappist_1e
+displayname=Trappist 1e
+displaydescription=A terrestrial planet located within the habitable region of the Trappist Star System. Potentially vaible candidate for long-term colonization. 
 type=planet
+icon=/assets/img/placeholderPlanet.png
 deposit.iron_ore=100000000
 booleanflag=true
 entryend

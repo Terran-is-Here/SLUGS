@@ -1,14 +1,16 @@
+## Material Extraction
 entrystart
 identifier=iron_mine
 displayname=Iron Mine
-displaydescription=A basic iron mine that outputs iron ore. 
+displaydescription=A rickety iron mine that produces some iron ore. 
 inputefficiency=1.0
 outputefficiency=1.0
-costscalefactor=1.0
+costscalefactor=1.03
 output.iron_ore=1
-basecost.iron_plate=10
+output.raw_stone=0.25
+basecost.wood=5
 type=extractor
-displaytype=Extracting
+displaytype=Raw Material Extractors
 entryend
 
 
@@ -18,24 +20,85 @@ displayname=Copper Mine
 displaydescription=A basic copper mine that outputs copper ore. 
 inputefficiency=1.0
 outputefficiency=1.0
-costscalefactor=1.0
+costscalefactor=1.03
 output.copper_ore=1
-basecost.iron_plate=10
+output.raw_stone=0.25
+basecost.iron_ingot=5
+basecost.wood=5
 type=extractor
-displaytype=Extracting
+displaytype=Raw Material Extractors
+entryend
+
+entrystart
+identifier=coal_mine
+displayname=Coal Mine
+displaydescription=A dirty coal mine that produces some coal.
+inputefficiency=1.0
+outputefficiency=1.0
+costscalefactor=1.04
+output.coal=1
+output.raw_stone=0.5
+basecost.iron_ingot=5
+basecost.wood=5
+type=extractor
+displaytype=Raw Material Extractors
+entryend
+
+
+entrystart
+identifier=tree_farm
+displayname=Tree Farm
+displaydescription=A basic tree plantation that produces lumber for construction purposes. 
+inputefficiency=1.0
+outputefficiency=1.0
+costscalefactor=1.02
+output.wood=2
+basecost.raw_stone=2
+basecost.wood=5
+type=agriculture
+displaytype=Agriculture
+entryend
+
+entrystart
+identifier=strone_quarry
+displayname=Stone Quarry 
+displaydescription=A basic stone quarry to dig and excavate usable material. 
+inputefficiency=1.0
+outputefficiency=1.0
+costscalefactor=1.02
+output.raw_stone= 5
+basecost.wood=5
+basecost.iron_ingot=2
+type=extractor
+displaytype=Raw Material Extractors
 entryend
 
 entrystart
 identifier=iron_furnace
 displayname=Iron Furnace 
-displaydescription=This is a test iron furnace. 
+displaydescription=A basic stone furnace that can process Iron Ore when given coal. 
 inputefficiency=1.0
 outputefficiency=1.0
 costscalefactor=1.0
+basecost.stone_brick=2
 input.iron_ore=1
-output.iron_plate=1
-basecost.iron_plate=10
+input.coal=0.5
+output.iron_ingot=1.5
 type=processor
 displaytype=Processing
 entryend
 
+entrystart
+identifier=copper_furnace
+displayname=Copper Furnace
+displaydescription=A slightly more developed furnace that can process and refine copper. 
+inputefficiency=1.0
+outputefficiency=1.0
+costscalefactor=1.0
+input.copper_ore=1
+input.coal=0.5
+output.copper_ingot=1.5
+basecost.stone_brick=2
+type=processor
+displaytype=Processing
+entryend

@@ -70,6 +70,7 @@ public class ResourceDisplayContainer extends javax.swing.JPanel {
             // Update resourceDisplay of Resource; then get that resourceDisplay JPanel and add it to the overall container with GBCs defined above. 
             currentResource = resourceTable.get(index); 
             currentResource.setDisplayIndex(index);
+            //currentResource.destroyResourceDisplay();
             currentResource.updateResourceDisplay(false);
             bufferPanel = currentResource.getResourceDisplayPanel(); 
             add(bufferPanel,gridBagConstraints);

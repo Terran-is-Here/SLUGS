@@ -55,7 +55,7 @@ public class StructureMainPanel extends javax.swing.JPanel {
         String searchDisplayKeyword = ""; 
         StructureButtonGroup bufferPanel; 
         // While new keywords are being found...
-        int totalHeight = 0; 
+        int totalHeight = 60; 
         while (newKeywordsFound) {
             
             // Reset loop variables; 
@@ -96,19 +96,28 @@ public class StructureMainPanel extends javax.swing.JPanel {
             
             // If a new keyword is found; create a new StructureButtonGroup and add it to this object. 
             if (newKeywordsFound) {
+                
+                // Add newfound keyword into the keywords processed arrayList; 
                 keywordsProcessed.add(searchKeyword); 
                 objectConstraints = new GridBagConstraints(); 
-                objectConstraints.gridx = 0;
-                objectConstraints.gridy = keywordsProcessed.size();
-                objectConstraints.weightx = 1.0; 
-                objectConstraints.weighty = 0.0; 
-                objectConstraints.fill = GridBagConstraints.HORIZONTAL; 
-                objectConstraints.anchor = GridBagConstraints.CENTER; 
+                objectConstraints.gridx = 0; //Set to first cell in row; 
+                objectConstraints.gridy = keywordsProcessed.size(); // Set to next unused column; i.e stack button groups vertically
+                objectConstraints.weightx = 1.0;  // Fill content to size of grid bag cell
+                objectConstraints.weighty = 0.0;  // Set content to not stretch vertically to fill content; 
+                objectConstraints.fill = GridBagConstraints.HORIZONTAL; // Fill content to size of grid bag cell
+                objectConstraints.anchor = GridBagConstraints.CENTER;  // Set content to be anchored towards the center
                 //objectConstraints.insets = new java.awt.Insets(10,10,10,10);
-                System.out.println(bufferStructures.size());
+                
+                // Create new structure button group with Structures of the same type; with the heading set to the display version of the keyword. 
                 bufferPanel = StructureButtonGroup.newStructureDisplayContainer(bufferStructures, searchDisplayKeyword); 
+                
+                // Set border; 
                 bufferPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0,0,0)));
+                
+                // Update total height for JScrollPane 
                 totalHeight += bufferPanel.getPreferredSize().height; 
+                
+                // Add current bufferPanel
                 add(bufferPanel, objectConstraints); 
             }
             

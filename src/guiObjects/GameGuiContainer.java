@@ -27,7 +27,7 @@ public class GameGuiContainer extends javax.swing.JFrame {
     public GameGuiContainer() {
         
         initComponents();
-        mainBodyContainer = new MainBodyContainer(); 
+        mainBodyContainer = new MainBodyContainer(Game.getCurrentScope()); 
         // Set MainBodyContainer as current focus tab for now;
         MainGamePanel.add(mainBodyContainer, BorderLayout.NORTH); 
     }
@@ -73,8 +73,7 @@ public class GameGuiContainer extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
-        jMenu4 = new javax.swing.JMenu();
+        chkPauseGame = new javax.swing.JCheckBoxMenuItem();
         jMenu6 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
@@ -127,25 +126,29 @@ public class GameGuiContainer extends javax.swing.JFrame {
 
         jMenu1.setText("Game");
 
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem2.setText("Save Game");
         jMenu1.add(jMenuItem2);
 
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PERIOD, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem3.setText("Exit Game");
         jMenu1.add(jMenuItem3);
 
+        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem4.setText("Load Game");
         jMenu1.add(jMenuItem4);
 
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Settings");
+
+        chkPauseGame.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.SHIFT_DOWN_MASK));
+        chkPauseGame.setSelected(true);
+        chkPauseGame.setText("Pause Game");
+        chkPauseGame.addActionListener(this::chkPauseGameActionPerformed);
+        jMenu2.add(chkPauseGame);
+
         jMenuBar1.add(jMenu2);
-
-        jMenu3.setText("System Navigation");
-        jMenuBar1.add(jMenu3);
-
-        jMenu4.setText("Research");
-        jMenuBar1.add(jMenu4);
 
         jMenu6.setText("Debug Menu");
         jMenu6.addActionListener(this::jMenu6ActionPerformed);
@@ -193,6 +196,11 @@ public class GameGuiContainer extends javax.swing.JFrame {
         Game.tickGame(); 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void chkPauseGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkPauseGameActionPerformed
+        // TODO add your handling code here:
+        Game.isPausedFlag = chkPauseGame.isSelected();
+    }//GEN-LAST:event_chkPauseGameActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -200,12 +208,11 @@ public class GameGuiContainer extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MainGamePanel;
     private javax.swing.JScrollPane ScrlResourceDisplay;
+    private javax.swing.JCheckBoxMenuItem chkPauseGame;
     private javax.swing.JPanel headerPanelContainer;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;

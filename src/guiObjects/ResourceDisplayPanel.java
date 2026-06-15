@@ -54,7 +54,6 @@ public class ResourceDisplayPanel extends javax.swing.JPanel {
     }
     
     public void updateColor() {
-        System.out.println(this.index%2);
         switch(this.index%2) {
             case 0 -> effectiveColor = GuiConfigs.RESOURCE_BACKGROUND_COLOR1;
             case 1 -> effectiveColor = GuiConfigs.RESOURCE_BACKGROUND_COLOR2; 
@@ -107,7 +106,7 @@ public class ResourceDisplayPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         add(lblResourceDisplayName, gridBagConstraints);
 
         lblResourceAmount.setBackground(effectiveColor);
@@ -138,7 +137,7 @@ public class ResourceDisplayPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         add(lblDeltaResource, gridBagConstraints);
         lblDeltaResource.getAccessibleContext().setAccessibleDescription("");
     }// </editor-fold>//GEN-END:initComponents

@@ -53,7 +53,7 @@ public class GameData {
         String bufferDisplayDescription = ""; 
         String bufferObjectType = ""; 
         String bufferObjectDisplayType = ""; 
-        
+        String bufferImageIcon = ""; 
         ArrayList<Resource> bufferInputResourceArrayList = new ArrayList(); 
         ArrayList<Resource> bufferOutputResourceArrayList = new ArrayList(); 
         ArrayList<Resource> bufferBuildCostResourceArrayList = new ArrayList(); 
@@ -114,7 +114,8 @@ public class GameData {
                             bufferCostScaleFactor,
                             bufferObjectType,
                             bufferObjectDisplayType, 
-                            bufferBooleanFlag);
+                            bufferBooleanFlag,
+                            bufferImageIcon);
                     
                     // Put respective buffer entry at the end of the table.
                     
@@ -213,6 +214,14 @@ public class GameData {
                     // If true, add new Resource object to bufferCostResourceArrayList
                     bufferStringArray = getLineValue(GameDataConfigs.OBJECT_DISPLAY_TYPE_REGEX, currentLine);
                     bufferObjectDisplayType = bufferStringArray[1]; 
+                    continue; 
+                }
+                
+                if (currentLine.startsWith(GameDataConfigs.OBJECT_ICON_REGEX)) {
+                    
+                    // If true, add new Resource object to bufferCostResourceArrayList
+                    bufferStringArray = getLineValue(GameDataConfigs.OBJECT_ICON_REGEX, currentLine);
+                    bufferImageIcon = bufferStringArray[1]; 
                     continue; 
                 }
                 

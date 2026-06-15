@@ -26,6 +26,7 @@ public class ReferenceDataEntry extends AbstractGameObject{
     private String objectType; // Internal object type(mainly for Resource and Structure and another subset of identification); 
     private String objectDisplayType; // Type of object string used for display. 
     private boolean booleanFlag; 
+    private String iconDirectory; 
     
     
     
@@ -55,7 +56,8 @@ public class ReferenceDataEntry extends AbstractGameObject{
             double _costScaleFactor,
             String _objectType,
             String _objectDisplayType, 
-            boolean _booleanFlag
+            boolean _booleanFlag,
+            String _iconDirectory
                 ) {
             identifierName = _identifierName; 
             displayName = _displayName; 
@@ -70,6 +72,7 @@ public class ReferenceDataEntry extends AbstractGameObject{
             objectType = _objectType; 
             objectDisplayType = _objectDisplayType; 
             booleanFlag = _booleanFlag; 
+            iconDirectory = _iconDirectory; 
         
             
     } 
@@ -87,7 +90,8 @@ public class ReferenceDataEntry extends AbstractGameObject{
             double _costScaleFactor,
             String _objectType,
             String _objectDisplayType, 
-            boolean _booleanFlag) {
+            boolean _booleanFlag,
+            String _iconDirectory) {
         return new ReferenceDataEntry(
                 _identifierName, 
                 _displayName,
@@ -101,7 +105,8 @@ public class ReferenceDataEntry extends AbstractGameObject{
                 _costScaleFactor,
                 _objectType,
                 _objectDisplayType, 
-                _booleanFlag);
+                _booleanFlag,
+                _iconDirectory);
     
     }
     
@@ -110,7 +115,7 @@ public class ReferenceDataEntry extends AbstractGameObject{
      * @return An empty referenceDataEntry. 
      */
     public static ReferenceDataEntry newEmptyReferenceDataEntry() {
-        ReferenceDataEntry buffer = new ReferenceDataEntry(null,null,null,null,null,null,null,1.0,1.0,1.0,null,null,false);
+        ReferenceDataEntry buffer = new ReferenceDataEntry(null,null,null,null,null,null,null,1.0,1.0,1.0,null,null,false, null);
         return buffer; 
     }
     
@@ -171,6 +176,10 @@ public class ReferenceDataEntry extends AbstractGameObject{
     
     public String getObjectDisplayType() {
         return this.objectDisplayType; 
+    }
+    
+    public String getObjectIconDirectory() {
+        return this.iconDirectory; 
     }
     
     /**

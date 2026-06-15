@@ -74,7 +74,10 @@ public class GameDataConfigs {
      */ 
     public final static String COST_RESOURCE_REGEX = "basecost."; 
     
-    
+    /**
+     * Regex to notate that a specific line's value is relating to it's associated icon (if it has one);
+     */
+    public final static String OBJECT_ICON_REGEX = "icon"; 
     
     /**
      * Regex to notate that a specific line's value is relating to it's type (as a String)

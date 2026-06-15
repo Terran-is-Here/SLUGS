@@ -13,8 +13,43 @@ type=normal
 entryend
 
 entrystart
-identifier=iron_plate
-displayname=Iron Plate
-displaydescription=This is some iron plates.
+identifier=iron_ingot
+displayname=Iron Ingot
+displaydescription=Processed iron ore; ready for industrial use. 
+type=normal
+entryend
+
+entrystart 
+identifier=copper_ingot
+displayname=Copper Ingot
+displaydescription=Processed copper ore; ready for industrial use. 
+type=normal
+entryend
+
+entrystart 
+identifier=coal
+displayname=Coal
+displaydescription=Fossil fuels used as themeral energy source for material refining. 
+type=normal
+entryend
+
+entrystart
+identifier=raw_stone
+displayname=Raw Stone
+displaydescription=Raw stone rocks from industrial processes. Requires further processing to be utilized. 
+type=normal
+entryend
+
+entrystart
+identifier=stone_brick
+displayname=Stone Brick
+displaydescription=Processed raw stone; sufficient as a basic construction material.
+type=normal
+entryend
+
+entrystart
+identifier=wood
+displayname=Wood Logs
+displaydescription=Raw wood logs; used as primitive building material.
 type=normal
 entryend

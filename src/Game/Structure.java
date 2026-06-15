@@ -12,6 +12,7 @@ package Game;
 import java.util.ArrayList;
 import java.util.Iterator; 
 import guiObjects.StructureButton; 
+import java.math.BigDecimal; 
 /*
 Main class for all Structures present within the game. 
 */
@@ -262,6 +263,7 @@ public class Structure extends AbstractGameObject{
         double scalingFactor = 0;
         Resource buffer;
         Resource currentResource;
+        double effectiveCostResourceAmount; 
         ArrayList<Resource> outputArrayList = new ArrayList<>(); 
         // First, get the effective scaling factor for this build order.
         // Special case if only one object is being built. 
@@ -277,7 +279,8 @@ public class Structure extends AbstractGameObject{
         // Using scalingFactor calculated above; iterate across baseStructureCosts to return the resulting cost as a Resource ArrayList. 
         while (resourceCostIterator.hasNext()) {
                currentResource = (Resource) resourceCostIterator.next(); 
-               buffer = Resource.newResource(currentResource.getIdentifier(), currentResource.getResourceAmount()*scalingFactor);
+               effectiveCostResourceAmount = Utilities.round(currentResource.getResourceAmount()*scalingFactor,2); 
+               buffer = Resource.newResource(currentResource.getIdentifier(), effectiveCostResourceAmount);
                outputArrayList.add(buffer);
         }
         return outputArrayList; 
@@ -369,7 +372,6 @@ public class Structure extends AbstractGameObject{
         
         // Check if this object is currently displaying a button; if it isnt create one. 
         if (this.getStructureButton() == null) {
-            System.out.println("Structure button created");
             this.structureDisplayButton = StructureButton.newStructureButton(this.getDisplayName(), this); 
         }
         
