@@ -14,6 +14,7 @@ public class BuildableBody extends AbstractGameObject{
     
     
     
+    
     /**
      * ArrayList of Resource objects that dictate the amount of Resources currently in this BuildableBody's storage. 
     */
@@ -33,6 +34,7 @@ public class BuildableBody extends AbstractGameObject{
     /** ArrayList of Vehicle objects that represent the Vehicles currently present in this BuildableBody.*/
     protected ArrayList<Vehicle> bodyVehicles; // Vehicles are currently unimplemented but will be in the future. 
     
+    protected ArrayList<BuildableBody> childBodies = new ArrayList<>(); 
     /** Flag if a BuildableBody is currently accessible to have structures built on it. */ 
     protected boolean buildableFlag = true; 
     
@@ -214,7 +216,7 @@ public class BuildableBody extends AbstractGameObject{
         Resource result = (Resource) Utilities.findObject(this.getBodyResourceStorage(), resourceToFindIdentifier); 
         
         // Create new output resource if it is not already present on the body, or if no match was found. 
-        if (result.equals(null)) {
+        if (result == null) {
             result = Resource.newResource(resourceToFindIdentifier, 0);
             this.getBodyResourceStorage().add(result);
             Utilities.quickSort(this.bodyResourceStorage);
@@ -304,6 +306,7 @@ public class BuildableBody extends AbstractGameObject{
             currentResource.setResourceAmount(tempResourceAmount);
                     
         }
+        Game.contentUpdateFlag = true; 
     }
     
     public static void destroyStructure(BuildableBody parentBuildableBody,Structure inputStructure, int amountToDestroy) {
@@ -318,5 +321,64 @@ public class BuildableBody extends AbstractGameObject{
             currentBodyResource.setResourceAmount(currentBodyResource.getResourceAmount() - temp);
         }
         inputStructure.setStructureAmount(inputStructure.getStructureAmount() - amountToDestroy);
+        Game.contentUpdateFlag = true; 
     } 
+    
+    
+    
+    /**
+     * Gets the list of identifiers of a set of buildable structures on a BuildableBody. 
+     * @param parentBody The parent BuildableBody in which the buildability of structures are being checked. 
+     * @param buildOptions The available list of build options.
+     * @return Returns an ArrayList of Strings representing the Identifiers of the Structures that are buildable. 
+     */
+    public ArrayList<String> findBuildableStructures() {
+        BuildableBody parentBody = this; 
+        ArrayList<ReferenceDataEntry> buildOptions = Game.getStructureReferenceTable(); 
+        ArrayList<String> outputIdentifierList = new ArrayList<>(); 
+        
+        // Iterate through all structure build options; 
+        Iterator buildOptionIterator = buildOptions.iterator(); 
+        Iterator structureResourceIterator;  
+        
+        ReferenceDataEntry currentReferenceDataEntry;
+        Resource currentResource; 
+        
+        boolean isBuildable = true; 
+        // Iterate through all build options; 
+        while (buildOptionIterator.hasNext()) {
+            
+            // Reset loop variables 
+            isBuildable = true; 
+            
+            // Get current structure and it's build costs. 
+            currentReferenceDataEntry = (ReferenceDataEntry) buildOptionIterator.next();
+            structureResourceIterator = currentReferenceDataEntry.getCostResourceArrayList().iterator(); 
+            
+            // Then iterate through all build costs; 
+            while (structureResourceIterator.hasNext()) {
+                
+                // Get current build cost and check if it exists; and or if there's a sufficient amount of it. 
+                currentResource = (Resource) structureResourceIterator.next(); 
+                // Check if resource is not present; then structure is not buildable and is thus not included. 
+                if (!parentBody.checkIfResourceIsPresent(currentResource.getIdentifier())) {
+                    isBuildable = false; 
+                    break; 
+                }
+                // Else; check if resource amount present within parent body is insufficient; if it is then do not include structure in final output. 
+                else if (parentBody.getResource(currentResource.getIdentifier()).getResourceAmount() < currentResource.getResourceAmount()) {
+                    isBuildable = false; 
+                    break; 
+                }
+                // If both are false; then our structure is buildable and loop is not broken. 
+            }
+            if (isBuildable) {
+                outputIdentifierList.add(currentReferenceDataEntry.getIdentifier());
+            }                
+        }
+        
+        
+        
+        return outputIdentifierList; 
+    }
 }

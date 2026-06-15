@@ -274,7 +274,6 @@ public class Structure extends AbstractGameObject{
             scalingFactor = Utilities.geometricSeriesInitialSum(currentStructureAmount, currentStructureAmount + buildAmount, structureCostScaleFactor);
         }
         
-        System.out.println(scalingFactor);
         // Using scalingFactor calculated above; iterate across baseStructureCosts to return the resulting cost as a Resource ArrayList. 
         while (resourceCostIterator.hasNext()) {
                currentResource = (Resource) resourceCostIterator.next(); 
@@ -370,6 +369,7 @@ public class Structure extends AbstractGameObject{
         
         // Check if this object is currently displaying a button; if it isnt create one. 
         if (this.getStructureButton() == null) {
+            System.out.println("Structure button created");
             this.structureDisplayButton = StructureButton.newStructureButton(this.getDisplayName(), this); 
         }
         
@@ -395,6 +395,7 @@ public class Structure extends AbstractGameObject{
         String currentLineOutput; 
         double multiplier; 
         if (isInput) {
+
             multiplier = effectiveStructures*this.getStructureInputEfficiency()*this.getReferenceDataTableEntry().getBaseInputEfficiency(); 
         }
         else {
@@ -402,7 +403,7 @@ public class Structure extends AbstractGameObject{
         }
         while (resourceIterator.hasNext()) {
             buffer = (Resource) resourceIterator.next(); 
-            output.add(Resource.newResource(buffer.getIdentifier(), buffer.getResourceAmount()*effectiveStructures*multiplier)); 
+            output.add(Resource.newResource(buffer.getIdentifier(), buffer.getResourceAmount()*multiplier)); 
         }
         return output; 
     }

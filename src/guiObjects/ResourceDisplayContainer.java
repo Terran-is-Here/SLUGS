@@ -39,9 +39,10 @@ public class ResourceDisplayContainer extends javax.swing.JPanel {
         
         // Sets the current focus resource table as resourceTable
         this.currentResourceTable = resourceTable; 
-        
+
         // Iterate through all objects within the resource table. 
         for (int index = 0; index < resourceTable.size(); index++){
+
             
             // create GBCs for placement in Grid Bag Layout; 
             gridBagConstraints = new java.awt.GridBagConstraints();
@@ -76,9 +77,9 @@ public class ResourceDisplayContainer extends javax.swing.JPanel {
         }
         
         // Add spacing glue to the bottom of the layout 
-        javax.swing.JPanel glue = new javax.swing.JPanel();
+        JPanel glue = new JPanel();
         glue.setOpaque(false); 
-        java.awt.GridBagConstraints glueConstraints = new java.awt.GridBagConstraints();
+        GridBagConstraints glueConstraints = new GridBagConstraints();
         glueConstraints.gridx = 0; 
         glueConstraints.gridy = resourceTable.size(); // Set it to be present at the very last row of our display; i.e. index + 1; 
         glueConstraints.weightx = 1.0; // Fully span horizontally

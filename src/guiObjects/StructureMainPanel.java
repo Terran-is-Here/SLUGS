@@ -1,0 +1,154 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
+package guiObjects;
+
+/**
+ *
+ * @author plcau
+ */
+import java.util.ArrayList; 
+import java.util.Iterator;
+import java.awt.GridBagConstraints; 
+import java.awt.Dimension; 
+import Game.Structure; 
+import Game.BuildableBody; 
+public class StructureMainPanel extends javax.swing.JPanel {
+    private ArrayList<Structure> structuresToDisplay; 
+    private BuildableBody parentBuildableBody; 
+    /**
+     * Creates new form StructureMainPanel
+     */
+    private StructureMainPanel(ArrayList<Structure> _structuresToDisplay, BuildableBody _parentBuildableBody) {
+        structuresToDisplay = _structuresToDisplay; 
+        parentBuildableBody = _parentBuildableBody; 
+        initComponents();
+    }
+    
+    public static StructureMainPanel newStructureMainPanel(ArrayList<Structure> _structuresToDisplay, BuildableBody _parentBuildableBody) {
+        // Create new JPanel container; 
+        StructureMainPanel currentPanel = new StructureMainPanel(_structuresToDisplay, _parentBuildableBody);
+        currentPanel.addStructureButtonGroups();
+
+        
+        
+        return currentPanel; 
+    }
+
+    
+    private void addStructureButtonGroups() {
+        // Create an arrayList of keywords (objectType of Structures) that have already been processed; 
+        ArrayList<String> keywordsProcessed = new ArrayList<>(); 
+        GridBagConstraints objectConstraints; 
+        // Keep looping through the structures to display arraylist; only stop looping if no new keywords are deteted; 
+        boolean newKeywordsFound = true;
+        
+        // Iterator and buffer values 
+        Iterator structureIterator; 
+        Structure currentStructure;
+        String currentKeyword = ""; 
+        
+        ArrayList<Structure> bufferStructures = new ArrayList<>(); 
+        String searchKeyword = ""; 
+        String currentDisplayKeyword = ""; 
+        String searchDisplayKeyword = ""; 
+        StructureButtonGroup bufferPanel; 
+        // While new keywords are being found...
+        int totalHeight = 0; 
+        while (newKeywordsFound) {
+            
+            // Reset loop variables; 
+            structureIterator = this.getStructuresToDisplay().iterator();
+            newKeywordsFound = false; 
+            searchKeyword = ""; 
+            bufferStructures = new ArrayList<>(); 
+            // Loop through the entire structure array
+            while (structureIterator.hasNext()) {
+                // Get current Structure object and gets it's keyword. 
+                currentStructure = (Structure) structureIterator.next(); 
+                currentKeyword = currentStructure.getReferenceDataTableEntry().getObjectType(); 
+                currentDisplayKeyword = currentStructure.getReferenceDataTableEntry().getObjectDisplayType(); 
+                
+                // If the current object already has a keyword we already processed; proceed to next object. 
+                if (keywordsProcessed.contains(searchKeyword)) {
+                    continue; 
+                }
+                
+                // If the currentKeyword is empty; i.e. not yet populated with a value; and if this is a new keyword; set current keyword towards the search keyword.
+                // This only happens if it is a new searchKeyword; in that case it is also a new category and as such plug it into the bufferStructures array. 
+                if (searchKeyword.equals("") && !keywordsProcessed.contains(currentKeyword)) {
+                    newKeywordsFound = true; 
+                    searchKeyword = currentKeyword; 
+                    searchDisplayKeyword = currentDisplayKeyword; 
+                    bufferStructures.add(currentStructure); 
+                    continue; 
+                }
+                
+                // If the currentKeyword matches with the searchKeyWord; add it to bufferStructures
+                if (currentKeyword.equals(searchKeyword)) {
+                    bufferStructures.add(currentStructure); 
+                }
+                else { // If it isn't a match; continue. 
+                    continue; 
+                }
+            }
+            
+            // If a new keyword is found; create a new StructureButtonGroup and add it to this object. 
+            if (newKeywordsFound) {
+                keywordsProcessed.add(searchKeyword); 
+                objectConstraints = new GridBagConstraints(); 
+                objectConstraints.gridx = 0;
+                objectConstraints.gridy = keywordsProcessed.size();
+                objectConstraints.weightx = 1.0; 
+                objectConstraints.weighty = 0.0; 
+                objectConstraints.fill = GridBagConstraints.HORIZONTAL; 
+                objectConstraints.anchor = GridBagConstraints.CENTER; 
+                //objectConstraints.insets = new java.awt.Insets(10,10,10,10);
+                System.out.println(bufferStructures.size());
+                bufferPanel = StructureButtonGroup.newStructureDisplayContainer(bufferStructures, searchDisplayKeyword); 
+                bufferPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0,0,0)));
+                totalHeight += bufferPanel.getPreferredSize().height; 
+                add(bufferPanel, objectConstraints); 
+            }
+            
+        }
+        // Set preferred size = it's width; and the total preferred heights of the container objects. 
+        this.setPreferredSize(new Dimension(this.getPreferredSize().width, totalHeight));
+    }
+    public ArrayList<Structure> getStructuresToDisplay() {
+        return this.structuresToDisplay; 
+    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        btnBuildNewStructure = new javax.swing.JButton();
+
+        setLayout(new java.awt.GridBagLayout());
+
+        btnBuildNewStructure.setText("Build Structure");
+        btnBuildNewStructure.addActionListener(this::btnBuildNewStructureActionPerformed);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(btnBuildNewStructure, gridBagConstraints);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnBuildNewStructureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuildNewStructureActionPerformed
+        // TODO add your handling code here:
+        ConstructNewStructurePopupDialog.newConstructNewStructurePopup(parentBuildableBody, this);
+    }//GEN-LAST:event_btnBuildNewStructureActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuildNewStructure;
+    // End of variables declaration//GEN-END:variables
+}

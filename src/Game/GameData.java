@@ -290,5 +290,43 @@ public class GameData {
         return false; 
     }
     
+    /**
+     * Gets a subarray of Objects within inputTableToSearch that match with identifierArray's identifiers.
+     * @param <T> Any object/class which extends the AbstractGameObject class. 
+     * @param identifierArray An array of Identifiers to get a subArray from a referenceDataTable. 
+     * @param inputTableToSearch An array of Objects of type <T> to search from using identifierArray. 
+     * @return Returns a subarray of inputTableToSearch whose objects match identifierArray's identifiers. Identifiers with no match are not included in this resultant array. 
+     */
+    public static <T extends AbstractGameObject> ArrayList<T> getSubArrayThroughIdentifier(ArrayList<String> identifierArray, ArrayList<T> inputTableToSearch) {
+        ArrayList<T> outputArray = new ArrayList<>(); 
+        
+        // Iterate through identifier list to search and create subarray of corresponding ? -> AbstractGameObject objects. 
+        Iterator identifierIterator = identifierArray.iterator(); 
+        
+        // Buffer value for any ? -> AbstractGameObject; 
+        T buffer;
+        
+        // Loop identifier buffer; 
+        String currentIdentifier; 
+        
+        // Iterate through all identifiers present; 
+        while (identifierIterator.hasNext()) {
+            
+            // Get identifier and find object using Utilities.findObject. 
+            currentIdentifier = (String) identifierIterator.next(); 
+            buffer = (T) Utilities.findObject(inputTableToSearch, currentIdentifier); 
+            
+            // Checks if findObject acutally returned an object; only evaluates as null if it hasnt. 
+            if (buffer == null) {
+                continue; 
+            }
+            // if findObject actually found the object; add object to outputArray. 
+            else {
+                outputArray.add(buffer); 
+            }
+        }
+        return outputArray; 
+    }
+    
 }
 

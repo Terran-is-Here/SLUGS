@@ -18,7 +18,7 @@ import java.util.Random;
 import java.util.ArrayList; 
 import java.util.Iterator; 
 public class GameGuiContainer extends javax.swing.JFrame {    
-    
+    public MainBodyContainer mainBodyContainer; 
     /**
      * Creates new form GameGuiContainer
      */
@@ -27,9 +27,9 @@ public class GameGuiContainer extends javax.swing.JFrame {
     public GameGuiContainer() {
         
         initComponents();
-        
+        mainBodyContainer = new MainBodyContainer(); 
         // Set MainBodyContainer as current focus tab for now;
-        MainGamePanel.add(new MainBodyContainer(), BorderLayout.NORTH); 
+        MainGamePanel.add(mainBodyContainer, BorderLayout.NORTH); 
     }
     public void updateUI(Container ContainerObject) {
         ContainerObject.repaint();

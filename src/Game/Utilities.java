@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator; 
 
 public class Utilities {
-
+    
     /**
      * Calculates the numerical sum of the range of [lowerBound, upperBound] present in a geometric series with a commonRatio common ratio. 
      * @param lowerBound
@@ -22,10 +22,7 @@ public class Utilities {
      * @return 
      */
     public static double geometricSeriesInitialSum(double lowerBound, double upperBound, double commonRatio) {
-        double output = 0;
-        System.out.println("Common Ratio" + Double.toString(commonRatio));
-        System.out.println("Lower Bound" + Double.toString(lowerBound));
-        System.out.println("Upper Bound" + Double.toString(upperBound));
+        double output = 0;;
         if(commonRatio > 1.0) {
             output = (Math.pow(commonRatio, lowerBound) - Math.pow(commonRatio, upperBound+1))/(1-commonRatio); 
         }
@@ -77,7 +74,6 @@ public class Utilities {
     public static String getSign(double number) {
         String buffer; 
         buffer = Double.toString(Math.signum(number));
-        System.out.println(buffer);
         if (buffer.equals("1.0")) {
             return "+";
         }
@@ -94,15 +90,28 @@ public class Utilities {
         return output;
     }
     
+    /**
+     * Searches for an object with identifierName within inputArrayList using linear search; provided that this object extends the AbstractGameObject class. 
+     * @param <T> Any object which inherits the AbstractGameObject class.
+     * @param inputArrayList An input array of objects which inherit the AbstractGameObject class.
+     * @param identifierName The identifier to search for. 
+     * @return Returns the first match found if it exists. If not, returns null. 
+     */
     public static <T extends AbstractGameObject> T findObject(ArrayList<T> inputArrayList, String identifierName) {
         Iterator inputArrayListIterator = inputArrayList.iterator(); 
         T currentObject; 
         while (inputArrayListIterator.hasNext()) {
             currentObject = (T) inputArrayListIterator.next(); 
-            if (currentObject.getIdentifier().equals(identifierName))
-                return currentObject; 
+            if (currentObject.getIdentifier().equals(identifierName)) {
+                return currentObject; }
         }
+        
         return null; 
     }
+    
+    
+    
+    
+    
     
 }

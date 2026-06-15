@@ -24,6 +24,7 @@ public class StructureButton{
         currentStructure = _currentStructure; 
         
         structureButton = new JButton(buttonDisplayText);
+        structureButton.setToolTipText(currentStructure.getDisplayDescription());
         structureButton.addActionListener(this::structureButtonClicked);
         
     }; 

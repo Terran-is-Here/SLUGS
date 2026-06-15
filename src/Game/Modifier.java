@@ -37,8 +37,6 @@ public class Modifier extends AbstractGameObject {
             buffer = (Modifier) modifierIterator.next();
             output *= buffer.getModifierValue(); 
         }
-        System.out.println("Testing!"); 
-        System.out.println(output);
         return output; 
     }
     

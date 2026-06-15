@@ -11,20 +11,45 @@ package guiObjects;
 import java.awt.BorderLayout;
 import Game.Game; 
 import Game.BuildableBody; 
+import java.awt.GridBagConstraints;
+import javax.swing.JPanel;
 public class MainBodyContainer extends javax.swing.JPanel {
     
     BuildableBody buildableBodyFocus; 
+    protected final static String STRUCTURE_PANEL = "structure";
+    protected final static String ORBITAL_PANEL = "orbital"; 
+    protected final static String VESSEL_PANEL = "vessel_panel"; 
     /**
      * Creates new form mainContainer
      */
     public MainBodyContainer() {
         initComponents();
         
-        buildableBodyFocus = Game.getCurrentScope(); 
-        pnlStructureDisplay.add(StructureDisplayContainer.newStructureDisplayContainer(Game.getCurrentScope().getBodyStructures(), "Testing"));
-        pnlMainScreenContent.add(pnlStructureDisplay, "Structure Display Panel");
-        pnlMainScreenContent.add(pnlOrbitalDisplay, "Orbital Display Panel");
-        pnlMainScreenContent.add(pnlVesselDisplay, "Vessel Display Panel");
+        updateStructureDisplayPanel(); 
+        pnlMainScreenContent.add(pnlStructureDisplay, MainBodyContainer.STRUCTURE_PANEL);
+        pnlMainScreenContent.add(pnlOrbitalDisplay, MainBodyContainer.ORBITAL_PANEL);
+        pnlMainScreenContent.add(pnlVesselDisplay, MainBodyContainer.VESSEL_PANEL);
+    }
+    
+    public void updateStructureDisplayPanel() {
+        pnlStructureDisplay.removeAll();
+        BuildableBody buildableBodyFocus = Game.getCurrentScope(); 
+        GridBagConstraints panelContentGridBagConstraints = new GridBagConstraints(); 
+        panelContentGridBagConstraints.gridx = 0;
+        panelContentGridBagConstraints.gridy = 0; 
+        panelContentGridBagConstraints.fill = GridBagConstraints.BOTH;
+        StructureMainPanel mainContent = StructureMainPanel.newStructureMainPanel(buildableBodyFocus.getBodyStructures(), buildableBodyFocus);
+        pnlStructureDisplay.add(mainContent, panelContentGridBagConstraints); 
+        
+        JPanel glue = new JPanel();
+        glue.setOpaque(false); 
+        GridBagConstraints glueConstraints = new GridBagConstraints();
+        glueConstraints.gridx = 0; 
+        glueConstraints.gridy = 2;  // Set it to be present at the very last row of our display; i.e. index + 1; 
+        glueConstraints.weightx = 1.0; // Fully span horizontally
+        glueConstraints.weighty = 1.0; // Take highest priority within Grid Bag Layout vertically, take up all remaining space  
+        glueConstraints.fill = GridBagConstraints.BOTH;
+        pnlStructureDisplay.add(glue, glueConstraints);
     }
 
     /**
@@ -146,13 +171,28 @@ public class MainBodyContainer extends javax.swing.JPanel {
 
         jScrollPane1.setBorder(null);
 
-        PnlMainScreen.setLayout(new java.awt.BorderLayout());
-        PnlMainScreen.add(MenuNavigationBar, BorderLayout.PAGE_START);
+        PnlMainScreen.setLayout(new java.awt.GridBagLayout());
+        java.awt.GridBagConstraints MenuBarGridBagConstraints = new java.awt.GridBagConstraints();
+        MenuBarGridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        MenuBarGridBagConstraints.gridx = 0;
+        MenuBarGridBagConstraints.gridy = 0;
+        PnlMainScreen.add(MenuNavigationBar, MenuBarGridBagConstraints);
 
         pnlMainScreenContent.setBackground(new java.awt.Color(204, 102, 0));
         pnlMainScreenContent.setToolTipText("");
         pnlMainScreenContent.setLayout(new java.awt.CardLayout());
-        PnlMainScreen.add(pnlMainScreenContent, java.awt.BorderLayout.SOUTH);
+        java.awt.GridBagConstraints contentGridBagConstraints = new java.awt.GridBagConstraints();
+        contentGridBagConstraints.gridx = 0;
+        contentGridBagConstraints.gridy = 1;
+        contentGridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        contentGridBagConstraints.weightx = 1.0;
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        PnlMainScreen.add(pnlMainScreenContent, gridBagConstraints);
 
         jScrollPane1.setViewportView(PnlMainScreen);
 
@@ -177,9 +217,7 @@ public class MainBodyContainer extends javax.swing.JPanel {
                         .addComponent(PnlImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(PnlImageDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(jScrollPane1))))
+                    .addComponent(jScrollPane1)))
         );
     }// </editor-fold>//GEN-END:initComponents
 

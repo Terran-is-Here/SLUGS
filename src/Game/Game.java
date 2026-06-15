@@ -26,20 +26,18 @@ public class Game {
     // Boolean to check if there already exists a save file (will probably be reworked); 
     static Boolean saveFileLoadFlag = false; 
     
+    public static Boolean contentUpdateFlag = false; 
+    
     // Internal game date object for keeping track of time (not ticks) 
     public static int gameDate =0; 
     
     // Game header title; will probably be replaced and added to it's own txt file. 
-    final static public String GAME_NAME = "Space Logistics Utilitarian Guidance System (S.L.U.G.S) v0.1.3"; 
+    final static public String GAME_NAME = "Space Logistics Utilitarian Guidance System (S.L.U.G.S) v0.2.1"; 
     
     // Global resource ArrayList accessible across all BuildableBodies; (probably meant to be used for resources) 
     static private ArrayList<Resource> globalResources = new ArrayList<>(); 
     
-    // Game runspeed settings; used for main game loop ticking 
-    private final static int TICKS_PER_MINUTE = 30; 
-    private static int targetMillis = 1000/TICKS_PER_MINUTE, 
-            lastTime = (int)System.currentTimeMillis(),
-            targetTime = lastTime + targetMillis;
+
     
     public static GameGuiContainer GameContainer; 
     
@@ -72,7 +70,7 @@ public class Game {
         
         // probably have this be further down 
         java.awt.EventQueue.invokeLater(() -> GameContainer.setVisible(true));
-        
+        startGameLoop();
         
     }
     
@@ -111,8 +109,54 @@ public class Game {
         }
     }
     
+    
+    // Game runspeed settings; used for main game loop ticking 
+    private final static int TICKS_PER_SECOND = 2;
     /**
-     * Main game loop. 
+     * Implemented using a basic implementation of a Delta Time gameloop. 
+     */
+    public static void startGameLoop() {
+        // Get current system time 
+        long timeOfLastLoop = System.nanoTime(); 
+        
+        // Get expected delta value between time measurements
+        final long IdealDeltaTime = 1000000000 /TICKS_PER_SECOND; 
+        long sleepTime; 
+        // Buffer values
+        long timeNow, deltaTime, lastFPSInterval = 0;
+        while (true) {
+            // Get current time; 
+            timeNow = System.nanoTime(); 
+            
+            // Calculate change in time since previous measurement; 
+            deltaTime = timeNow - timeOfLastLoop; 
+            
+            // And set last time loop to current time; 
+            timeOfLastLoop = timeNow; 
+            
+            // Determine total time since last game "tick" ;
+            lastFPSInterval += deltaTime; 
+            
+            // Check of interval since last tick versus the ideal TPS time is greater than or equal to; in which case we tick immediately. 
+            if (lastFPSInterval >= IdealDeltaTime) {
+                lastFPSInterval = 0; 
+                tickGame(); 
+            }
+            
+            try {
+                // Calculate optimal sleep step S.T we dont hog the cpu; 
+                // Calculate delta time between last loop time and current time; then add ideal TPS time
+                sleepTime  = (timeOfLastLoop - System.nanoTime() + IdealDeltaTime) /1000000; 
+                System.out.println(sleepTime);
+                Thread.sleep(sleepTime);
+            }
+            catch (java.lang.Exception e) {}
+        }
+        
+    }
+    
+    /**
+     * Main game loop tick step. 
      */
     public static void tickGame() {
         
@@ -137,10 +181,15 @@ public class Game {
         //First, update resource table
         
         // Then update game UI 
-        
+        Utilities.quickSort(getCurrentScope().getBodyResourceStorage()); 
         GameContainer.resourceDisplayPanel.readNewResourceTable(getCurrentScope().getBodyResourceStorage());
         GameContainer.updateUI();
         
+        // Check if other more graphically-intensive steps need an update
+        if (contentUpdateFlag) {
+            contentUpdateFlag = false;
+            GameContainer.mainBodyContainer.updateStructureDisplayPanel();
+        }
     }
     
     /**

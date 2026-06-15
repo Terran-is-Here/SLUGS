@@ -151,7 +151,6 @@ public class Resource extends AbstractGameObject{
     
     public void setDisplayIndex (int newValue) {
         this.displayIndex = newValue; 
-        System.out.println("+" + displayIndex);
     }
     /**
      * Debugging tool that prints out the contents of an ArrayList<Resoruce> to console. 
@@ -192,12 +191,12 @@ public class Resource extends AbstractGameObject{
         // Check first if the GUI object acutally exists. If it doesnt; create a new object. 
         if (this.resourceDisplayPanel == null) {
             
-            System.out.println(this.displayIndex + "Display Index");
             this.resourceDisplayPanel = ResourceDisplayPanel.newResourceDisplayPanel(this, this.displayIndex); 
         }
         
         // If object actually exists; simply call update value. 
         else {
+            this.resourceDisplayPanel.setIndex(this.displayIndex);
             this.resourceDisplayPanel.updateValue();
         }
     }

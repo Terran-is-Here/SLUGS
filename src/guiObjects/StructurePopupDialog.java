@@ -15,7 +15,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JDialog; 
 import java.awt.Dialog.ModalityType; 
 import javax.swing.SwingUtilities; 
+import java.util.ArrayList;
 import java.awt.Component; 
+import java.util.Iterator; 
 public class StructurePopupDialog extends javax.swing.JPanel {
     
     /**
@@ -25,6 +27,7 @@ public class StructurePopupDialog extends javax.swing.JPanel {
     private StructurePopupDialog(Structure _currentStructure) {
         currentStructure = _currentStructure; 
         initComponents();
+        updateDisplays(); 
     }
     public static StructurePopupDialog newStructurePopupDialog(Structure _currentStructure) {
         return new StructurePopupDialog(_currentStructure);
@@ -79,11 +82,12 @@ public class StructurePopupDialog extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 18, 6, 10);
+        gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
         add(lblInputOutput, gridBagConstraints);
 
         txtInputOutputArea.setEditable(false);
         txtInputOutputArea.setColumns(20);
+        txtInputOutputArea.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         txtInputOutputArea.setLineWrap(true);
         txtInputOutputArea.setRows(5);
         txtInputOutputArea.setWrapStyleWord(true);
@@ -92,7 +96,7 @@ public class StructurePopupDialog extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 18, 0, 10);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         add(jScrollPane1, gridBagConstraints);
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
@@ -143,7 +147,7 @@ public class StructurePopupDialog extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(8, 0, 5, 0);
         jPanel1.add(lblConfigurationHeader, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -189,7 +193,7 @@ public class StructurePopupDialog extends javax.swing.JPanel {
             BuildableBody.buildStructure(currentStructure.getParentBuildableBody(), currentStructure, structuresToBuild);
         }
         
-        txtCurrentlyEnabled.setText(Integer.toString(currentStructure.getStructureAmount()));
+        updateDisplays();
     }//GEN-LAST:event_btnBuildStructureActionPerformed
 
     private void btnDeconstructStructureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeconstructStructureActionPerformed
@@ -206,16 +210,19 @@ public class StructurePopupDialog extends javax.swing.JPanel {
             // Attempt to build structures based off currentStructure and structuresToBuild. 
             BuildableBody.destroyStructure(currentStructure.getParentBuildableBody(), currentStructure, structuresToBuild);
         }
-        txtCurrentlyEnabled.setText(Integer.toString(currentStructure.getStructureAmount()));
+        updateDisplays();
     }//GEN-LAST:event_btnDeconstructStructureActionPerformed
 
     private void btnConfirmConfigurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmConfigurationActionPerformed
-        String userInput = txtCurrentlyDisabled.getText(); 
+        String userInput = txtCurrentlyDisabled.getText();  
         int structureDisableAmount; 
         try {
             structureDisableAmount = Integer.parseInt(userInput); 
             if (structureDisableAmount < 0) {
                 JOptionPane.showMessageDialog(null, "Please enter a number greater than 0", "Result", JOptionPane.WARNING_MESSAGE); 
+            }
+            else if (structureDisableAmount > currentStructure.getStructureAmount()) {
+                   JOptionPane.showMessageDialog(null, "Please enter a number less than your current structure amount.", "Result", JOptionPane.WARNING_MESSAGE); 
             }
             else {
                 currentStructure.setInactiveStructureAmount(structureDisableAmount);
@@ -225,20 +232,42 @@ public class StructurePopupDialog extends javax.swing.JPanel {
         catch (java.lang.NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Please enter an actual number", "Result", JOptionPane.WARNING_MESSAGE); 
         }
+        updateDisplays();
         
-        txtCurrentlyDisabled.setText(Integer.toString(currentStructure.getInactiveStructureAmount()));
     }//GEN-LAST:event_btnConfirmConfigurationActionPerformed
     
+    private void updateDisplays() {
+        txtCurrentlyDisabled.setText(Integer.toString(currentStructure.getInactiveStructureAmount()));
+        txtCurrentlyEnabled.setText(Integer.toString(currentStructure.getStructureAmount()));
+        
+        ArrayList<String[]> outputStrings = new ArrayList<>(); 
+        String outputString = ""; 
+        if (!currentStructure.getStructureBaseOutputResources().isEmpty()) {
+        outputStrings.add(Resource.getScaledResourceReceipt(currentStructure.getEffectiveResourceArray(currentStructure.getStructureBaseOutputResources(), false), "Assuming full efficiency; these structures are outputting:", ""));
+        }; 
+        if (!currentStructure.getStructureBaseInputResources().isEmpty()) {
+        outputStrings.add(Resource.getScaledResourceReceipt(currentStructure.getEffectiveResourceArray(currentStructure.getStructureBaseInputResources(), true), "Assuming full efficiency; these structures are consuming:", ""));
+        }; 
+        Iterator outputStringIterator = outputStrings.iterator(); 
+        while (outputStringIterator.hasNext()) {
+            String[] currentRow= (String[]) outputStringIterator.next();
+            for (int i = 0; i < currentRow.length; i++){
+                outputString += currentRow[i]; 
+                outputString += "\n"; 
+            }; 
+        }
+        txtInputOutputArea.setText(outputString);
+    }
     
     /**
-     * Obtains a structureAmount value for other methods within this class by displaying a dialog input box for resource amount. Comes with input error handling and user input confirmation dialog. 
+     * Obtains a structureAmount value for other methods by displaying a dialog input box for resource amount. Comes with input error handling and user input confirmation dialog. 
      * @param valueInputDisplayMessage Message to display on initial integer input dialog. 
      * @param currentStructure Current structure to calculate / obtain final resource table for display in confirmation dialog. 
      * @param beforeResourcesMessage String to show before the resource table in the confirmation dialog.
      * @param afterResourcesMessage String to show after the resource table in the confirmation dialog.
      * @return Returns user input for structures to build if it is valid and confirmed. Returns -1 if user did not confirm value or closed the dialog boxes. 
      */
-    int structureDialogWithResources(String valueInputDisplayMessage, Structure currentStructure, String beforeResourcesMessage, String afterResourcesMessage) {
+    public static int structureDialogWithResources(String valueInputDisplayMessage, Structure currentStructure, String beforeResourcesMessage, String afterResourcesMessage) {
         
         // Flag for if a valid input has been entered and confirmed; 
         boolean validInput = false; 

@@ -29,6 +29,7 @@ public class ResourceDisplayPanel extends javax.swing.JPanel {
         resourceToDisplay = _resourceToDisplay; 
         index = _index; 
         initComponents();
+        this.lblResourceDisplayName.setToolTipText(resourceToDisplay.getDisplayDescription());
         updateColor(); 
         updateDisplay(this);
         
@@ -47,6 +48,7 @@ public class ResourceDisplayPanel extends javax.swing.JPanel {
             lblDeltaResource.setText(Game.Utilities.getSign(resourceToDisplay.getDeltaResource())+ " " + String.valueOf(resourceToDisplay.getDeltaResource()) + " / day"); 
         }
         lblResourceAmount.setText(Double.toString(resourceToDisplay.getResourceAmount()));
+        updateColor();
         updateDisplay(lblResourceAmount); 
         
     }

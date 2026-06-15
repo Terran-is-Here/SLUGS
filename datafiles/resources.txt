@@ -2,26 +2,19 @@ entrystart
 identifier=iron_ore
 displayname=Iron Ore
 displaydescription=Raw ore. Must be processed into ingots in order to be utilized in manufacturing. 
-resourcetype=normal
+type=normal
+entryend
+
+entrystart
+identifier=copper_ore
+displayname=Copper Ore
+displaydescription=Raw ore. Must be processed into ingots to be utilized in manufacturing. 
+type=normal
 entryend
 
 entrystart
 identifier=iron_plate
 displayname=Iron Plate
 displaydescription=This is some iron plates.
-resourcetype=normal
-entryend
-
-entrystart
-identifier=test_material1
-displayname=Refined Quartz
-displaydescription=this is a description that is also very long and is meant to stress test mechanics. 
-resourcetype=normal 
-entryend
-
-entrystart
-identifier=test_material2
-displayname=a
-displaydescription=this is a description that is also very long and is meant to stress test mechanics. 
-resourcetype=normal 
+type=normal
 entryend

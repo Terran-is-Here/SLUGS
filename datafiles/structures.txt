@@ -1,4 +1,31 @@
 entrystart
+identifier=iron_mine
+displayname=Iron Mine
+displaydescription=A basic iron mine that outputs iron ore. 
+inputefficiency=1.0
+outputefficiency=1.0
+costscalefactor=1.0
+output.iron_ore=1
+basecost.iron_plate=10
+type=extractor
+displaytype=Extracting
+entryend
+
+
+entrystart
+identifier=copper_mine
+displayname=Copper Mine
+displaydescription=A basic copper mine that outputs copper ore. 
+inputefficiency=1.0
+outputefficiency=1.0
+costscalefactor=1.0
+output.copper_ore=1
+basecost.iron_plate=10
+type=extractor
+displaytype=Extracting
+entryend
+
+entrystart
 identifier=iron_furnace
 displayname=Iron Furnace 
 displaydescription=This is a test iron furnace. 
@@ -7,15 +34,8 @@ outputefficiency=1.0
 costscalefactor=1.0
 input.iron_ore=1
 output.iron_plate=1
+basecost.iron_plate=10
+type=processor
+displaytype=Processing
 entryend
 
-entrystart
-identifier=iron_mine
-displayname=Iron Mine
-displaydescription=A basic iron mine that outputs iron ore. 
-inputefficiency=1.0
-outputefficiency=1.0
-costscalefactor=1.0
-output.iron_ore=1
-basecost.iron_ore=1
-entryend

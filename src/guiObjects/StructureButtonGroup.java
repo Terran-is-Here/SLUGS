@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.awt.GridBagConstraints; 
 import java.awt.Insets;
 import java.awt.Dimension; 
-public class StructureDisplayContainer extends javax.swing.JPanel {
+public class StructureButtonGroup extends javax.swing.JPanel {
     
     private ArrayList<Structure> structureArrayList; 
     private static final int BUTTONS_PER_ROW = 5; 
@@ -23,7 +23,7 @@ public class StructureDisplayContainer extends javax.swing.JPanel {
     /**
      * Creates new form StructureDisplayPanel
      */
-    private StructureDisplayContainer(ArrayList<Structure> _structureArrayList, String _categoryTitle) {
+    private StructureButtonGroup(ArrayList<Structure> _structureArrayList, String _categoryTitle) {
         structureArrayList = _structureArrayList; 
         categoryTitle = _categoryTitle; 
         initComponents();
@@ -34,10 +34,10 @@ public class StructureDisplayContainer extends javax.swing.JPanel {
         return this.structureArrayList; 
     }
     
-    public static StructureDisplayContainer newStructureDisplayContainer(ArrayList<Structure> _structureArrayList, String _categoryTitle) {
+    public static StructureButtonGroup newStructureDisplayContainer(ArrayList<Structure> _structureArrayList, String _categoryTitle) {
         Structure currentStructure; 
         StructureButton bufferStructureButton; 
-        StructureDisplayContainer newContainer = new StructureDisplayContainer(_structureArrayList, _categoryTitle); 
+        StructureButtonGroup newContainer = new StructureButtonGroup(_structureArrayList, _categoryTitle); 
         GridBagConstraints currentObjectGridBagConstraints; 
         int index; 
         int rows; 
@@ -50,7 +50,7 @@ public class StructureDisplayContainer extends javax.swing.JPanel {
             currentObjectGridBagConstraints.insets = new Insets(5,5,5,5); 
             
             // Set position based on the current index of this button; with every row forming after every BUTTONS_PER_ROW objects. 
-            currentObjectGridBagConstraints.gridx = index%BUTTONS_PER_ROW;
+            currentObjectGridBagConstraints.gridx = (index%BUTTONS_PER_ROW) + 1;
             currentObjectGridBagConstraints.gridy = index/BUTTONS_PER_ROW; 
             
             // Set anchor to northwest and make the objects fill horizontally
@@ -68,11 +68,16 @@ public class StructureDisplayContainer extends javax.swing.JPanel {
             newContainer.PnlButtonContainer.add(bufferStructureButton.getStructureJButton(), currentObjectGridBagConstraints);
         }
         rows = index/BUTTONS_PER_ROW; 
-        int verticalSpacing = rows * VERTICAL_SIZE_FACTOR; 
+        int verticalSpacing = (rows+1) * VERTICAL_SIZE_FACTOR; 
         newContainer.PnlButtonContainer.setPreferredSize(new Dimension(600, verticalSpacing));
+        newContainer.PnlButtonContainer.setMinimumSize(new Dimension(600, verticalSpacing));
+       
+        newContainer.setPreferredSize(new Dimension (600, verticalSpacing + 60));
+        
         newContainer.PnlButtonContainer.validate();
         newContainer.PnlButtonContainer.repaint();
-        newContainer.setPreferredSize(new Dimension (600, verticalSpacing + 40));
+        newContainer.validate();
+        newContainer.repaint();
         return newContainer; 
     }
     
@@ -100,9 +105,9 @@ public class StructureDisplayContainer extends javax.swing.JPanel {
         add(lblStructureCategoryHeader, new java.awt.GridBagConstraints());
 
         PnlButtonContainer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        PnlButtonContainer.setMaximumSize(new java.awt.Dimension(500, 2147483647));
-        PnlButtonContainer.setMinimumSize(new java.awt.Dimension(500, 0));
-        PnlButtonContainer.setPreferredSize(new java.awt.Dimension(500, 280));
+        PnlButtonContainer.setMaximumSize(new java.awt.Dimension(600, 2147483647));
+        PnlButtonContainer.setMinimumSize(new java.awt.Dimension(600, 0));
+        PnlButtonContainer.setPreferredSize(new java.awt.Dimension(600, 280));
         PnlButtonContainer.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
