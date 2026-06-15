@@ -174,17 +174,7 @@ public class Resource extends AbstractGameObject{
     }
     
     public static Resource getResourceFromArray(ArrayList<Resource> inputArrayList, String identifierName) {
-        Iterator inputArrayListIterator = inputArrayList.iterator(); 
-        Resource currentResource; 
-        
-        while (inputArrayListIterator.hasNext()) {
-            currentResource = (Resource) inputArrayListIterator.next(); 
-            if (currentResource.getIdentifier().equals(identifierName)) {
-                return currentResource; 
-            }
-            
-        }
-        return null; 
+        return (Resource) Utilities.findObject(inputArrayList, identifierName); 
     }
     
     public double getDeltaResource() {

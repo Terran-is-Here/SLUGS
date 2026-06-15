@@ -163,28 +163,11 @@ public class BuildableBody extends AbstractGameObject{
     
     /** 
      * Checks if a building is present on this BuildableBody; then returns it if it exists. 
-     * @param structureToFindIdentifier The identifier of the Structure object being searched for.
+     * @param identifierToFind The identifier of the Structure object being searched for.
      * @return Returns the Structure object with the same identifierName as the structure being found. If no match is found, returns null.
      */
-    public Structure getStructure (String structureToFindIdentifier) {
-        Iterator structureIterator = this.getBodyStructures().iterator(); 
-        Structure currentStructure; 
-        if (checkIfStructureIsPresent(structureToFindIdentifier)){ 
-            while (structureIterator.hasNext()) {
-            currentStructure = (Structure) structureIterator.next(); 
-            
-            if (currentStructure.getIdentifier().equals(structureToFindIdentifier)) {
-                return currentStructure; 
-            }
-            }
-            // Also returns null if structure is not present at all (mainly for Apache Netbeans Error Handling
-            return null; 
-        
-        }
-        else {
-        // Returns null if structure is not present at all. 
-        return null;
-        }
+    public Structure getStructure (String identifierToFind) {
+        return (Structure) Utilities.findObject(this.getBodyStructures(), identifierToFind); 
     }
     
     public void updateStructureAmount(String structureToUpdateIdentifier, int newValue) {
@@ -224,32 +207,19 @@ public class BuildableBody extends AbstractGameObject{
     
     /** 
      * Checks if a resource is present on this BuildableBody; then returns it if it exists. 
-     * @param resourceToFindIterator The identifier of the Resource object being searched for.
+     * @param resourceToFindIdentifier The identifier of the Resource object being searched for.
      * @return Returns the Resource object with the same identifierName as the resource being found. If no match is found, creates a new empty resource object with the same identifier and returns that.
      */
     public Resource getResource (String resourceToFindIdentifier) {
-        Iterator resourceIterator = this.getBodyResourceStorage().iterator();
-        Resource currentResource; 
-        Resource bufferResource;
+        Resource result = (Resource) Utilities.findObject(this.getBodyResourceStorage(), resourceToFindIdentifier); 
         
-        // First check if resource is even present to begin with; 
-        if (checkIfResourceIsPresent(resourceToFindIdentifier)){ 
-            // If so; iterate through body resource storage to find it;  
-            while (resourceIterator.hasNext()) {
-                // Get current Resource in bodyResourceStorage, 
-                currentResource = (Resource) resourceIterator.next(); 
-                
-                // If identifiers match between resourceToFindIdentifier and currentResource; then return currentResource. 
-                if (currentResource.getIdentifier().equals(resourceToFindIdentifier)) {
-                    return currentResource; 
-                }
-            }
-        }
         // Create new output resource if it is not already present on the body, or if no match was found. 
-        bufferResource = Resource.newResource(resourceToFindIdentifier, 0);
-        this.getBodyResourceStorage().add(bufferResource);
-        Utilities.quickSort(this.bodyResourceStorage);
-        return bufferResource;
+        if (result.equals(null)) {
+            result = Resource.newResource(resourceToFindIdentifier, 0);
+            this.getBodyResourceStorage().add(result);
+            Utilities.quickSort(this.bodyResourceStorage);
+        }
+        return result;
     }
     
     /**

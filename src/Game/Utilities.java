@@ -10,7 +10,7 @@ package Game;
  */
 import java.lang.Math; 
 import java.util.ArrayList; 
-
+import java.util.Iterator; 
 
 public class Utilities {
 
@@ -93,4 +93,16 @@ public class Utilities {
         String output = "Cycle: " + String.valueOf(year) + " Day: " + String.valueOf(day); 
         return output;
     }
+    
+    public static <T extends AbstractGameObject> T findObject(ArrayList<T> inputArrayList, String identifierName) {
+        Iterator inputArrayListIterator = inputArrayList.iterator(); 
+        T currentObject; 
+        while (inputArrayListIterator.hasNext()) {
+            currentObject = (T) inputArrayListIterator.next(); 
+            if (currentObject.getIdentifier().equals(identifierName))
+                return currentObject; 
+        }
+        return null; 
+    }
+    
 }

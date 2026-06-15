@@ -165,6 +165,9 @@ public class Structure extends AbstractGameObject{
         return Modifier.getEffectiveModifier(this.getStructureInnateOutputEfficiencyModifiers());
     }
     
+    public String getStructureType() {
+        return this.getReferenceDataTableEntry().getObjectType(); 
+    }
     /**
      * Returns the structureCostScaleFactor (double) property of the current object.
      * @return 
@@ -288,9 +291,13 @@ public class Structure extends AbstractGameObject{
         ArrayList<Resource> baseOutputResources = this.getReferenceDataTableEntry().getOutputResourceArrayList(); 
         Iterator baseInputResourceIterator = baseInputResources.iterator(); 
         Iterator baseOutputResourceIterator = baseOutputResources.iterator(); 
+        double effectiveStructures; 
         
-        double effectiveStructures = this.getStructureAmount() - this.getInactiveStructureAmount(); // Assume from the start that all active structures can be used at 100%. 
-        System.out.println(this.getInactiveStructureAmount());
+        
+        // Assume from the start that all active structures can be used at 100%.
+            effectiveStructures = this.getStructureAmount() - this.getInactiveStructureAmount(); 
+        
+        // Buffer variables for resource output/input. 
         double temp; 
         Resource tempResource;
         Resource bufferResource; 
@@ -315,10 +322,9 @@ public class Structure extends AbstractGameObject{
                 temp = tempResource.getResourceAmount() / (bufferResource.getResourceAmount() * this.getStructureInnateInputEfficiency() * this.getStructureInputEfficiency()); 
                 
                 // If Temp (sustainable structures) is less than effective structures previously calculated; set that as the new effective structure amount. 
-                if (temp < effectiveStructures) {;
+                if (temp < effectiveStructures) {
                     effectiveStructures = temp; 
                 }
-                continue; 
             }
             
             // If resource does not exist; that means that our body does not have it and therefore we are bottlenecked with no input. 
@@ -379,6 +385,26 @@ public class Structure extends AbstractGameObject{
     
     public void destroyStructureButton() {
         this.structureDisplayButton = null; 
+    }
+    
+    public ArrayList<Resource> getEffectiveResourceArray(ArrayList<Resource> resourceArray, boolean isInput) {
+        ArrayList<Resource> output = new ArrayList<>(); 
+        Iterator resourceIterator = resourceArray.iterator();
+        int effectiveStructures = this.getStructureAmount() - this.getInactiveStructureAmount(); 
+        Resource buffer; 
+        String currentLineOutput; 
+        double multiplier; 
+        if (isInput) {
+            multiplier = effectiveStructures*this.getStructureInputEfficiency()*this.getReferenceDataTableEntry().getBaseInputEfficiency(); 
+        }
+        else {
+            multiplier = effectiveStructures*this.getStructureOutputEfficiency()*this.getReferenceDataTableEntry().getBaseOutputEfficiency(); 
+        }
+        while (resourceIterator.hasNext()) {
+            buffer = (Resource) resourceIterator.next(); 
+            output.add(Resource.newResource(buffer.getIdentifier(), buffer.getResourceAmount()*effectiveStructures*multiplier)); 
+        }
+        return output; 
     }
 }
 
