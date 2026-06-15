@@ -28,11 +28,13 @@ public class Game {
     
     public static Boolean contentUpdateFlag = false; 
     
+    public static Boolean isPausedFlag = false; 
+    
     // Internal game date object for keeping track of time (not ticks) 
     public static int gameDate =0; 
     
     // Game header title; will probably be replaced and added to it's own txt file. 
-    final static public String GAME_NAME = "Space Logistics Utilitarian Guidance System (S.L.U.G.S) v0.2.1"; 
+    final static public String GAME_NAME = "Space Logistics Utilitarian Guidance System (S.L.U.G.S) v0.3.1"; 
     
     // Global resource ArrayList accessible across all BuildableBodies; (probably meant to be used for resources) 
     static private ArrayList<Resource> globalResources = new ArrayList<>(); 
@@ -59,10 +61,6 @@ public class Game {
         //startGame; 
         startGame(); 
         // For now, set initial scope to be the first object created. In terms of testing; create this. 
-        
-        // Add 10 iron mines to test.
-        getCurrentScope().getBodyStructures().add(Structure.newStructure("iron_mine", 10, getCurrentScope())); 
-        getCurrentScope().getBodyStructures().add(Structure.newStructure("iron_furnace", 1, getCurrentScope())); 
         
 
         // Create GUI and set it visible after things are loaded
@@ -106,12 +104,17 @@ public class Game {
             }
             // Get the first indexed object and set as current game scope. 
             setCurrentScope(Game.getBuildableBodyContainerTable().get(0));
+            
+            // Set some intial structures just for bootstrapping. 
+            Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("wood", 100));
+            Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("stone_brick", 20));
+            Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("coal", 20));
         }
     }
     
     
     // Game runspeed settings; used for main game loop ticking 
-    private final static int TICKS_PER_SECOND = 2;
+    private final static int TICKS_PER_SECOND = 1;
     /**
      * Implemented using a basic implementation of a Delta Time gameloop. 
      */
@@ -119,7 +122,7 @@ public class Game {
         // Get current system time 
         long timeOfLastLoop = System.nanoTime(); 
         
-        // Get expected delta value between time measurements
+        // Get expected delta value between time measurements (in units of ns) 
         final long IdealDeltaTime = 1000000000 /TICKS_PER_SECOND; 
         long sleepTime; 
         // Buffer values
@@ -130,7 +133,6 @@ public class Game {
             
             // Calculate change in time since previous measurement; 
             deltaTime = timeNow - timeOfLastLoop; 
-            
             // And set last time loop to current time; 
             timeOfLastLoop = timeNow; 
             
@@ -139,15 +141,16 @@ public class Game {
             
             // Check of interval since last tick versus the ideal TPS time is greater than or equal to; in which case we tick immediately. 
             if (lastFPSInterval >= IdealDeltaTime) {
-                lastFPSInterval = 0; 
+                lastFPSInterval =0 ; 
+                if (!isPausedFlag) {
                 tickGame(); 
+                }
             }
             
             try {
                 // Calculate optimal sleep step S.T we dont hog the cpu; 
-                // Calculate delta time between last loop time and current time; then add ideal TPS time
+                // Calculate delta time between last loop time and current time; then add ideal TPS time (division for ns -> ms) 
                 sleepTime  = (timeOfLastLoop - System.nanoTime() + IdealDeltaTime) /1000000; 
-                System.out.println(sleepTime);
                 Thread.sleep(sleepTime);
             }
             catch (java.lang.Exception e) {}
@@ -174,6 +177,7 @@ public class Game {
                 currentStructure = (Structure) structureIterator.next(); 
                 currentStructure.tickStructure();
             }
+            currentBuildableBody.refreshBodyResources();
         }
         
         
