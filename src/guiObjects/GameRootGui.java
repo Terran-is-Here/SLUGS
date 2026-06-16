@@ -13,6 +13,8 @@ import Game.*;
 import java.awt.BorderLayout;
 import java.awt.Container; 
 public class GameRootGui extends javax.swing.JFrame {    
+    /** Game header title*/ 
+    final static public String GAME_NAME = "Space Logistics Utilitarian Guidance System (S.L.U.G.S) v0.3.1"; 
     
     // Current BuildableBody being focused on currently focused object 
     public MainBodyContainer mainBodyContainer; 
@@ -33,25 +35,25 @@ public class GameRootGui extends javax.swing.JFrame {
         MainGamePanel.add(mainBodyContainer, BorderLayout.NORTH); 
     }
     
-    // 
-    public void updateUI(Container ContainerObject) {
-        ContainerObject.repaint();
-        ContainerObject.revalidate(); 
-    }
+    
     
     /**
      * Set current focus game panel to newContainer. 
      * @param newContainer A JPanel to set as the current new contents of MainGamePanel. 
      */
-    public void setMainGamePanel(javax.swing.JPanel newContainer) {
+    public void setMainGamePanel(MainBodyContainer newContainer) {
+        mainBodyContainer = newContainer; 
         MainGamePanel.removeAll(); 
-        MainGamePanel.add(newContainer); 
+        MainGamePanel.add(mainBodyContainer, BorderLayout.NORTH);
+        MainGamePanel.revalidate();
+        MainGamePanel.repaint();    
     }
     
     /**
      * Updates MainGamePanel's content with a new MainBodyContainer with an updated currentScope based off the current scope of the Game class. 
      */
     public void updateMainGamePanel() {
+        System.out.println("Updating main game panel with current scope:" + Game.getCurrentScope().getIdentifier());
         this.setMainGamePanel(new MainBodyContainer(Game.getCurrentScope())); 
     }
     
@@ -97,7 +99,7 @@ public class GameRootGui extends javax.swing.JFrame {
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle(Game.GAME_NAME);
+        setTitle(GAME_NAME);
         setBackground(new java.awt.Color(102, 102, 102));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setName("mainGuiFrame"); // NOI18N

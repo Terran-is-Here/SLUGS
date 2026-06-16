@@ -93,7 +93,7 @@ public class StructureButtonGroup extends javax.swing.JPanel {
         
         // Calculate effective number of rows to use for calulating effects on layout; 
         int rows = index/BUTTONS_PER_ROW; 
-        
+        System.out.println("Buttons created: " + index);
         // Get vertical spacing for layout and apply it to layouts / dimensions; 
         int verticalSpacing = (rows+1) * VERTICAL_SIZE_FACTOR; 
         

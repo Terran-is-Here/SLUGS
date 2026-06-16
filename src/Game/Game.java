@@ -20,29 +20,26 @@ public class Game {
     final static String RESOURCE_DATA_FILE = "resources.txt"; 
     final static String BUILDABLEBODY_DATA_FILE = "buildablebodies.txt";
     
-    // Curent focused BuildableBody and or Vehicle (if applicable). 
+    /**Current focused BuildableBody in terms of displaying it to GUI*/
     static BuildableBody currentScope; 
     
-    // Boolean to check if there already exists a save file (will probably be reworked); 
+    /**Boolean to check if a save file already exists.*/
     static Boolean saveFileLoadFlag = false; 
     
+    /**Boolean to check if a more major GUI refresh is required (i.e. redrawing the Structures table; etc.)*/
     public static Boolean contentUpdateFlag = false; 
     
+    /**Boolean to check if the game is currently paused or not*/
     public static Boolean isPausedFlag = false; 
     
-    // Internal game date object for keeping track of time (not ticks) 
+    /**Internal game date tracking variable*/; 
     public static int gameDate =0; 
-    
-    // Game header title; will probably be replaced and added to it's own txt file. 
-    final static public String GAME_NAME = "Space Logistics Utilitarian Guidance System (S.L.U.G.S) v0.3.1"; 
     
     // Global resource ArrayList accessible across all BuildableBodies; (probably meant to be used for resources) 
     static private ArrayList<Resource> globalResources = new ArrayList<>(); 
     
-
-    
-    public static GameGuiContainer GameContainer; 
-    
+    // Main game container GUI object; 
+    public static GameRootGui GameContainer; 
     
     // ArrayLists which represent reference tables for objects of their name within the game. 
     private static ArrayList<ReferenceDataEntry> structureReferenceTable = new ArrayList<>(); 
@@ -58,22 +55,24 @@ public class Game {
         // Attempt to load and initialize game data for now. 
         loadData(); 
         
-        //startGame; 
+        // Start game setting initial data fields; 
         startGame(); 
-        // For now, set initial scope to be the first object created. In terms of testing; create this. 
+        
         
 
         // Create GUI and set it visible after things are loaded
-        GameContainer = new GameGuiContainer(); 
+        GameContainer = new GameRootGui(); 
         
-        // probably have this be further down 
+        // Set Java Swing GUI to EDT (should be separate from main thread) 
         java.awt.EventQueue.invokeLater(() -> GameContainer.setVisible(true));
+        
+        // Start main game loop on main thread. 
         startGameLoop();
         
     }
     
     /**
-     * Loads important game data such as reference hashMaps, raises and ends execution if files do not properly exist. 
+     * Loads important game data such as reference data tables, raises and ends execution if files do not properly exist. 
      */
     public static void loadData() {
         // Load data reference tables from their respective files; 
@@ -87,28 +86,40 @@ public class Game {
         Utilities.quickSort(buildableBodyReferenceTable);
         }
     
-    
+    /**
+     * Initializes the game's initial parameters. 
+     */
     public static void startGame() {
         // Checks if a save game has already been loaded. 
         // If not; instantialize new game. 
-        ReferenceDataEntry referenceDataEntry; 
-        Iterator referenceDataEntryIterator; 
-        BuildableBody buffer; 
+        
+        
         if (!saveFileLoadFlag) {
-            // Generate initial set of BuildableBody Objects
-            referenceDataEntryIterator = Game.getBuildableBodyReferenceTable().iterator(); 
+            // Iterator buffers; 
+            ReferenceDataEntry referenceDataEntry; 
+            Iterator referenceDataEntryIterator; 
             
-            while (referenceDataEntryIterator.hasNext()){
-                referenceDataEntry = (ReferenceDataEntry) referenceDataEntryIterator.next(); 
-                buffer = BuildableBody.initializeNewBuildableBody(referenceDataEntry.getIdentifier());
+            // Generate initial set of BuildableBody Objects
+            Iterator buildableBodyReferenceDataEntryIterator = Game.getBuildableBodyReferenceTable().iterator(); 
+            
+            // Iterate and initialize all BuildableBodies within BuildableBodyReferenceTable; 
+            while (buildableBodyReferenceDataEntryIterator.hasNext()){
+                
+                // Get reference data entry and initialize new entry. 
+                referenceDataEntry = (ReferenceDataEntry) buildableBodyReferenceDataEntryIterator.next(); 
+                BuildableBody.initializeNewBuildableBody(referenceDataEntry.getIdentifier());
             }
             // Get the first indexed object and set as current game scope. 
             setCurrentScope(Game.getBuildableBodyContainerTable().get(0));
             
-            // Set some intial structures just for bootstrapping. 
+            // Set some intial structures just for bootstrapping on the first planet. 
             Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("wood", 100));
             Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("stone_brick", 20));
             Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("coal", 20));
+        }
+        else{
+            // Insert game load logic here. 
+            return;
         }
     }
     
@@ -116,7 +127,7 @@ public class Game {
     // Game runspeed settings; used for main game loop ticking 
     private final static int TICKS_PER_SECOND = 1;
     /**
-     * Implemented using a basic implementation of a Delta Time gameloop. 
+     * Main game loop, runs using a Delta Time-based gameloop.
      */
     public static void startGameLoop() {
         // Get current system time 
@@ -141,7 +152,7 @@ public class Game {
             
             // Check of interval since last tick versus the ideal TPS time is greater than or equal to; in which case we tick immediately. 
             if (lastFPSInterval >= IdealDeltaTime) {
-                lastFPSInterval =0 ; 
+                lastFPSInterval -= IdealDeltaTime; 
                 if (!isPausedFlag) {
                 tickGame(); 
                 }
@@ -150,7 +161,7 @@ public class Game {
             try {
                 // Calculate optimal sleep step S.T we dont hog the cpu; 
                 // Calculate delta time between last loop time and current time; then add ideal TPS time (division for ns -> ms) 
-                sleepTime  = (timeOfLastLoop - System.nanoTime() + IdealDeltaTime) /1000000; 
+                sleepTime  = (System.nanoTime()- timeOfLastLoop + IdealDeltaTime) /1000000; 
                 Thread.sleep(sleepTime);
             }
             catch (java.lang.Exception e) {}
@@ -191,6 +202,8 @@ public class Game {
         
         // Check if other more graphically-intensive steps need an update
         if (contentUpdateFlag) {
+            System.out.println("Structure List Updated");
+            System.out.println("Content update flag raised!");
             contentUpdateFlag = false;
             GameContainer.mainBodyContainer.updateStructureDisplayPanel();
         }
@@ -227,9 +240,14 @@ public class Game {
     
     
     public static void setCurrentScope(BuildableBody scopeToMoveTo) {
-        
         currentScope = scopeToMoveTo; 
-        // Probably add GUI update logic here..?
+    }
+    
+    public static void setNewCurrentScope(BuildableBody scopeToMoveTo) {
+        setCurrentScope(scopeToMoveTo); 
+        System.out.println("Current Scope: " + scopeToMoveTo.getIdentifier());
+        System.out.println("Current Scope Structure Length: " + scopeToMoveTo.getBodyStructures().size());
+        GameContainer.updateMainGamePanel();
     }
     
     public static BuildableBody getCurrentScope() {

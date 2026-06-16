@@ -233,11 +233,14 @@ public class ConstructNewStructurePopupDialog extends javax.swing.JPanel {
         // As convention; 
         if (structuresToBuild == -1) {
             JOptionPane.showMessageDialog(null, "Build order cancelled.", "Result", JOptionPane.INFORMATION_MESSAGE);
+            this.getCurrentPopup().setVisible(false);
+            this.getCurrentPopup().dispose();
         }
         else {
             // Attempt to build structures based off currentStructure and structuresToBuild. 
             BuildableBody.buildStructure(this.currentStructure.getParentBuildableBody(), this.currentStructure, structuresToBuild);
-            
+            this.getCurrentPopup().setVisible(false);
+            this.getCurrentPopup().dispose();
         }
     }//GEN-LAST:event_btnBuildStructureActionPerformed
 
