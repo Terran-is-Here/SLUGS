@@ -268,7 +268,7 @@ public class Structure extends AbstractGameObject{
         // First, get the effective scaling factor for this build order.
         // Special case if only one object is being built. 
         if (buildAmount == 1) {
-           scalingFactor = Utilities.geometricSeriesInitialSum(currentStructureAmount, currentStructureAmount-1, structureCostScaleFactor);
+           scalingFactor = Utilities.geometricSeriesInitialSum(currentStructureAmount, currentStructureAmount, structureCostScaleFactor);
         }
         
         //Else, calculate as normal
