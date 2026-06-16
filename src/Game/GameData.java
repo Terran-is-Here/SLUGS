@@ -520,7 +520,6 @@ public class GameData {
             bodyResourcesIterator = currentBuildableBody.getBodyResourceStorage().iterator(); 
             
             while (bodyResourcesIterator.hasNext()) {
-                System.out.println("uhoh");
                 currentResource = (Resource) bodyResourcesIterator.next();
                 
                 // Add "resource_deposit_amount.resource_identifier=resource_amount" into data to write.
@@ -532,7 +531,6 @@ public class GameData {
             bodyResourcesIterator = currentBuildableBody.getBodyDeposits().iterator(); 
             
             while (bodyResourcesIterator.hasNext()) {
-                System.out.println("uho2h");
                 currentResource = (Resource) bodyResourcesIterator.next();
                 
                 // Add "resource_deposit_amount.resource_identifier=resource_amount" into data to write.

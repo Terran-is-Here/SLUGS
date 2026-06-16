@@ -14,7 +14,7 @@ import java.awt.BorderLayout;
 import java.awt.Container; 
 public class GameRootGui extends javax.swing.JFrame {    
     /** Game header title*/ 
-    final static public String GAME_NAME = "Space Logistics Utilitarian Guidance System (S.L.U.G.S) v0.3.1"; 
+    final static public String GAME_NAME = "Space Logistics Utilitarian Guidance System (S.L.U.G.S) v0.4.1"; 
     
     // Current BuildableBody being focused on currently focused object 
     public MainBodyContainer mainBodyContainer; 

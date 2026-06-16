@@ -94,6 +94,7 @@ public class Game {
         // Sets saveFileLoadFlag to true if a file is successfully loaded. 
         GameData.loadSaveData();
         if (!saveFileLoadFlag) {
+            
             // Iterator buffers; 
             ReferenceDataEntry referenceDataEntry; 
             Iterator referenceDataEntryIterator; 
@@ -108,14 +109,14 @@ public class Game {
                 referenceDataEntry = (ReferenceDataEntry) buildableBodyReferenceDataEntryIterator.next(); 
                 BuildableBody.initializeNewBuildableBody(referenceDataEntry.getIdentifier());
             }
-            
+            setCurrentScope(Game.getBuildableBodyContainerTable().get(0));
             // Set some intial structures just for bootstrapping on the first planet. 
             Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("wood", 100));
             Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("stone_brick", 20));
             Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("coal", 20));
         }
         // Get the first indexed object and set as current game scope. 
-            setCurrentScope(Game.getBuildableBodyContainerTable().get(0));
+        setCurrentScope(Game.getBuildableBodyContainerTable().get(0));    
     }
     
     
@@ -197,8 +198,6 @@ public class Game {
         
         // Check if other more graphically-intensive steps need an update
         if (contentUpdateFlag) {
-            System.out.println("Structure List Updated");
-            System.out.println("Content update flag raised!");
             contentUpdateFlag = false;
             GameContainer.mainBodyContainer.updateStructureDisplayPanel();
         }
@@ -240,8 +239,6 @@ public class Game {
     
     public static void setNewCurrentScope(BuildableBody scopeToMoveTo) {
         setCurrentScope(scopeToMoveTo); 
-        System.out.println("Current Scope: " + scopeToMoveTo.getIdentifier());
-        System.out.println("Current Scope Structure Length: " + scopeToMoveTo.getBodyStructures().size());
         GameContainer.updateMainGamePanel();
     }
     
