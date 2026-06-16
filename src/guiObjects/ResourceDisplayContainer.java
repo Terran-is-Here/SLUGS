@@ -16,7 +16,10 @@ import java.awt.GridBagConstraints;
 import javax.swing.JPanel; 
 public class ResourceDisplayContainer extends javax.swing.JPanel {
     
+    /** Current resource display table to display as a table of UI objects*/
     protected ArrayList<Resource> currentResourceTable; 
+    
+    /** buffer GridBagConstraints object for GBCs*/ 
     public GridBagConstraints gridBagConstraints = new GridBagConstraints();
     
     /**
@@ -29,16 +32,25 @@ public class ResourceDisplayContainer extends javax.swing.JPanel {
         
     }
     
+    /**
+     * Reads a resourceTable and uses it to display it as a string of UI objects within this container object. 
+     * @param resourceTable Input ArrayList of Resource objects to display on this display container. 
+     */
     public void readNewResourceTable(ArrayList<Resource> resourceTable) {
-        this.removeAll();
+        
+        // Sets the current focus resource table as resourceTable
+        this.currentResourceTable = resourceTable; 
+        // Clear all objects currently present within the container + their memory
+        this.removeAll(); 
+        
         // Buffer vertical space for the preferred size of the overall container for parent JScrollPane. 
         int verticalSpace = 0;
+        
         // Buffer for Resource and JPanels produced by Resource.getResourceDisplayPanel() respectively.  
         Resource currentResource; 
         JPanel bufferPanel;
         
-        // Sets the current focus resource table as resourceTable
-        this.currentResourceTable = resourceTable; 
+        
 
         // Iterate through all objects within the resource table. 
         for (int index = 0; index < resourceTable.size(); index++){
@@ -97,11 +109,17 @@ public class ResourceDisplayContainer extends javax.swing.JPanel {
         
     }
     
+    /**
+     * Gets the current resource table being used by this ResourceDisplayContainer.
+     * @return the currentResourceTable property of this ResourceDisplayContainer. 
+     */
     public ArrayList<Resource> getCurrentResourceTable() {
         return this.currentResourceTable; 
     }
     
-    
+    /**
+     * Fully clears the resource display; as well as destroys the resourceDisplayPanels attached onto our resource objects to clear memory. 
+     */
     public void clearResourceDisplay() {
         // Clear all objects from GUI first
         this.removeAll();
@@ -115,11 +133,6 @@ public class ResourceDisplayContainer extends javax.swing.JPanel {
             // Destroy GUI object linked to Resource object. 
             currentResource.destroyResourceDisplay();
         }
-        // Add c
-
-        // Validate layout
-        
-        
         this.validate();
     }
     

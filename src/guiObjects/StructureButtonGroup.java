@@ -4,29 +4,41 @@
  */
 package guiObjects;
 
-/**
- *
- * @author plcau
- */
+
 import Game.Structure;
 import java.util.ArrayList; 
-import java.util.Iterator; 
 import java.awt.GridBagConstraints; 
 import java.awt.Insets;
 import java.awt.Dimension; 
+/**
+ * A group of Button objects with the same Category. 
+ * @author plcau
+ */
 public class StructureButtonGroup extends javax.swing.JPanel {
     
+    /**ArrayList representing the current Strucutres this ButtonGroup will display.*/
     private ArrayList<Structure> structureArrayList; 
-    private static final int BUTTONS_PER_ROW = 5; 
+    
+    /**How many buttons that are to be displayed per row.*/
+    private static final int BUTTONS_PER_ROW = 6;
+    
+    /** The category title of this structureButtonGroup*/ 
     private String categoryTitle; 
+    
+    /**Preferred size factory for every row of buttons to add to this JPanel's preferred size.*/
     private static int VERTICAL_SIZE_FACTOR = 50; 
+    
     /**
-     * Creates new form StructureDisplayPanel
+     * Private constructor method for making a new StructureButtonGroup. 
+     * @param _structureArrayList Array of structures to display within the button group
+     * @param _categoryTitle String to use as a title for this Button group.
      */
     private StructureButtonGroup(ArrayList<Structure> _structureArrayList, String _categoryTitle) {
         structureArrayList = _structureArrayList; 
         categoryTitle = _categoryTitle; 
         initComponents();
+        
+        // Set header text equal to t
         lblStructureCategoryHeader.setText(categoryTitle);
     }
     
@@ -34,13 +46,24 @@ public class StructureButtonGroup extends javax.swing.JPanel {
         return this.structureArrayList; 
     }
     
+    /**
+     * Creates a new StructureButtonGroup of StructureButton objects using _structureArrayList.
+     * @param _structureArrayList ArrayList of Structure Objects to create and link StructureButtons.
+     * @param _categoryTitle Title of this StructureButtonGroup on the GUI. 
+     * @return Returns a JPanel object representing a group of StructureButtons. 
+     */
     public static StructureButtonGroup newStructureDisplayContainer(ArrayList<Structure> _structureArrayList, String _categoryTitle) {
+        
+        // Create new StructureButtonGroup Object for output
+        StructureButtonGroup newContainer = new StructureButtonGroup(_structureArrayList, _categoryTitle); 
+        
+        // Buffer variables for loop; 
         Structure currentStructure; 
         StructureButton bufferStructureButton; 
-        StructureButtonGroup newContainer = new StructureButtonGroup(_structureArrayList, _categoryTitle); 
+        int index;
+        // GBC object for layout; 
         GridBagConstraints currentObjectGridBagConstraints; 
-        int index; 
-        int rows; 
+        
         // Set up structure buttons within PnlButtonContainer; 
         for (index = 0; index < _structureArrayList.size(); index++) {
             // Set up GBCs for display objects. 
@@ -67,13 +90,21 @@ public class StructureButtonGroup extends javax.swing.JPanel {
             bufferStructureButton = currentStructure.getStructureButton(); 
             newContainer.PnlButtonContainer.add(bufferStructureButton.getStructureJButton(), currentObjectGridBagConstraints);
         }
-        rows = index/BUTTONS_PER_ROW; 
+        
+        // Calculate effective number of rows to use for calulating effects on layout; 
+        int rows = index/BUTTONS_PER_ROW; 
+        
+        // Get vertical spacing for layout and apply it to layouts / dimensions; 
         int verticalSpacing = (rows+1) * VERTICAL_SIZE_FACTOR; 
+        
+        // Set the container of ButtonObject's Dimensions scaled off verticalSpacing
         newContainer.PnlButtonContainer.setPreferredSize(new Dimension(600, verticalSpacing));
         newContainer.PnlButtonContainer.setMinimumSize(new Dimension(600, verticalSpacing));
-       
+        
+        // Set the container of ButtonObject's Container's Dimensions scaled off verticalSpacing
         newContainer.setPreferredSize(new Dimension (600, verticalSpacing + 60));
         
+        // Revalidate layouts and redraw objects. 
         newContainer.PnlButtonContainer.validate();
         newContainer.PnlButtonContainer.repaint();
         newContainer.validate();
@@ -85,6 +116,10 @@ public class StructureButtonGroup extends javax.swing.JPanel {
         return this.PnlButtonContainer; 
     }
 
+    
+    public String getCategoryTitle() {
+        return this.categoryTitle; 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -15,45 +15,85 @@ import java.awt.Container;
  */
 public class ResourceDisplayPanel extends javax.swing.JPanel {
     
+    /**Current Resource object to display */
     private Resource resourceToDisplay; 
+    
+    /** Current color to use as a background (set as default value to start)*/
     private java.awt.Color effectiveColor = GuiConfigs.RESOURCE_BACKGROUND_COLOR1;  
+    
+    /** Index of this object within the parent container (used for alternating colors) */
     private int index;  
+    
+    // Determined via trial and error; increase/decrease to change vertical spacing of ResourceDisplayPanels. 
+    /** Vertical sizing of this object in terms of setting preferred size*/
     public final static int VERTICAL_SIZING = 22;  
+    
+    
+    
     /**
      * Creates a new Resource Display Panel object based off an input _resourceToDisplay; 
      * @param _resourceToDisplay The resource object to display data from. 
      */
-    
-    
     private ResourceDisplayPanel(Resource _resourceToDisplay, int _index) {
         resourceToDisplay = _resourceToDisplay; 
         index = _index; 
+        
         initComponents();
+        
+        // Set tooltip text as the display description of the resource.
         this.lblResourceDisplayName.setToolTipText(resourceToDisplay.getDisplayDescription());
+        
+        // Update colros and update display.
         updateColor(); 
         updateDisplay(this);
         
     }
+    
+    /**
+     * Creates a new ResourceDisplayPanel object returns the corresponding JPanel/ResourceDisplayPanel. 
+     * @param _resourceToDisplay Resource object for this object to get it's display data from.
+     * @param _index The display index of this object for alternating colors. 
+     * @return 
+     */
     public static ResourceDisplayPanel newResourceDisplayPanel(Resource _resourceToDisplay, int _index) {
         ResourceDisplayPanel output = new ResourceDisplayPanel(_resourceToDisplay, _index); 
         return output; 
     }
     
-    
+    /**
+     * Updates the display values present within this ResourceDisplayPanel.
+     */
     public void updateValue() {
+        // If the previous resource value == 0; that is our panel was just initialized/is just 0; set to 0.0/day as a placeholder.
+        String deltaResourceOutput; 
+        String resourceAmountOutput;
         if (resourceToDisplay.getPreviousResourceValue() == 0) {
-            lblDeltaResource.setText("0.0/day"); 
+            deltaResourceOutput = "0.0/day"; 
+            lblDeltaResource.setText(deltaResourceOutput); 
         }
+        // If there actually was a previous value, set the delta value to be; "Sign DeltaValue / day".
         else {
-            lblDeltaResource.setText(Game.Utilities.getSign(resourceToDisplay.getDeltaResource())+ " " + String.valueOf(resourceToDisplay.getDeltaResource()) + " / day"); 
+            deltaResourceOutput = Game.Utilities.getSign(resourceToDisplay.getDeltaResource());
+            deltaResourceOutput = deltaResourceOutput + " " + String.valueOf(resourceToDisplay.getDeltaResource()); 
+            deltaResourceOutput += " / day";
+            lblDeltaResource.setText(deltaResourceOutput); 
         }
-        lblResourceAmount.setText(Double.toString(resourceToDisplay.getResourceAmount()));
+        // Set current resource amount displayed to current resource amount;
+        resourceAmountOutput = Double.toString(resourceToDisplay.getResourceAmount());
+        lblResourceAmount.setText(resourceAmountOutput);
+        
+        // Update colors and display as needed. 
         updateColor();
         updateDisplay(lblResourceAmount); 
         
     }
     
+    /**
+     * Updates the background color of this Object based on it's index; 
+     */
     public void updateColor() {
+        
+        // Alternate background color between two choices; then set that to be the background color of our panel. 
         switch(this.index%2) {
             case 0 -> effectiveColor = GuiConfigs.RESOURCE_BACKGROUND_COLOR1;
             case 1 -> effectiveColor = GuiConfigs.RESOURCE_BACKGROUND_COLOR2; 

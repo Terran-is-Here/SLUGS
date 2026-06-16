@@ -8,11 +8,9 @@ package guiObjects;
  *
  * @author plcau
  */
-import Game.ReferenceDataEntry; 
 import Game.Structure;
 import Game.BuildableBody; 
 import Game.GameData;
-import Game.Utilities; 
 import static guiObjects.StructurePopupDialog.structureDialogWithResources;
 import java.awt.Dialog;
 import java.awt.Component; 
@@ -23,27 +21,51 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 public class ConstructNewStructurePopupDialog extends javax.swing.JPanel {
     
-    BuildableBody parentBuildableBody; 
-    ArrayList<String> choiceIdentifiers; 
-    ArrayList<String> choiceDisplayText; 
-    Structure currentStructure; 
-    int selectedIndex; 
-    JDialog currentPopup; 
+    // Parent buildable body for this object to obtain choices from; 
+    protected BuildableBody parentBuildableBody; 
+    
+    // ArrayList describing the list of identifiers this of this popup. Shares index relation with choiceDisplayText. 
+    protected ArrayList<String> choiceIdentifiers; 
+    
+    // Arraylist describing the list of Display Text options actually shown in JComboBox<String>. 
+    protected ArrayList<String> choiceDisplayText; 
+    
+    // Current choice of Structure in JComboBox
+    protected Structure currentStructure; 
+    
+    // Selected index in JComboBox
+    protected int selectedIndex; 
+    
+    // Current popup object. 
+    protected JDialog currentPopup; 
     /**
      * Creates new form StructureNewStructurePopupDialog
      */
     
-    
+    /**
+     * Private constructor for ConstructNewStructurePopupDialog; Creates the components of the form and the choices based off _parentBuildableBody
+     * @param _parentBuildableBody The BuildableBody this object is being used on (i.e. what body are we building on)? 
+     */
     private ConstructNewStructurePopupDialog(BuildableBody _parentBuildableBody) {
         parentBuildableBody = _parentBuildableBody; 
         initComponents();
         setComboBoxChoices();
     }
     
-    public static ConstructNewStructurePopupDialog newConstructNewStructurePopupDialog(BuildableBody _parentBuildableBody) {
+    /**
+     * Creates and returns a JPanel with the layout of a popup used for constructing new structures. 
+     * @param _parentBuildableBody
+     * @return 
+     */
+    protected static ConstructNewStructurePopupDialog newConstructNewStructurePopupDialog(BuildableBody _parentBuildableBody) {
         return new ConstructNewStructurePopupDialog(_parentBuildableBody); 
     }
     
+    /**
+     * Creates a popup which lets users choose what structure option to build on _parentBuildableBody.
+     * @param _parentBuildableBody The parentBuildableBody the structure is being built on. 
+     * @param parentComponent A parent Component (used for positioning the popup). 
+     */
     public static void newConstructNewStructurePopup(BuildableBody _parentBuildableBody, Component parentComponent) {
         // Create new JDialog object, using SwingUtilities to get the highest most window ancestor of the parent component. 
         JDialog currentPopup = new JDialog(SwingUtilities.getWindowAncestor(parentComponent), Dialog.ModalityType.APPLICATION_MODAL);
@@ -65,33 +87,47 @@ public class ConstructNewStructurePopupDialog extends javax.swing.JPanel {
         currentPopup.setVisible(true);
     }
     
-    
+    /**
+     * 
+     */
     protected void setComboBoxChoices() {
-        // Get ArrayList of Identifiers signifying potentially buildable structures within this BuildableBody. 
-        this.setChoiceIdentifiers(parentBuildableBody.findBuildableStructures()); 
+        // Get ArrayList of Identifiers signifying potentially buildable structures within this BuildableBody; and set it to this structure's choiceIdentifiers. 
+        ArrayList<String> currentIdentifiers = parentBuildableBody.findBuildableStructures();
+        this.setChoiceIdentifiers(currentIdentifiers); 
         
-        
+        // Checks if the choices are not initially empty to start (i.e. if there's any Structures properly buildable on the object to begin with
         if (!this.getChoiceIdentifiers().isEmpty()) {
-        // Iterate through all identifiers and get display text entries. 
-        ArrayList<String> buffer = new ArrayList<>(); 
-        Iterator choiceIdentifierIterator = this.getChoiceIdentifiers().iterator(); 
-        String currentIdentifier, temp; 
-        while (choiceIdentifierIterator.hasNext()) {
-            // Get current identifier; 
-            currentIdentifier = (String) choiceIdentifierIterator.next(); 
             
-            // Then get current display name from the associated reference data entry of the object; 
-            temp = GameData.fetchReferenceDataEntry(Game.Game.getStructureReferenceTable(), currentIdentifier).getDisplayName(); 
-            buffer.add(temp); 
-        }
-        // Set choiceDisplayText arrayList to be all displayText value of associated identifiers within the same index in choiceIdentifiers. 
-        this.setChoiceDisplayText(buffer);  
-        
-        String[] toSetAsChoiceDisplay = new String[this.getChoiceDisplayText().size()-1]; 
-        toSetAsChoiceDisplay = this.getChoiceDisplayText().toArray(toSetAsChoiceDisplay); 
-        cmbxStructureChoices.setModel(new javax.swing.DefaultComboBoxModel( toSetAsChoiceDisplay));
-        cmbxStructureChoices.setSelectedIndex(0);
+            // Iterate through all identifiers and get display text entries. 
+            ArrayList<String> displayTextChoices = new ArrayList<>(); 
+            
+            // Get identifier Array and iterate through all identifiers to get related Display text. 
+            Iterator choiceIdentifierIterator = currentIdentifiers.iterator(); 
+            String currentIdentifier, temp; 
+            
+            // Iterate through all identifiers
+            while (choiceIdentifierIterator.hasNext()) {
+                // Get current identifier; 
+                currentIdentifier = (String) choiceIdentifierIterator.next(); 
+
+                // Then get current display name from the associated reference data entry of the object; 
+                temp = GameData.fetchReferenceDataEntry(Game.Game.getStructureReferenceTable(), currentIdentifier).getDisplayName(); 
+                displayTextChoices.add(temp); 
+            }
+            // Set choiceDisplayText arrayList to be all displayText value of associated identifiers within the same index in choiceIdentifiers. 
+            this.setChoiceDisplayText(displayTextChoices);  
+            
+            // Convert ArrayList to string for javax.swing.DefaultComboBoxModel to actually parse it.
+            
+            // Create / allocate array for .toArray() to actually work; 
+            String[] toSetAsChoiceDisplay = new String[displayTextChoices.size()-1]; 
+            toSetAsChoiceDisplay = displayTextChoices.toArray(toSetAsChoiceDisplay); 
+            
+            // Set JComboBox choices equal to the DisplayText choices; and set default index to 0. 
+            cmbxStructureChoices.setModel(new javax.swing.DefaultComboBoxModel( toSetAsChoiceDisplay));
+            cmbxStructureChoices.setSelectedIndex(0);
         } 
+        // In case when there are no valid buildable structures currently present; set the only choice as "No build options available" and disable selection on the JComboBox.
         else {
             String[] toSetASChoiceDisplay = {"No build options available"}; 
             cmbxStructureChoices.setModel(new javax.swing.DefaultComboBoxModel(toSetASChoiceDisplay)); 

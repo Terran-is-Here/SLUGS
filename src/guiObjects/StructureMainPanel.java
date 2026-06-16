@@ -4,21 +4,31 @@
  */
 package guiObjects;
 
-/**
- *
- * @author plcau
- */
+
 import java.util.ArrayList; 
 import java.util.Iterator;
 import java.awt.GridBagConstraints; 
 import java.awt.Dimension; 
 import Game.Structure; 
 import Game.BuildableBody; 
+/**
+ * Main container object of StructureButtonGroups (and by extension; StructureButtons) 
+ * @author plcau
+ */
 public class StructureMainPanel extends javax.swing.JPanel {
+    
+    private final static int INITIAL_HEIGHT = 60; 
+    
+    /**ArrayList of Structures to display overall in this panel.*/
     private ArrayList<Structure> structuresToDisplay; 
+    
+    /**BuildableBody this object is displaying the Structures of.*/
     private BuildableBody parentBuildableBody; 
+    
     /**
-     * Creates new form StructureMainPanel
+     * Private constructor of StructureMainPanels; creates a new StrucureMainPanel object and initializes the JPanel. 
+     * @param _structuresToDisplay ArrayList of Structure to Display.
+     * @param _parentBuildableBody BuildableBody that this Object is displaying the structures of. 
      */
     private StructureMainPanel(ArrayList<Structure> _structuresToDisplay, BuildableBody _parentBuildableBody) {
         structuresToDisplay = _structuresToDisplay; 
@@ -26,36 +36,48 @@ public class StructureMainPanel extends javax.swing.JPanel {
         initComponents();
     }
     
+    /**
+     * Creates a new content JPanel formatted w/ StructureButtonGroups. Intended for using within MainBodyContainer. 
+     * @param _structuresToDisplay ArrayList of Structure to Display.
+     * @param _parentBuildableBody BuildableBody that this Object is displaying the structures of. 
+     * @return Returns a StructureMainPanel (really a JPanel) full of StructureButtonGroups for use in the main game's GUI. 
+     */
     public static StructureMainPanel newStructureMainPanel(ArrayList<Structure> _structuresToDisplay, BuildableBody _parentBuildableBody) {
         // Create new JPanel container; 
         StructureMainPanel currentPanel = new StructureMainPanel(_structuresToDisplay, _parentBuildableBody);
-        currentPanel.addStructureButtonGroups();
-
-        
-        
+        currentPanel.addStructureButtonGroups();   
         return currentPanel; 
     }
 
-    
+    /**
+     * Adds StructureButtonGroups onto a StructureMainPanel based on it's structuresToDisplay property. 
+     */
     private void addStructureButtonGroups() {
         // Create an arrayList of keywords (objectType of Structures) that have already been processed; 
         ArrayList<String> keywordsProcessed = new ArrayList<>(); 
         GridBagConstraints objectConstraints; 
+        
+        // Height value used for dimensions of this overall object. 
+        int totalHeight = StructureMainPanel.INITIAL_HEIGHT; 
         // Keep looping through the structures to display arraylist; only stop looping if no new keywords are deteted; 
         boolean newKeywordsFound = true;
         
         // Iterator and buffer values 
         Iterator structureIterator; 
         Structure currentStructure;
-        String currentKeyword = ""; 
-        
-        ArrayList<Structure> bufferStructures = new ArrayList<>(); 
-        String searchKeyword = ""; 
-        String currentDisplayKeyword = ""; 
-        String searchDisplayKeyword = ""; 
         StructureButtonGroup bufferPanel; 
+        
+        // ArrayList used as buffer for generating StructureButtonGroups. 
+        ArrayList<Structure> bufferStructures = new ArrayList<>(); 
+        
+        // Current keywrods. 
+        String currentKeyword = "";  // Loop variable for the current Keyword; 
+        String currentDisplayKeyword = ""; // Loop variable for current display keyword; 
+        String searchKeyword = ""; // Loop variable for current keyword being searched for; 
+        String searchDisplayKeyword = ""; // Current display keyword; 
+        
         // While new keywords are being found...
-        int totalHeight = 60; 
+        
         while (newKeywordsFound) {
             
             // Reset loop variables; 
@@ -63,6 +85,7 @@ public class StructureMainPanel extends javax.swing.JPanel {
             newKeywordsFound = false; 
             searchKeyword = ""; 
             bufferStructures = new ArrayList<>(); 
+            
             // Loop through the entire structure array
             while (structureIterator.hasNext()) {
                 // Get current Structure object and gets it's keyword. 

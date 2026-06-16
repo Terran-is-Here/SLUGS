@@ -4,10 +4,8 @@
  */
 package guiObjects;
 
-/**
- *
- * @author plcau
- */
+
+
 import Game.Structure; 
 import Game.BuildableBody;
 import Game.Resource; 
@@ -18,21 +16,40 @@ import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 import java.awt.Component; 
 import java.util.Iterator; 
+
+/**
+ * Class that creates the JPanel Form used in the popup dialog for StructureButtons; comes with Structure manipulation methods.
+ * @author plcau
+ */
 public class StructurePopupDialog extends javax.swing.JPanel {
     
+    /** Current Structure Object that this StructurePopupDialog is handling*/
+    protected Structure currentStructure; 
+    
     /**
-     * Creates new form StructurePopupDialog
+     * Private constructor method that creates a StructurePopupDialog (JPanel Form) based off _currentStructure.
+     * @param _currentStructure Structure from which StructurePopupDialog gets it's data from. 
      */
-    Structure currentStructure; 
     private StructurePopupDialog(Structure _currentStructure) {
         currentStructure = _currentStructure; 
         initComponents();
         updateDisplays(); 
     }
-    public static StructurePopupDialog newStructurePopupDialog(Structure _currentStructure) {
+    
+    /**
+     * Factory constructor method that creates a StructurePopupDialog (JPanel Form) based off _currentStructure.
+     * @param _currentStructure Structure from which StructurePopupDialog gets it's data from. 
+     * @return Returns a StructurePopupDialog (JPanel) which represents the interior of a JDialog object. 
+     */
+    protected static StructurePopupDialog newStructurePopupDialog(Structure _currentStructure) {
         return new StructurePopupDialog(_currentStructure);
     }
     
+    /**
+     * Creates a set of JDialog Popups which grapple with editing the configuration of _currentStructure (amount, etc.) 
+     * @param _currentStructure Structure from which the popup gets it's data from.
+     * @param parentComponent A Component used to determine which window this JDialog is a parent of. 
+     */
     public static void newStructurePopupDialogWindow(Structure _currentStructure, Component parentComponent) {
         // Create new JDialog object, using SwingUtilities to get the highest most window ancestor of the parent component. 
         JDialog jDialogToDisplay = new JDialog(SwingUtilities.getWindowAncestor(parentComponent), ModalityType.APPLICATION_MODAL);
@@ -177,6 +194,7 @@ public class StructurePopupDialog extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCurrentlyEnabledActionPerformed
 
+    
     private void btnBuildStructureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuildStructureActionPerformed
         
         // Get display message based on structure name
@@ -236,18 +254,34 @@ public class StructurePopupDialog extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btnConfirmConfigurationActionPerformed
     
+    /**
+     * Updates the displays of this current StructurePopupDialog's JPanel. 
+     */
     private void updateDisplays() {
+        // Update the amounts of currently enabed (structure amount) and disabled (inactive structures) text fields.  
         txtCurrentlyDisabled.setText(Integer.toString(currentStructure.getInactiveStructureAmount()));
         txtCurrentlyEnabled.setText(Integer.toString(currentStructure.getStructureAmount()));
         
+        // Get the output string for use in txtInputOutputArea; 
+        // Buffer loop values; 
         ArrayList<String[]> outputStrings = new ArrayList<>(); 
         String outputString = ""; 
+        String[] buffer; 
+        
+        // Check if Structure has Base Ouptut resources
         if (!currentStructure.getStructureBaseOutputResources().isEmpty()) {
-        outputStrings.add(Resource.getScaledResourceReceipt(currentStructure.getEffectiveResourceArray(currentStructure.getStructureBaseOutputResources(), false), "Assuming full efficiency; these structures are outputting:", ""));
+            buffer = Resource.getScaledResourceReceipt(currentStructure.getEffectiveResourceArray(
+                    currentStructure.getStructureBaseOutputResources(), false), "Assuming full efficiency; these structures are outputting:", "");
+            outputStrings.add(buffer);
         }; 
+        // Check if Structure has Base Input resouces; 
         if (!currentStructure.getStructureBaseInputResources().isEmpty()) {
-        outputStrings.add(Resource.getScaledResourceReceipt(currentStructure.getEffectiveResourceArray(currentStructure.getStructureBaseInputResources(), true), "Assuming full efficiency; these structures are consuming:", ""));
+            buffer = Resource.getScaledResourceReceipt(currentStructure.getEffectiveResourceArray(
+                    currentStructure.getStructureBaseInputResources(), true), "Assuming full efficiency; these structures are consuming:", "");
+            outputStrings.add(buffer);
         }; 
+        
+        // Process outputString arrayList (nested ArrayList) into a String for display in txtInputOutputArea. 
         Iterator outputStringIterator = outputStrings.iterator(); 
         while (outputStringIterator.hasNext()) {
             String[] currentRow= (String[]) outputStringIterator.next();
@@ -256,6 +290,7 @@ public class StructurePopupDialog extends javax.swing.JPanel {
                 outputString += "\n"; 
             }; 
         }
+        // Update display text.
         txtInputOutputArea.setText(outputString);
     }
     

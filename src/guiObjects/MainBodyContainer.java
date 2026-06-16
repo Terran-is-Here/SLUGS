@@ -8,40 +8,57 @@ package guiObjects;
  * Container JPanel for when a BuildableBody is currently being focused on. 
  * @author plcau
  */
-import java.awt.BorderLayout;
-import Game.Game; 
 import Game.BuildableBody; 
 import java.awt.GridBagConstraints;
 import javax.swing.JPanel;
 public class MainBodyContainer extends javax.swing.JPanel {
     
+    // Current BuildableBody that is being focused on. 
     BuildableBody buildableBodyFocus; 
+    
+    // Panel declarations for JCardLayout (not implemented)
     protected final static String STRUCTURE_PANEL = "structure";
-    protected final static String ORBITAL_PANEL = "orbital"; 
-    protected final static String VESSEL_PANEL = "vessel_panel"; 
+    
+    
     /**
      * Creates new form mainContainer
      */
     public MainBodyContainer(BuildableBody _buildableBodyFocus) {
+        
+        // Set current buildableBodyFocus as the input; then initialize components
         buildableBodyFocus = _buildableBodyFocus; 
         initComponents();
         
+        
+        // Update components based on buildableBodyFocus's data. 
         updateStructureDisplayPanel(); 
         updateBodyImagePanel();
         updateBodyDescriptionPanel(); 
         pnlMainScreenContent.add(pnlStructureDisplay, MainBodyContainer.STRUCTURE_PANEL);
     }
     
+    /**
+     * Updates the central updateStructureDisplaypanel via clearing it and re-adding new object when required. 
+     */
     public void updateStructureDisplayPanel() {
+        // Clear all objects. 
         pnlStructureDisplay.removeAll();
         
+        // Set up GridBagConstraints for the main StructureMainPanel within StructureDisplay
         GridBagConstraints panelContentGridBagConstraints = new GridBagConstraints(); 
-        panelContentGridBagConstraints.gridx = 0;
+        
+        // Position in [0,0]; or in top left position of Grid Bag Layout's table
+        panelContentGridBagConstraints.gridx = 0; 
         panelContentGridBagConstraints.gridy = 0; 
+        
+        // Set to fill horizontally and vertically; 
         panelContentGridBagConstraints.fill = GridBagConstraints.BOTH;
+        
+        // Set the main content to be equal to a structureMainPanel object with the current focus buildableBody's structures; then add to the display panel; 
         StructureMainPanel mainContent = StructureMainPanel.newStructureMainPanel(buildableBodyFocus.getBodyStructures(), buildableBodyFocus);
         pnlStructureDisplay.add(mainContent, panelContentGridBagConstraints); 
         
+        // Add glue to fill in any potentially empty space to prevent potential streching of mainStructureMainPanel; 
         JPanel glue = new JPanel();
         glue.setOpaque(false); 
         GridBagConstraints glueConstraints = new GridBagConstraints();
@@ -53,10 +70,18 @@ public class MainBodyContainer extends javax.swing.JPanel {
         pnlStructureDisplay.add(glue, glueConstraints);
     }
     
+    /**
+     * Updates the image present within lblPlanetAppearanceImage 
+     */
     public void updateBodyImagePanel() {
-        lblPlanetAppearanceImage.setIcon(new javax.swing.ImageIcon(getClass().getResource(buildableBodyFocus.getReferenceDataTableEntry().getObjectIconDirectory()))); // NOI18N
+        // Get image / icon from assets directory; then set to the icon of lblPlanetAppearanceImage. 
+        javax.swing.ImageIcon imageToDisplay = new javax.swing.ImageIcon(getClass().getResource(buildableBodyFocus.getReferenceDataTableEntry().getObjectIconDirectory()));
+        lblPlanetAppearanceImage.setIcon(imageToDisplay); 
     }
     
+    /**
+     * Updates the txtBodyDescriptionArea display text with the current description of the BuildableBody. 
+     */
     public void updateBodyDescriptionPanel() {
         txtBodyDescriptionArea.setText(buildableBodyFocus.getDisplayDescription());
     }
@@ -73,7 +98,6 @@ public class MainBodyContainer extends javax.swing.JPanel {
 
         MenuNavigationBar = new javax.swing.JMenuBar();
         MnuBtnSurface = new javax.swing.JMenu();
-        MnuBtnOrbit = new javax.swing.JMenu();
         pnlStructureDisplay = new javax.swing.JPanel();
         pnlOrbitalDisplay = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -102,9 +126,6 @@ public class MainBodyContainer extends javax.swing.JPanel {
             }
         });
         MenuNavigationBar.add(MnuBtnSurface);
-
-        MnuBtnOrbit.setText("Orbit");
-        MenuNavigationBar.add(MnuBtnOrbit);
 
         pnlStructureDisplay.setLayout(new java.awt.GridBagLayout());
 
@@ -144,9 +165,6 @@ public class MainBodyContainer extends javax.swing.JPanel {
         PnlImage.setLayout(new java.awt.GridBagLayout());
 
         lblPlanetAppearanceImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/placeholderPlanet.png"))); // NOI18N
-        lblPlanetAppearanceImage.setMaximumSize(new java.awt.Dimension(198, 198));
-        lblPlanetAppearanceImage.setMinimumSize(new java.awt.Dimension(198, 198));
-        lblPlanetAppearanceImage.setPreferredSize(new java.awt.Dimension(198, 198));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -245,7 +263,6 @@ public class MainBodyContainer extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar MenuNavigationBar;
-    private javax.swing.JMenu MnuBtnOrbit;
     private javax.swing.JMenu MnuBtnSurface;
     private javax.swing.JPanel PnlImage;
     private javax.swing.JPanel PnlImageDescription;
