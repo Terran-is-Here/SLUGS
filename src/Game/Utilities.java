@@ -35,10 +35,6 @@ public class Utilities {
         else {
             output = (Math.pow(commonRatio, lowerBound) - Math.pow(commonRatio, upperBound+1))/(1-commonRatio); 
         }
-        System.out.println("Testing\n");
-        System.out.println(lowerBound);
-        System.out.println(upperBound);
-        System.out.println(output);
         return output; 
     }
     
