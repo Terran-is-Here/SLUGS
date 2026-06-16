@@ -390,4 +390,8 @@ public class BuildableBody extends AbstractGameObject{
         
         return outputIdentifierList; 
     }
+    
+    public ArrayList<Resource> getBodyDeposits() {
+        return this.bodyResourceDeposits;
+    }
 }

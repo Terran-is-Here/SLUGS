@@ -24,7 +24,7 @@ public class Game {
     static BuildableBody currentScope; 
     
     /**Boolean to check if a save file already exists.*/
-    static Boolean saveFileLoadFlag = false; 
+    public static Boolean saveFileLoadFlag = false; 
     
     /**Boolean to check if a more major GUI refresh is required (i.e. redrawing the Structures table; etc.)*/
     public static Boolean contentUpdateFlag = false; 
@@ -90,10 +90,9 @@ public class Game {
      * Initializes the game's initial parameters. 
      */
     public static void startGame() {
-        // Checks if a save game has already been loaded. 
-        // If not; instantialize new game. 
-        
-        
+        // Attempt to load save data and set it to be the variables of our BuildableBodyContainerTable. 
+        // Sets saveFileLoadFlag to true if a file is successfully loaded. 
+        GameData.loadSaveData();
         if (!saveFileLoadFlag) {
             // Iterator buffers; 
             ReferenceDataEntry referenceDataEntry; 
@@ -109,18 +108,14 @@ public class Game {
                 referenceDataEntry = (ReferenceDataEntry) buildableBodyReferenceDataEntryIterator.next(); 
                 BuildableBody.initializeNewBuildableBody(referenceDataEntry.getIdentifier());
             }
-            // Get the first indexed object and set as current game scope. 
-            setCurrentScope(Game.getBuildableBodyContainerTable().get(0));
             
             // Set some intial structures just for bootstrapping on the first planet. 
             Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("wood", 100));
             Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("stone_brick", 20));
             Game.getCurrentScope().getBodyResourceStorage().add(Resource.newResource("coal", 20));
         }
-        else{
-            // Insert game load logic here. 
-            return;
-        }
+        // Get the first indexed object and set as current game scope. 
+            setCurrentScope(Game.getBuildableBodyContainerTable().get(0));
     }
     
     

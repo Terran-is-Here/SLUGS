@@ -34,6 +34,8 @@ public class Structure extends AbstractGameObject{
     protected boolean enabledFlag = true; 
     
     protected StructureButton structureDisplayButton; 
+    
+    // These can be rebuilt by ticking the game once.
     /**
      * ArrayList of Modifier objects for the current set of modifiers affecting this object instance alone (ignoring global effects). 
      */
@@ -233,6 +235,10 @@ public class Structure extends AbstractGameObject{
      */
     public void setInactiveStructureAmount (int inactiveStructureAmount) {
         this.inactiveStructureAmount = inactiveStructureAmount;
+    }
+    
+    public void setStructureEnabledFlag(boolean newValue) {
+        this.enabledFlag = newValue; 
     }
     
     

@@ -8,11 +8,16 @@ package Game;
  * Utility class for math and search functions. 
  * @author plcau
  */
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.Math; 
 import java.util.ArrayList; 
 import java.util.Iterator; 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Scanner;
 public class Utilities {
     
     /**
@@ -121,8 +126,68 @@ public class Utilities {
         return bigDecimalBuffer.doubleValue(); 
     }
     
+    public static void writeTxtFile(String fileName, ArrayList<String> textToWrite) {
+        try {
+            
+            // Creates a new FileWriter for a .txt file with a fileName file name. 
+            FileWriter currentFileWriter = new FileWriter(fileName, true); 
+            
+            // Iterates through every entry within textToWrite. 
+            Iterator currentLine = textToWrite.iterator(); 
+            
+            while (currentLine.hasNext()) {
+                // Writes current entry within currentLine into fileName
+                currentFileWriter.write((String) currentLine.next());
+                
+                // Adds line break (\n) in between every line
+                currentFileWriter.write(System.lineSeparator()); 
+            }
+            // Adds line break to separate multiple instances of writeTxtFile being called. 
+            currentFileWriter.write(System.lineSeparator()); 
+            
+            // Close FileWriter after writing operation is done.
+            currentFileWriter.close();
+            
+        }
+        // Catches general IO exceptions possibly raised by other factors. 
+        catch (IOException e) {
+            System.out.println("An IO error occured.");
+            e.printStackTrace(); 
+        }
+    }
     
-    
-    
-    
+    public static ArrayList<String> readTxtFile (String fileName) {
+        
+        //Makes buffer ArrayList for output. 
+        ArrayList<String> outputArray = new ArrayList<String>();
+        try {
+            
+            // Opens up .txt file with fileName filename. 
+            File openedFile = new File(fileName); 
+            
+            // Creates a new Scanner object for openedFile
+            Scanner fileScanner = new Scanner(openedFile); 
+            
+            // Iterates through every line of the .txt file. 
+            while (fileScanner.hasNextLine()) {
+                
+            // For every line within the .txt file; adds it to the end of the outputArray ArrayList object. 
+                outputArray.add(fileScanner.nextLine());
+            }
+            
+            // Close fileScanner to save on memory
+            fileScanner.close(); 
+            
+            // Return outputArray as output. 
+            return outputArray; 
+        }
+        
+        // Runs in case where the file does not exist; print error stack + error message and return a null value. 
+        catch(FileNotFoundException e) {
+            System.out.println("File not found."); 
+            e.printStackTrace(); 
+            return null;
+        }
+        
+    }
 }

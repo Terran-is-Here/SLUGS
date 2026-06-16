@@ -6,6 +6,7 @@ package Game;
 
 
 import java.io.File;
+import java.nio.file.Files; 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator; 
@@ -337,5 +338,235 @@ public class GameData {
         return outputArray; 
     }
     
+    /** Load a game file and set it to be the data arrays for Game.*/ 
+    public static void loadSaveData() {
+        // File variables
+        ArrayList<String> fileContents; 
+        File currentFile;
+        
+        // Iterate through every file within savefile directory to get most recent one (i.e. the one with thie largest number) 
+        int filesChecked = 0; 
+        boolean mostRecentFileFound = false; 
+        String currentFileName = ""; 
+        while (!mostRecentFileFound) {
+            currentFileName = SaveDataConfigs.SAVE_FILE_NAME + filesChecked + SaveDataConfigs.SAVE_FILE_EXTENSION; 
+            // Iterate through every file within the directory and check if the file exists; 
+            currentFile = new File(SaveDataConfigs.SAVE_FILE_DIRECTORY + currentFileName); 
+            
+            // If current file exists; continue parsing until the file is no longer found. 
+            if (currentFile.exists()) {
+                filesChecked += 1; 
+                continue; 
+            }
+            // Catch case in which the game has no save files at all; in which case end loading function early. 
+            else if (filesChecked == 0) {
+                return; 
+            }
+            // If current file doesnt exist; previous file was the last accessible file.
+            else {
+                Game.saveFileLoadFlag = true; 
+                currentFileName = SaveDataConfigs.SAVE_FILE_DIRECTORY + SaveDataConfigs.SAVE_FILE_NAME + (filesChecked-1) + SaveDataConfigs.SAVE_FILE_EXTENSION; 
+                break;
+            }
+        }
+        //Data Buffer Variables
+        BuildableBody bufferBuildableBody = null; 
+        Structure bufferStructure = null; 
+        double resourceAmountBuffer = 0.0; 
+        Resource bufferResource; 
+       
+        // Read file as an ArrayList of String objects; 
+        fileContents = Utilities.readTxtFile(currentFileName);
+        Iterator fileContentsIterator = fileContents.iterator(); 
+        String currentLine = ""; 
+        String[] bufferStringArray; 
+        while (fileContentsIterator.hasNext()) {
+            currentLine = (String) fileContentsIterator.next(); 
+            
+            // Check if line starts with "bodystart.body_identifier". If true; initialize new bufferBuildableBody with that identifier. 
+            // This line will always be called first before any other properties of the buildablebody are initialized; meaning that any lines after it 
+            // are safely defining things inside this body. 
+            if (currentLine.startsWith(SaveDataConfigs.BODY_START)) {
+                currentLine = currentLine.replaceFirst(SaveDataConfigs.BODY_START, ""); 
+                // Since initializeNewBuildableBody already saves itself to Game's array; we don't need to add it again. 
+                bufferBuildableBody = BuildableBody.initializeNewBuildableBody(currentLine); 
+            }
+            
+            // Check if line has the structure of "structurestart.structure_identifier"
+            // Then process line to create a new structure object with that identifier. 
+            if (currentLine.startsWith(SaveDataConfigs.STRUCTURE_START)) {
+                currentLine = currentLine.replaceFirst(SaveDataConfigs.STRUCTURE_START, ""); 
+                bufferStructure = Structure.newStructure(currentLine,0, bufferBuildableBody); 
+            }
+            
+            // Check if line has the structure of "amount=structure_amount"
+            // Then process line to update current structure object's amount with structure_amount. 
+            if (currentLine.startsWith(SaveDataConfigs.STRUCTURE_AMOUNT)) {
+                currentLine = currentLine.replaceFirst(SaveDataConfigs.STRUCTURE_AMOUNT + SaveDataConfigs.VALUE_DEFINITION, ""); 
+                bufferStructure.setStructureAmount(Integer.parseInt(currentLine));
+            }
+            
+            // Check if line has the structure of "amount=inactive_structure_amount"
+            // Then process line to update current structure object's inactive structure amount with inactive_structure_amount. 
+            if (currentLine.startsWith(SaveDataConfigs.STRUCTURE_INACTIVE_AMOUNT)) {
+                currentLine = currentLine.replaceFirst(SaveDataConfigs.STRUCTURE_INACTIVE_AMOUNT + SaveDataConfigs.VALUE_DEFINITION, ""); 
+                bufferStructure.setInactiveStructureAmount(Integer.parseInt(currentLine));
+            }
+            
+            // Check if line has the structure of "toggleflag=flag_state"
+            // Then process line to update current structure object's enabledFlag with flag_state. 
+            if (currentLine.startsWith(SaveDataConfigs.STRUCTURE_TOGGLE)) {
+                currentLine = currentLine.replaceFirst(SaveDataConfigs.STRUCTURE_TOGGLE + SaveDataConfigs.VALUE_DEFINITION, ""); 
+                bufferStructure.setStructureEnabledFlag(Boolean.parseBoolean(currentLine));
+            }
+            
+            // Check if line has the structure of "structureend"
+            // If so; add processed Structure into bufferBuildableBody; then set current variable to null
+            if (currentLine.startsWith(SaveDataConfigs.STRUCTURE_END)) {
+                bufferBuildableBody.getBodyStructures().add(bufferStructure); 
+                bufferStructure = null; 
+            }
+            
+            // Check if the line has the structure of "resourceamount.resource_identifier=resource_amount" 
+            // If so; add processed resource with resource_identifier as it's identifier and resoruce_amount as it's amount. 
+            if (currentLine.startsWith(SaveDataConfigs.RESOURCE_AMOUNT)) {
+                // First, get it in terms of resource_identifier=resourceamount; 
+                // Returns an array with [resource_identifier, resource_amount] 
+                bufferStringArray = GameData.getLineValue(SaveDataConfigs.RESOURCE_AMOUNT, currentLine);
+                
+                // Parse second entry as a double as it represents our resource value; 
+                resourceAmountBuffer = Double.parseDouble(bufferStringArray[1]); 
+                
+                // Create new Resource object with identifier and value; then add to our BuildableBody's buffer. 
+                bufferResource = Resource.newResource(bufferStringArray[0],resourceAmountBuffer); 
+                bufferBuildableBody.getBodyResourceStorage().add(bufferResource); 
+            }
+            
+            // Check if the line has the structure of "resourcedepositamount.resource_identifier=resource_amount" 
+            // If so; add processed resource with resource_identifier as it's identifier and resoruce_amount as it's amount. 
+            if (currentLine.startsWith(SaveDataConfigs.RESOURCE_DEPOSIT_AMOUNT)) {
+                // First, get it in terms of resource_identifier=resourceamount; 
+                // Returns an array with [resource_identifier, resource_amount] 
+                bufferStringArray = GameData.getLineValue(SaveDataConfigs.RESOURCE_DEPOSIT_AMOUNT, currentLine);
+                
+                // Parse second entry as a double as it represents our resource value; 
+                resourceAmountBuffer = Double.parseDouble(bufferStringArray[1]); 
+                
+                // Create new Resource object with identifier and value; then add to our BuildableBody's buffer. 
+                bufferResource = Resource.newResource(bufferStringArray[0],resourceAmountBuffer); 
+                bufferBuildableBody.getBodyDeposits().add(bufferResource); 
+            }
+            
+            
+            // Check if the line has the structure of being "bodyend"; in which case clear current values for re-assignment. 
+            if (currentLine.startsWith(SaveDataConfigs.BODY_END)) {
+                bufferBuildableBody = null; 
+                bufferStructure = null; 
+                resourceAmountBuffer = 0.0; 
+                bufferResource = null;
+            }
+        }
+        
+    }
+    
+    public static void saveData() {
+        ArrayList<String> dataToWrite = new ArrayList<>(); 
+        
+        // All data that needs to be saved can be gathered from the master BuildableBody table; as these contain data on the speciifc instances of resources
+        // and strucures present. 
+        ArrayList<BuildableBody> buildableBodyData = Game.getBuildableBodyContainerTable(); 
+        Iterator buildableBodyDataIterator = buildableBodyData.iterator(); 
+        Iterator bodyStructuresIterator, bodyResourcesIterator; 
+        BuildableBody currentBuildableBody; 
+        Structure currentStructure; 
+        Resource currentResource; 
+        String buffer; 
+        // Iterate through all bodies present in the master table to save data in the form of a String ArrayList
+        while (buildableBodyDataIterator.hasNext()) {
+            
+            //Get the current buildable body
+            currentBuildableBody = (BuildableBody) buildableBodyDataIterator.next();
+            // Adds into first line as "bodystart.body_identifier"
+            buffer = SaveDataConfigs.BODY_START + currentBuildableBody.getIdentifier();
+            dataToWrite.add(buffer); 
+            
+            // Then iterate and save data of all structures present: 
+            bodyStructuresIterator = currentBuildableBody.getBodyStructures().iterator(); 
+            while (bodyStructuresIterator.hasNext()) {
+                currentStructure = (Structure) bodyStructuresIterator.next(); 
+                
+                // Adds into first line as "structurestart.structure_identifier"
+                buffer = SaveDataConfigs.STRUCTURE_START + currentStructure.getIdentifier(); 
+                dataToWrite.add(buffer);
+                
+                //Then add current structure amount; inactive structure amount and toggle. 
+                buffer = SaveDataConfigs.STRUCTURE_AMOUNT + SaveDataConfigs.VALUE_DEFINITION + currentStructure.getStructureAmount(); 
+                dataToWrite.add(buffer);
+                
+                //Then add current inactive structure amount as  "inactiveamount=..." 
+                buffer = SaveDataConfigs.STRUCTURE_INACTIVE_AMOUNT + SaveDataConfigs.VALUE_DEFINITION+ currentStructure.getInactiveStructureAmount(); 
+                dataToWrite.add(buffer);
+                
+                //THen add current structure toggle status as "toggleflag=..." 
+                buffer = SaveDataConfigs.STRUCTURE_TOGGLE + SaveDataConfigs.VALUE_DEFINITION+ currentStructure.getEnabledFlag(); 
+                dataToWrite.add(buffer);
+                
+                // Then add "structureend" to denote that this structure has ended.
+                buffer = SaveDataConfigs.STRUCTURE_END; 
+                dataToWrite.add(buffer); 
+            }
+            
+            // Then iterate through all Resources present in storage: 
+            bodyResourcesIterator = currentBuildableBody.getBodyResourceStorage().iterator(); 
+            
+            while (bodyResourcesIterator.hasNext()) {
+                System.out.println("uhoh");
+                currentResource = (Resource) bodyResourcesIterator.next();
+                
+                // Add "resource_deposit_amount.resource_identifier=resource_amount" into data to write.
+                buffer = SaveDataConfigs.RESOURCE_AMOUNT + currentResource.getIdentifier()+ SaveDataConfigs.VALUE_DEFINITION + currentResource.getResourceAmount(); 
+                dataToWrite.add(buffer);
+            }
+            
+            // Then iterate through all Resources present in deposits: 
+            bodyResourcesIterator = currentBuildableBody.getBodyDeposits().iterator(); 
+            
+            while (bodyResourcesIterator.hasNext()) {
+                System.out.println("uho2h");
+                currentResource = (Resource) bodyResourcesIterator.next();
+                
+                // Add "resource_deposit_amount.resource_identifier=resource_amount" into data to write.
+                buffer = SaveDataConfigs.RESOURCE_DEPOSIT_AMOUNT + currentResource.getIdentifier()+ SaveDataConfigs.VALUE_DEFINITION + currentResource.getResourceAmount(); 
+                dataToWrite.add(buffer);
+            }
+            
+            // Once all of the data fields of a BuildableBody are done; add bodyend line to signify this in save file: 
+            buffer = SaveDataConfigs.BODY_END; 
+            dataToWrite.add(buffer); 
+            
+        }
+        
+        // Now write it to a new save file within this game; 
+        int filesChecked = 0; 
+        boolean newFileCreated = false; 
+        String currentFileName; 
+        File currentFile; 
+        while (!newFileCreated) {
+            
+            currentFileName = SaveDataConfigs.SAVE_FILE_NAME + filesChecked + SaveDataConfigs.SAVE_FILE_EXTENSION; 
+            // Iterate through every file within the directory and check if the file exists; 
+            currentFile = new File(SaveDataConfigs.SAVE_FILE_DIRECTORY + currentFileName); 
+            // If file does not exist; write to data then break loop. 
+            if (!currentFile.exists()) {
+                Utilities.writeTxtFile(SaveDataConfigs.SAVE_FILE_DIRECTORY + currentFileName, dataToWrite);
+                break; 
+            }
+            else {
+                filesChecked += 1; 
+                continue;
+            }
+            
+        }
+    }
 }
 
