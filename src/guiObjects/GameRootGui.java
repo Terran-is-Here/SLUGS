@@ -84,13 +84,12 @@ public class GameRootGui extends javax.swing.JFrame {
         ScrlResourceDisplay = new javax.swing.JScrollPane(resourceDisplayPanel);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        mnuBtnSaveGame = new javax.swing.JMenuItem();
+        mnuBtnExitGame = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         chkPauseGame = new javax.swing.JCheckBoxMenuItem();
         jMenu6 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        mnuBtnTickgame = new javax.swing.JMenuItem();
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -98,7 +97,7 @@ public class GameRootGui extends javax.swing.JFrame {
         jLabel1.setAlignmentX(0.5F);
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle(GAME_NAME);
         setBackground(new java.awt.Color(102, 102, 102));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -106,6 +105,11 @@ public class GameRootGui extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
         setSize(new java.awt.Dimension(1280, 720));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         MainGamePanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         MainGamePanel.setPreferredSize(new java.awt.Dimension(972, 218));
@@ -141,17 +145,15 @@ public class GameRootGui extends javax.swing.JFrame {
 
         jMenu1.setText("Game");
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem2.setText("Save Game");
-        jMenu1.add(jMenuItem2);
+        mnuBtnSaveGame.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        mnuBtnSaveGame.setText("Save Game");
+        mnuBtnSaveGame.addActionListener(this::mnuBtnSaveGameActionPerformed);
+        jMenu1.add(mnuBtnSaveGame);
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PERIOD, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem3.setText("Exit Game");
-        jMenu1.add(jMenuItem3);
-
-        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem4.setText("Load Game");
-        jMenu1.add(jMenuItem4);
+        mnuBtnExitGame.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PERIOD, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        mnuBtnExitGame.setText("Exit Game");
+        mnuBtnExitGame.addActionListener(this::mnuBtnExitGameActionPerformed);
+        jMenu1.add(mnuBtnExitGame);
 
         jMenuBar1.add(jMenu1);
 
@@ -168,9 +170,9 @@ public class GameRootGui extends javax.swing.JFrame {
         jMenu6.setText("Debug Menu");
         jMenu6.addActionListener(this::jMenu6ActionPerformed);
 
-        jMenuItem1.setText("Manually tickGame()");
-        jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
-        jMenu6.add(jMenuItem1);
+        mnuBtnTickgame.setText("Manually tickGame()");
+        mnuBtnTickgame.addActionListener(this::mnuBtnTickgameActionPerformed);
+        jMenu6.add(mnuBtnTickgame);
 
         jMenuBar1.add(jMenu6);
 
@@ -206,15 +208,33 @@ public class GameRootGui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenu6ActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void mnuBtnTickgameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBtnTickgameActionPerformed
         // TODO add your handling code here:
         Game.tickGame(); 
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_mnuBtnTickgameActionPerformed
 
     private void chkPauseGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkPauseGameActionPerformed
         // TODO add your handling code here:
         Game.isPausedFlag = chkPauseGame.isSelected();
     }//GEN-LAST:event_chkPauseGameActionPerformed
+
+    private void mnuBtnSaveGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBtnSaveGameActionPerformed
+        // TODO add your handling code here:
+        GameData.saveData();
+    }//GEN-LAST:event_mnuBtnSaveGameActionPerformed
+
+    // Function for closing frame window to automatically save game progress.
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        GameData.saveData();
+        System.exit(0);
+    }//GEN-LAST:event_formWindowClosing
+
+    private void mnuBtnExitGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBtnExitGameActionPerformed
+        // TODO add your handling code here:
+        GameData.saveData();
+        System.exit(0);
+    }//GEN-LAST:event_mnuBtnExitGameActionPerformed
 
     /**
      * @param args the command line arguments
@@ -230,11 +250,10 @@ public class GameRootGui extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JLabel lblCurrentFocus;
     private javax.swing.JLabel lblDateHeader;
+    private javax.swing.JMenuItem mnuBtnExitGame;
+    private javax.swing.JMenuItem mnuBtnSaveGame;
+    private javax.swing.JMenuItem mnuBtnTickgame;
     // End of variables declaration//GEN-END:variables
 }
