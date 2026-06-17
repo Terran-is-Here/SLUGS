@@ -108,13 +108,14 @@ public class Utilities {
      * @param identifierName The identifier to search for. 
      * @return Returns the first match found if it exists. If not, returns null. 
      */
+    @SuppressWarnings("unchecked")
     public static <T extends AbstractGameObject> T findObject(ArrayList<T> inputArrayList, String identifierName) {
         Iterator inputArrayListIterator = inputArrayList.iterator(); 
         T currentObject; 
         while (inputArrayListIterator.hasNext()) {
             currentObject = (T) inputArrayListIterator.next(); 
             if (currentObject.getIdentifier().equals(identifierName)) {
-                return currentObject; }
+                return (T) currentObject; }
         }
         
         return null; 

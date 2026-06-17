@@ -43,7 +43,7 @@ public class GameData {
      * @return 
      */
     public static ArrayList<ReferenceDataEntry> readDataFileAsReferenceTable(String fileName) {
-        ArrayList<ReferenceDataEntry> outputTable = new ArrayList(); 
+        ArrayList<ReferenceDataEntry> outputTable = new ArrayList<>(); 
         String currentLine; 
         String[] bufferStringArray;
         Resource bufferResource; 
@@ -55,10 +55,10 @@ public class GameData {
         String bufferObjectType = ""; 
         String bufferObjectDisplayType = ""; 
         String bufferImageIcon = ""; 
-        ArrayList<Resource> bufferInputResourceArrayList = new ArrayList(); 
-        ArrayList<Resource> bufferOutputResourceArrayList = new ArrayList(); 
-        ArrayList<Resource> bufferBuildCostResourceArrayList = new ArrayList(); 
-        ArrayList<Resource> bufferDepositResourceArrayList = new ArrayList(); 
+        ArrayList<Resource> bufferInputResourceArrayList = new ArrayList<>(); 
+        ArrayList<Resource> bufferOutputResourceArrayList = new ArrayList<>(); 
+        ArrayList<Resource> bufferBuildCostResourceArrayList = new ArrayList<>(); 
+        ArrayList<Resource> bufferDepositResourceArrayList = new ArrayList<>(); 
         
         double bufferCostScaleFactor = 1.0; 
         double bufferInputEfficiency = 1.0; 

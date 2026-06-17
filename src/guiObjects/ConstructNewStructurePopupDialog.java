@@ -90,6 +90,7 @@ public class ConstructNewStructurePopupDialog extends javax.swing.JPanel {
     /**
      * 
      */
+    @SuppressWarnings("unchecked")
     protected void setComboBoxChoices() {
         // Get ArrayList of Identifiers signifying potentially buildable structures within this BuildableBody; and set it to this structure's choiceIdentifiers. 
         ArrayList<String> currentIdentifiers = parentBuildableBody.findBuildableStructures();

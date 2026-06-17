@@ -1,0 +1,8 @@
+bodystart.kepler_452b
+resourceamount.coal=20.0
+resourceamount.stone_brick=20.0
+resourceamount.wood=100.0
+bodyend
+bodystart.trappist_1e
+bodyend
+

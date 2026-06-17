@@ -1,0 +1,14 @@
+bodystart.kepler_452b
+structurestart.copper_furnace
+amount=1
+inactiveamount=0
+toggleflag=true
+structureend
+resourceamount.coal=20.0
+resourceamount.copper_ore=0.0
+resourceamount.stone_brick=18.0
+resourceamount.wood=100.0
+bodyend
+bodystart.trappist_1e
+bodyend
+

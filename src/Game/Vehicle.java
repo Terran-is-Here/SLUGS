@@ -24,4 +24,6 @@ public class Vehicle extends BuildableBody{
             
             super(_identifierName, _bodyResourceStorage, _bodyResourceDeposits, _bodyStructures, _bodyVehicle, _referenceDataEntry, _parentBuildableBody); 
     }
+    
+    // Class not implemented due to a lack of time. 
 }
